@@ -29,6 +29,12 @@ RabbitHoles (RBITS) is an ERC-20 contract abstracted to act as a permanent & cen
   - The rabbits burned by each user
   - More...
 
+# Currently
+
+- Working on tests
+- Waiting for alphaV7 to be on goerli for deployments
+- Finishing up frontend
+
 # Scarb Commands
 
 - `scarb build`
