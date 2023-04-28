@@ -17,27 +17,29 @@ trait IDigFeeToken {
 mod RabbitHoles {
     use super::IDigFeeTokenDispatcher;
     use super::IDigFeeTokenDispatcherTrait;
+
+    use array::ArrayTrait;
+    use zeroable::Zeroable;
+    use traits::Into;
+    use traits::TryInto;
+    use option::OptionTrait;
+
     use starknet::get_caller_address;
     use starknet::get_contract_address;
     use starknet::get_block_timestamp;
+
     use starknet::ContractAddress;
     use starknet::Felt252TryIntoContractAddress;
     use starknet::ContractAddressIntoFelt252;
     use starknet::ContractAddressZeroable;
-    // use starknet::Zeroable;
-
-
-    use array::ArrayTrait;
-    use zeroable::Zeroable;
+    
     use starknet::StorageAccess;
     use starknet::StorageBaseAddress;
     use starknet::SyscallResult;
     use starknet::storage_read_syscall;
     use starknet::storage_write_syscall;
     use starknet::storage_address_from_base_and_offset;
-    use traits::Into;
-    use traits::TryInto;
-    use option::OptionTrait;
+    
 
     struct Storage {
         /// Ownable ///
