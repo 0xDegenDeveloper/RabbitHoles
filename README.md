@@ -5,9 +5,10 @@ RabbitHoles (RBITS) is an ERC-20 contract abstracted to act as a permanent & cen
 ## Basic Flow
 
 - Alice pays a small fee ~0.001 ETH (DIG_FEE) to dig the hole "SHOWER THOUGHTS".
+
   - She is minted ~25.0 RBITS (DIG_REWARD).
 
-Now that the "SHOWER THOUGHTS" hole is dug, rabbits may be burned inside, and because RBITS are ERC-20 tokens, Alice sends 5.0 to Bob.
+    Now that the "SHOWER THOUGHTS" hole is dug, rabbits may be burned inside, and because RBITS are ERC-20 tokens, Alice sends 5.0 to Bob.
 
 - Bob decides to leave the message "Who would have thought that the first shower thought to be immortalized on the blockchain would be about the very concept of storing shower thoughts on the blockchain?", this transaction burns 1.0 of Bob's RBITS.
 
