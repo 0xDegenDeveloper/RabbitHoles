@@ -14,18 +14,25 @@ RabbitHoles (RBITS) is an ERC-20 contract abstracted to act as a permanent & cen
 
 ## Technicals
 
-- The `title`s for each hole dug ("SHOWER THOUGHTS") are stored in the contract as a `felt252`s, meaning each title must be < 32 characters long
+- The titles for each hole dug ("SHOWER THOUGHTS") are stored in the contract as a `felt252`, meaning each title must be < 32 characters long
 
-  - The dApp will try to encourage hole title syntax and there will eventually be a syntax sheet released for best practices for digging holes about: persons, dates, events, etc.
+  - The dApp will encourage hole title syntax and there will eventually be a syntax sheet released for best practices when digging holes about: persons, dates, events, etc.
 
-- The messages left inside the holes are stored as `Array<felt252>` (felt arrays)
+- The messages left inside the holes are stored as felt arrays (`Array<felt252>`)
 
-  - Storing a `Array<felt252>` message in the contract burns 1.0 RBITS regardless of length; however, gas costs will rise as the message length increases
+  - Storing a message in the contract burns 1.0 RBITS regardless of length; however, gas costs will rise as the message length increases
 
 - The contract has `#[view]` functions to return:
+
   - The rabbits inside each hole
   - The holes dug by each user
   - The rabbits burned by each user
+  - More...
+
+# Scarb Commands
+
+- `scarb build`
+- `scarb fmt`
 
 # Activate Environment (awaiting alphav7 on goerli/mainnet)
 
@@ -35,14 +42,6 @@ RabbitHoles (RBITS) is an ERC-20 contract abstracted to act as a permanent & cen
 - `export STARKNET_WALLET=starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount`
 - `export CAIRO_COMPILER_DIR=~/.cairo/target/release/`
 - `export CAIRO_COMPILER_ARGS=--add-pythonic-hints`
-
-# Build Sierra
-
-`scarb build`
-
-# Format
-
-`scarb fmt`
 
 # Declaring contract class
 
