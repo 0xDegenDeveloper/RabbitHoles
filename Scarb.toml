@@ -1,0 +1,25 @@
+[[target.starknet-contract]]
+# Enable Sierra codegen.
+sierra = true
+ 
+# Enable CASM codegen.
+# casm = true
+
+# Emit Python-powered hints in order to run compiled CASM class with legacy Cairo VM.
+casm-add-pythonic-hints = true
+
+[package]
+name = "rbits"
+version = "0.1.0"
+authors = ["Matt Carter <novemberfork@proton.me"]
+readme = "README.md"
+homepage = "https://novemberfork.io/"
+repository = "https://github.com/0xDegenDeveloper/RabbitHoles"
+description = "---"
+
+[dependencies]
+quaireaux_math = { git = "https://github.com/keep-starknet-strange/quaireaux.git" }
+
+[scripts]
+compile = "starknet-compile src/lib.cairo target/rbits.json"
+# sierra-compile = "starknet-sierra-compile src/lib.cairo sierra/rbits.json"
