@@ -14,9 +14,13 @@ RabbitHoles (RBITS) is an ERC-20 contract abstracted to act as a permanent & cen
 
 ## Technicals
 
-- The `title` of the previously dug hole ("SHOWER THOUGHTS") is stored in the contract as a felt252, meaning each title must be < 32 characters long
+- The `title`s for each hole dug ("SHOWER THOUGHTS") are stored in the contract as a `felt252`s, meaning each title must be < 32 characters long
 
-- The message left inside the hole is stored as an `Array<felt252>`
+  - The dApp will try to encourage hole title syntax and there will eventually be a syntax sheet released for best practices for digging holes about: persons, dates, events, etc.
+
+- The messages left inside the holes are stored as `Array<felt252>` (felt arrays)
+
+  - Storing a `Array<felt252>` message in the contract burns 1.0 RBITS regardless of length; however, gas costs will rise as the message length increases
 
 - The contract has `#[view]` functions to return:
   - The rabbits inside each hole
