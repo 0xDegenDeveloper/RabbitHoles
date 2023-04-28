@@ -29,12 +29,12 @@ RabbitHoles (RBITS) is an ERC-20 contract abstracted to act as a permanent & cen
 
 # Activate Environment (awaiting alphav7 on goerli/mainnet)
 
-`python3.9 -m venv ~/cairo_venv  `
-`source ~/cairo_venv/bin/activate`
-`export STARKNET_NETWORK=alpha-goerli`  
-`export STARKNET_WALLET=starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount`
-`export CAIRO_COMPILER_DIR=~/.cairo/target/release/`
-`export CAIRO_COMPILER_ARGS=--add-pythonic-hints`
+- `python3.9 -m venv ~/cairo_venv`
+- `source ~/cairo_venv/bin/activate`
+- `export STARKNET_NETWORK=alpha-goerli`
+- `export STARKNET_WALLET=starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount`
+- `export CAIRO_COMPILER_DIR=~/.cairo/target/release/`
+- `export CAIRO_COMPILER_ARGS=--add-pythonic-hints`
 
 # Build Sierra
 
