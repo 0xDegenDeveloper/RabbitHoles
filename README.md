@@ -1,54 +1,60 @@
 # RabbitHoles
 
-RabbitHoles (RBITS) is an ERC-20 contract abstracted to act as a permanent & censorship resistant discussion board.
+RabbitHoles (RBITS): A Permanent & Censorship Resistant Discussion Board
+
+## Overview
+
+RabbitHoles (RBITS) is an ERC-20 contract aiming to offer a permanent and censorship-resistant platform for engaging in discussions. By abstracting the functionality of traditional discussion boards, it leverages the power of StarkNet and the Cairo programming language to ensure immutability, transparency, and scalability.
+
+RBITS enables users to dig holes and burn rabbits, which represent topics of discussion and individual messages respectively.
 
 ## Basic Flow
 
-- Alice pays a small fee ~0.001 ETH (DIG_FEE) to dig the hole "SHOWER THOUGHTS".
+The basic flow of RabbitHoles involves the following steps:
 
-  - She is minted ~25.0 RBITS (DIG_REWARD).
+- Alice pays a small fee, something like 0.001 ETH (the `DIG_FEE`), to dig a hole with the title "SHOWER THOUGHTS".
+- As a reward for digging the hole, Alice is minted something like 25.0 RBITS (the `DIG_REWARD`).
+- With the "SHOWER THOUGHTS" hole now available, rabbits can be burned inside. Since RBITS are ERC-20 tokens, Alice sends 5.0 RBITS to Bob.
+- Bob decides to leave the message "Who would have thought that the first shower thought to be immortalized on the blockchain would be about the very concept of storing shower thoughts on the blockchain?" into the hole, burning 1.0 RBITS from his balance.
 
-    Now that the "SHOWER THOUGHTS" hole is dug, rabbits may be burned inside, and because RBITS are ERC-20 tokens, Alice sends 5.0 to Bob.
+## Technical Details
 
-- Bob decides to leave the message "Who would have thought that the first shower thought to be immortalized on the blockchain would be about the very concept of storing shower thoughts on the blockchain?", this transaction burns 1.0 of Bob's RBITS.
+- Holes: Each hole's title, such as "SHOWER THOUGHTS", is stored in the contract as a single `felt252`. This means that every title must be 31 characters or fewer in length.
+- Rabbits: Messages left by buring RBITS are stored in a single `LegacyMap<u64, felt252>` data structure. Each rabbit (message) occupies a contiguous range of slots based on its length in felts. For example, the message Bob left is 167 characters long. This spans across 6 felts, assuming this is the first rabbit burned, Bob's message will fill slots 0, 1, 2, ..., 5.
+- Gas Costs: Burning a rabbit (message) in a hole has a fixed burn fee of 1.0 RBITS, regardless of the message length. However, gas costs will increase as the message length increases.
+- Contract Views: The contract has been designed to include several #[view] functions, keeping the frontend and UX in mind. These user-friendly functions make it easy to query and parse information, providing details such as the rabbits within each hole, the holes dug/rabbits burned by each user, the oldest/newest holes/rabbits, and more. This design ensures a smooth and enjoyable experience when interacting with the contract directly or through the frontend.
+- Hole Title Syntax/Best Practices: The dApp will encourage hole title syntax and a guide outlining best practices for digging holes related to people, dates, events, and more will be released. This, along with off-chain parsing/indexing/caching will help reduce the chances of duplcate holes being dug.
 
-## Technicals
+## Currentl Development Status
 
-- The titles for each hole dug ("SHOWER THOUGHTS") are stored in the contract as a `felt252`, meaning each title must be < 32 characters long
+The RabbitHoles project is currently under active development. Here are the current tasks being worked on:
 
-  - The dApp will encourage hole title syntax and there will eventually be a syntax sheet released for best practices when digging holes about: persons, dates, events, etc.
+- Tests: Writing comprehensive tests to ensure the contract behaves as intended.
+- Deployment: Waiting for the alphaV7 upgrade to the network to practice deployment & verification
+- Frontend Development: Finalizing the frontend interface (React) for an intuitive and user-friendly experience.
 
-- The messages left inside the holes are stored as felt arrays (`Array<felt252>`)
+### Scarb Commands
 
-  - Storing a message in the contract burns 1.0 RBITS regardless of length; however, gas costs will rise as the message length increases
+The RabbitHoles project utilizes Scarb, a toolset for building and interacting with StarkNet contracts. The following Scarb commands are useful for working with the project:
 
-- The contract has `#[view]` functions to return:
+- `scarb build`: Builds the .sierra & .json files
+- `scarb fmt`: Formats .cairo code
 
-  - The rabbits inside each hole
-  - The holes dug by each user
-  - The rabbits burned by each user
-  - More...
+### Activate Environment (awaiting alphav7 upgrade, until live, take these steps with a grain of salt)
 
-# Currently
+To activate the RabbitHoles project environment, follow these steps:
 
-- Working on tests
-- Waiting for alphaV7 to be on goerli for deployments
-- Finishing up frontend
+- Create a Python 3.9 virtual environment: `python3.9 -m venv ~/cairo_venv`
+- Activate the virtual environment: `source ~/cairo_venv/bin/activate`
+- Set the STARKNET_NETWORK variable to "alpha-goerli": `export STARKNET_NETWORK=alpha-goerli`
+- Set the STARKNET_WALLET variable to "starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount": `export STARKNET_WALLET=starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount`
+- Set the CAIRO_COMPILER_DIR variable to the Cairo compiler directory path: `export CAIRO_COMPILER_DIR=~/.cairo/target/release/`
+- Set the CAIRO_COMPILER_ARGS variable to include additional arguments for the Cairo compiler if needed: `export CAIRO_COMPILER_ARGS=--add-pythonic-hints`
 
-# Scarb Commands
+### Declaring contract class
 
-- `scarb build`
-- `scarb fmt`
+- To declare the RabbitHoles contract class, execute the following command: `starknet declare --contract target/rbits.json --account v0.11.0.2 --network alpha-goerli`
 
-# Activate Environment (awaiting alphav7 on goerli/mainnet)
+## Authors
 
-- `python3.9 -m venv ~/cairo_venv`
-- `source ~/cairo_venv/bin/activate`
-- `export STARKNET_NETWORK=alpha-goerli`
-- `export STARKNET_WALLET=starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount`
-- `export CAIRO_COMPILER_DIR=~/.cairo/target/release/`
-- `export CAIRO_COMPILER_ARGS=--add-pythonic-hints`
-
-# Declaring contract class
-
-`starknet declare --contract target/rbits.json --account v0.11.0.2 --network alpha-goerli`
+- Matt Carter (DegenDeveloper.eth)

@@ -1,12 +1,11 @@
 [[target.starknet-contract]]
-# Enable Sierra codegen.
+[lib]
+casm = false
 sierra = true
- 
-# Enable CASM codegen.
-# casm = true
+# casm-add-pythonic-hints = true
 
-# Emit Python-powered hints in order to run compiled CASM class with legacy Cairo VM.
-casm-add-pythonic-hints = true
+
+
 
 [package]
 name = "rbits"
