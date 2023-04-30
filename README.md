@@ -14,7 +14,7 @@ The basic flow of RabbitHoles involves the following steps:
 
 - Alice pays a small fee, something like 0.001 ETH (the `DIG_FEE`), to dig a hole with the title "SHOWER THOUGHTS".
 - As a reward for digging the hole, Alice is minted something like 25.0 RBITS (the `DIG_REWARD`).
-- With the "SHOWER THOUGHTS" hole now available, rabbits can be burned inside. Since RBITS are ERC-20 tokens, Alice sends 5.0 RBITS to Bob.
+- With the "SHOWER THOUGHTS" hole now available, rabbits can be burned inside. Since RBITS are ERC-20 tokens, Alice sends 2.0 RBITS to Bob.
 - Bob decides to leave the message "Who would have thought that the first shower thought to be immortalized on the blockchain would be about the very concept of storing shower thoughts on the blockchain?" into the hole, burning 1.0 of his RBITS.
 
 ## Technical Details
