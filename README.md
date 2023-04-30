@@ -4,7 +4,7 @@ RabbitHoles (RBITS): A Permanent & Censorship Resistant Discussion Board
 
 ## Overview
 
-RabbitHoles (RBITS) is an abstracted ERC-20 contract aiming to offer a permanent and censorship-resistant platform for engaging in discussions. It leverages the power of StarkNet and the Cairo programming language to ensure immutability, transparency, and scalability.
+RabbitHoles (RBITS) is an abstracted ERC-20 contract aiming to offer a permanent and censorship-resistant platform for engaging in discussions.
 
 RBITS enables users to dig holes and burn rabbits, which represent topics of discussion and individual messages respectively.
 
