@@ -31,7 +31,7 @@ The RabbitHoles project is currently under active development. Here are the curr
 
 - Tests: Writing comprehensive tests to ensure the contract behaves as intended.
 - Deployment: Waiting for the alphaV7 upgrade to the network to practice deployment & verification
-- Frontend Development: Finalizing the frontend interface (React) for an intuitive and user-friendly experience.
+- Frontend Development: Finalizing the frontend interface for an intuitive and user-friendly experience.
 
 ### Scarb Commands
 
