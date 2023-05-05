@@ -13,7 +13,7 @@ RBITS enables users to dig holes and burn rabbits, which represent topics of dis
 The basic flow of RabbitHoles involves the following steps:
 
 - Alice pays a small fee to dig a hole with the title "SHOWER THOUGHTS".
-- Her dig count is incremented, and as a reward, she is minted some RBITS.
+- As a reward, she is minted some RBITS.
 - Since they are ERC-20 tokens, she sends a few to Bob.
 - Now that the "SHOWER THOUGHTS" hole is dug, anyone can burn a rabbit inside.
   Bob decides to leave the message,
@@ -22,8 +22,9 @@ The basic flow of RabbitHoles involves the following steps:
 
 into the hole, burning some of his RBITS.
 
-- Bob's message is timestamped, stored in the contract, and his burn count is incremented.
-  Several `#[view]` functions are available keeping the frontend and UX in mind. These user-friendly functions make it easy to query and parse information, providing details such as the rabbits within each hole, the holes dug/rabbits burned by each user, the oldest/newest holes/rabbits, and more. This design ensures a smooth and enjoyable experience when interacting with the contract directly or through the frontend.
+- Bob's message is timestamped and stored in the contract.
+- Several `#[view]` functions are available keeping the frontend and UX in mind.
+  -These user-friendly functions make it easy to query and parse details such as the rabbits within each hole, the holes dug/rabbits burned by each user, the oldest/newest holes/rabbits, etc. This design ensures a smooth and enjoyable experience when interacting with the contracts directly or through the frontend.
 
 ## Technical Details
 
@@ -33,11 +34,11 @@ into the hole, burning some of his RBITS.
 
 - Each dig will mint RBITS to its digger. This is the dig reward and will probably be in the ball park of 20-100 RBITS.
 
-\*\* The exact numbers are still being thought about and feedback, opinions, and thoughts are appreciated.
+\*\* The exact numbers are still being thought about. Feedback, opinions, and thoughts are appreciated and ecouraged.
 
 - A hole's title, ("SHOWER THOUGHTS"), is stored as a single `felt252`, meaning every title must be 31 characters or fewer in length.
 
-- The dApp will encourage syntax and a guide outlining best practices for digging holes relating to people, dates, events, and more will be released. This, along with additional backend techniques should reduce the chances of similar holes being dug.
+- The dApp will encourage syntax and a guide outlining best practices for digging holes relating to people, dates, events, and more will be released. This, along with a dedicated backend should reduce the chances of similar holes being dug.
 
 ### Rabbits
 
@@ -46,7 +47,7 @@ into the hole, burning some of his RBITS.
 
   - For example, the message Bob burned is 167 characters long. This spans across 6 felts, assuming this is the first rabbit burned, Bob's message will fill slots 0, 1, 2, ..., 5.
 
-- Burning a rabbit will burn 1.0 RBITS for each `felt252` the message fills.
+- Leaving a rabbit will burn 1.0 RBITS for each `felt252` the message spans.
 
   - Therefore, Bob's message cost him 6.0 RBITS to burn.
 
@@ -58,30 +59,28 @@ Current tasks include:
 
 - Finalizing contract design to account for future expansion
 - Testing to ensure intended behavior.
-- Waiting for the alphaV7 network upgrade to deploy on goerli and connect to the demo site
-- Tweaking the frontend to ensure a smooth experience on all devices
+- Waiting for the alphaV7 network upgrade to deploy on testnet and connect to the demo site
+- Finalizing the frontend to ensure a smooth experience on all devices
 
 ### Scarb Commands
 
-The RabbitHoles project utilizes Scarb, a toolset for building and interacting with StarkNet contracts. The following Scarb commands are useful for working with the project:
+The project utilizes Scarb,The following commands are useful for working with the project:
 
-- `scarb build`: Builds the .sierra & .json files
-- `scarb fmt`: Formats .cairo code
+- `scarb build`
+- `scarb fmt`
 
-### Activate Environment (awaiting alphav7 upgrade, until live, take these steps with a grain of salt)
+### Activate Environment (awaiting alphav7 upgrade)
 
-To activate the RabbitHoles project environment, follow these steps:
+- `python3.9 -m venv ~/cairo_venv`
+- `source ~/cairo_venv/bin/activate`
+- `export STARKNET_NETWORK=alpha-goerli`
+- `export STARKNET_WALLET=starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount`
+- `export CAIRO_COMPILER_DIR=~/.cairo/target/release/`
+- `export CAIRO_COMPILER_ARGS=--add-pythonic-hints`
 
-- Create a Python 3.9 virtual environment: `python3.9 -m venv ~/cairo_venv`
-- Activate the virtual environment: `source ~/cairo_venv/bin/activate`
-- Set the STARKNET_NETWORK variable to "alpha-goerli": `export STARKNET_NETWORK=alpha-goerli`
-- Set the STARKNET_WALLET variable to "starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount": `export STARKNET_WALLET=starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount`
-- Set the CAIRO_COMPILER_DIR variable to the Cairo compiler directory path: `export CAIRO_COMPILER_DIR=~/.cairo/target/release/`
-- Set the CAIRO_COMPILER_ARGS variable to include additional arguments for the Cairo compiler if needed: `export CAIRO_COMPILER_ARGS=--add-pythonic-hints`
+### Other commands
 
-### Declaring contract class
-
-- To declare the RabbitHoles contract class, execute the following command: `starknet declare --contract target/rbits.json --account v0.11.0.2 --network alpha-goerli`
+- Declare contract class: `starknet declare --contract <path-to.json> --account v0.11.0.2 --network alpha-goerli`
 
 ## Authors
 
