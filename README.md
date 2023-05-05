@@ -15,7 +15,7 @@ The basic flow of RabbitHoles involves the following steps:
 - Alice pays a small fee to dig a hole with the title "SHOWER THOUGHTS".
 - Her dig count is incremented, and as a reward, she is minted some RBITS.
 - Since they are ERC-20 tokens, she sends a few to Bob.
-  Now that the "SHOWER THOUGHTS" hole is dug, anyone can burn a rabbit inside.
+- Now that the "SHOWER THOUGHTS" hole is dug, anyone can burn a rabbit inside.
   Bob decides to leave the message,
 
 > Who would have thought that the first shower thought to be immortalized on the blockchain would be about the very concept of storing shower thoughts on the blockchain?"
