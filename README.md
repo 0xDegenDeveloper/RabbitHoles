@@ -37,7 +37,7 @@ into the hole, burning some of his RBITS.
 
 - Each dig will mint RBITS to its digger. This is the dig reward and will probably be in the ball park of 20-100 RBITS.
 
-* The exact numbers are still being thought about and feedback/opinions/thoughts are appreciated.
+\*\* The exact numbers are still being thought about and feedback/opinions/thoughts are appreciated.
 
 - A hole's title, such as "SHOWER THOUGHTS", is stored as a single `felt252`. This means that every title must be 31 characters or fewer in length.
 
