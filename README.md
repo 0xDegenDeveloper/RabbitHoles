@@ -20,7 +20,7 @@ The basic flow of RabbitHoles involves the following steps:
 
 > Who would have thought that the first shower thought to be immortalized on the blockchain would be about the very concept of storing shower thoughts on the blockchain?"
 
-    into the hole, burning some of his RBITS.
+into the hole, burning some of his RBITS.
 
 - Bob's message is timestamped, stored in the contract, and his burn count is incremented.
   `#[view]` functions can return details about holes by their title, global index, or user index.
@@ -33,7 +33,11 @@ The basic flow of RabbitHoles involves the following steps:
 
 ### Holes
 
-- Digging a hole will cost a small fee, something like 0.001Ξ. This is the dig fee
+- Digging a hole will cost a small fee, something like 0.001Ξ. This is the dig fee and is used to disincentive spam and fund future extensions to the project.
+
+- Each dig will mint RBITS to its digger. This is the dig reward and will probably be in the ball park of 20-100 RBITS.
+
+* The exact numbers are still being thought about and feedback/opinions/thoughts are appreciated.
 
 - A hole's title, such as "SHOWER THOUGHTS", is stored as a single `felt252`. This means that every title must be 31 characters or fewer in length.
 
