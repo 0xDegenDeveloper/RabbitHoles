@@ -12,19 +12,19 @@ RBITS enables users to dig holes and burn rabbits, which represent topics of dis
 
 The basic flow of RabbitHoles involves the following steps:
 
-Alice pays a small fee to dig a hole with the title "SHOWER THOUGHTS".
-Her dig count is incremented, and as a reward, she is minted some RBITS.
-Since they are ERC-20 tokens, she sends a few to Bob.
-Now that the "SHOWER THOUGHTS" hole is dug, anyone can burn a rabbit inside.
-Bob decides to leave the message,
+- Alice pays a small fee to dig a hole with the title "SHOWER THOUGHTS".
+- Her dig count is incremented, and as a reward, she is minted some RBITS.
+- Since they are ERC-20 tokens, she sends a few to Bob.
+  Now that the "SHOWER THOUGHTS" hole is dug, anyone can burn a rabbit inside.
+  Bob decides to leave the message,
 
 > Who would have thought that the first shower thought to be immortalized on the blockchain would be about the very concept of storing shower thoughts on the blockchain?"
 
 into the hole, burning some of his RBITS.
 
-Bob's message is timestamped, stored in the contract, and his burn count is incremented.
-`#[view]` functions can return details about holes by their title, global index, and user index.
-The same goes for rabbits by their global index, user index, and index within a hole.
+- Bob's message is timestamped, stored in the contract, and his burn count is incremented.
+  `#[view]` functions can return details about holes by their title, global index, or user index.
+  And rabbits can be viewed by their global index, user index, or index within a hole.
 
 ## Technical Details
 
@@ -32,6 +32,8 @@ The same goes for rabbits by their global index, user index, and index within a 
 - (the `DIG_REWARD`)
 
 ### Holes
+
+- Digging a hole will cost a small fee, something like 0.001Ξ. This is the dig fee
 
 - A hole's title, such as "SHOWER THOUGHTS", is stored as a single `felt252`. This means that every title must be 31 characters or fewer in length.
 
