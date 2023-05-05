@@ -23,13 +23,9 @@ The basic flow of RabbitHoles involves the following steps:
 into the hole, burning some of his RBITS.
 
 - Bob's message is timestamped, stored in the contract, and his burn count is incremented.
-  `#[view]` functions can return details about holes by their title, global index, or user index.
-  And rabbits can be viewed by their global index, user index, or index within a hole.
+  Several `#[view]` functions are available keeping the frontend and UX in mind. These user-friendly functions make it easy to query and parse information, providing details such as the rabbits within each hole, the holes dug/rabbits burned by each user, the oldest/newest holes/rabbits, and more. This design ensures a smooth and enjoyable experience when interacting with the contract directly or through the frontend.
 
 ## Technical Details
-
-- something like 0.001 ETH (the `DIG_FEE`),
-- (the `DIG_REWARD`)
 
 ### Holes
 
@@ -37,27 +33,33 @@ into the hole, burning some of his RBITS.
 
 - Each dig will mint RBITS to its digger. This is the dig reward and will probably be in the ball park of 20-100 RBITS.
 
-\*\* The exact numbers are still being thought about and feedback/opinions/thoughts are appreciated.
+\*\* The exact numbers are still being thought about and feedback, opinions, and thoughts are appreciated.
 
-- A hole's title, such as "SHOWER THOUGHTS", is stored as a single `felt252`. This means that every title must be 31 characters or fewer in length.
+- A hole's title, ("SHOWER THOUGHTS"), is stored as a single `felt252`, meaning every title must be 31 characters or fewer in length.
 
--
+- The dApp will encourage syntax and a guide outlining best practices for digging holes relating to people, dates, events, and more will be released. This, along with additional backend techniques should reduce the chances of similar holes being dug.
 
 ### Rabbits
 
-- Rabbits: Messages left by buring RBITS are stored in a single `LegacyMap<u64, felt252>` data structure. Each rabbit (message) occupies a contiguous range of slots based on its length in felts. For example, the message Bob left is 167 characters long. This spans across 6 felts, assuming this is the first rabbit burned, Bob's message will fill slots 0, 1, 2, ..., 5.
+- Messages left (rabbits burned) are stored in a single `LegacyMap<u64, felt252>` data structure.
+- Each message occupies a contiguous range of slots based on its length in felts
 
-- Gas Costs: Burning a rabbit (message) in a hole has a fixed burn fee of 1.0 RBITS, regardless of the message length. However, gas costs will increase with message length.
-- Contract Views: The contract has been designed to include several `#[view]` functions, keeping the frontend and UX in mind. These user-friendly functions make it easy to query and parse information, providing details such as the rabbits within each hole, the holes dug/rabbits burned by each user, the oldest/newest holes/rabbits, and more. This design ensures a smooth and enjoyable experience when interacting with the contract directly or through the frontend.
-- Hole Title Syntax/Best Practices: The dApp will encourage hole title syntax and a guide outlining best practices for digging holes related to people, dates, events, and more will be released. This, along with off-chain parsing/indexing/caching should help reduce the chances of duplcate holes being dug.
+  - For example, the message Bob burned is 167 characters long. This spans across 6 felts, assuming this is the first rabbit burned, Bob's message will fill slots 0, 1, 2, ..., 5.
+
+- Burning a rabbit will burn 1.0 RBITS for each `felt252` the message fills.
+
+  - Therefore, Bob's message cost him 6.0 RBITS to burn.
 
 ## Current Development Status
 
-The RabbitHoles project is currently under active development. Here are the current tasks being worked on:
+### A demo for the project can be found at https://rbits.space.
 
-- Tests: Writing comprehensive tests to ensure the contract behaves as intended.
-- Deployment: Waiting for the alphaV7 upgrade to the network to practice deployment & verification
-- Frontend Development: Finalizing the frontend interface for an intuitive and user-friendly experience.
+Current tasks include:
+
+- Finalizing contract design to account for future expansion
+- Testing to ensure intended behavior.
+- Waiting for the alphaV7 network upgrade to deploy on goerli and connect to the demo site
+- Tweaking the frontend to ensure a smooth experience on all devices
 
 ### Scarb Commands
 
