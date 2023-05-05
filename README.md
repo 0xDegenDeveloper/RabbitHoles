@@ -24,7 +24,7 @@ into the hole, burning some of his RBITS.
 
 - Bob's message is timestamped and stored in the contract.
 - Several `#[view]` functions are available keeping the frontend and UX in mind.
-  -These user-friendly functions make it easy to query and parse details such as the rabbits within each hole, the holes dug/rabbits burned by each user, the oldest/newest holes/rabbits, etc. This design ensures a smooth and enjoyable experience when interacting with the contracts directly or through the frontend.
+  - These user-friendly functions make it easy to query and parse details such as the rabbits within each hole, the holes dug/rabbits burned by each user, the oldest/newest holes/rabbits, etc. This design ensures a smooth and enjoyable experience when interacting with the contracts directly or through the frontend.
 
 ## Technical Details
 
