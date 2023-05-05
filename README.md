@@ -20,7 +20,7 @@ The basic flow of RabbitHoles involves the following steps:
 
 > Who would have thought that the first shower thought to be immortalized on the blockchain would be about the very concept of storing shower thoughts on the blockchain?"
 
-into the hole, burning some of his RBITS.
+    into the hole, burning some of his RBITS.
 
 - Bob's message is timestamped, stored in the contract, and his burn count is incremented.
   `#[view]` functions can return details about holes by their title, global index, or user index.
