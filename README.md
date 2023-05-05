@@ -24,7 +24,7 @@ into the hole, burning some of his RBITS.
 
 - Bob's message is timestamped and stored in the contract.
 - Several `#[view]` functions are available keeping the frontend and UX in mind.
-  - These user-friendly functions make it easy to query and parse details such as the rabbits within each hole, the holes dug/rabbits burned by each user, the oldest/newest holes/rabbits, etc. This design ensures a smooth and enjoyable experience when interacting with the contracts directly or through the frontend.
+  - These user-friendly functions make it easy to query and parse details such as the rabbits within each hole, the holes dug/rabbits burned by each user, the oldest/newest holes/rabbits, etc. This design ensures a smooth and enjoyable experience while interacting with the contracts directly or through the frontend.
 
 ## Technical Details
 
@@ -47,7 +47,7 @@ into the hole, burning some of his RBITS.
 
   - For example, the message Bob burned is 167 characters long. This spans across 6 felts, assuming this is the first rabbit burned, Bob's message will fill slots 0, 1, 2, ..., 5.
 
-- Leaving a rabbit will burn 1.0 RBITS for each `felt252` the message spans.
+- Leaving a rabbit will burn 1.0 RBITS for each `felt252` the message fills.
 
   - Therefore, Bob's message cost him 6.0 RBITS to burn.
 
@@ -57,10 +57,11 @@ into the hole, burning some of his RBITS.
 
 Current tasks include:
 
-- Finalizing contract design to account for future expansion
-- Testing to ensure intended behavior.
-- Waiting for the alphaV7 network upgrade to deploy on testnet and connect to the demo site
-- Finalizing the frontend to ensure a smooth experience on all devices
+- Finalizing contract design/testing
+  - Accounting for future expansion
+- Waiting for alphaV7 network upgrade
+  - To connect to the demo site
+- Optimizing frontend on all devices
 
 ### Scarb Commands
 
