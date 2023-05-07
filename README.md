@@ -1,10 +1,10 @@
 # RabbitHoles
 
-A Permanent & Censorship-Resistant Discussion Board. A demo can be found at https://rbits.space.
+A Permanent & Censorship-Resistant Discussion Board.
 
 ## Overview
 
-RabbitHoles is a decentralized discussion platform built on Starknet using Cairo 1, offering an everlasting, censorship-resistant space for open conversations. Each discussion topic, called a "hole," houses messages known as "rabbits". RBITS, are ERC-20 token facilitating interactions within the platform.
+RabbitHoles is a decentralized discussion platform built on Starknet using Cairo 1, offering an everlasting, censorship-resistant space for open conversations. Each discussion topic, called a "hole," houses messages known as "rabbits". RBITS, are ERC-20 token facilitating interactions within the platform. A demo can be found at https://rbits.space.
 
 ## Basic Flow
 
