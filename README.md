@@ -1,26 +1,24 @@
 # RabbitHoles
 
-RabbitHoles (RBITS): A Permanent & Censorship Resistant Discussion Board
+A Permanent & Censorship-Resistant Discussion Board
 
 ## Overview
 
-RabbitHoles (RBITS) is an abstracted ERC-20 contract aiming to offer a permanent and censorship-resistant platform for engaging in discussions.
-
-RBITS enables users to dig holes and burn rabbits, which represent topics of discussion and individual messages respectively.
+RabbitHoles is a decentralized discussion platform built on Starknet using Cairo 1, offering an everlasting, censorship-resistant space for open conversations. Each discussion topic, called a "hole," houses messages known as "rabbits". $RBITS, are ERC-20 token facilitating interactions within the platform.
 
 ## Basic Flow
 
-The basic flow of RabbitHoles involves the following steps:
+The basic flow involves the following steps:
 
-- Alice pays a small fee to dig a hole with the title "SHOWER THOUGHTS".
-- As a reward, she is minted some RBITS.
+- Alice pays a small fee to dig a hole with the title "SHOWER THOUGHTS"
+- As a reward, she is minted some RBITS
 - Since they are ERC-20 tokens, she sends a few to Bob.
-- Now that the "SHOWER THOUGHTS" hole is dug, anyone can burn a rabbit inside.
+- Now that the "SHOWER THOUGHTS" hole is dug, anyone can burn a rabbit inside
   Bob decides to leave the message,
 
 > Who would have thought that the first shower thought to be immortalized on a blockchain would be about the very concept of storing shower thoughts on a blockchain?"
 
-into the hole, burning some of his RBITS.
+in the hole, giving some RBIT to Alice and burning the rest
 
 - Bob's message is timestamped and stored in the contract.
 - Several `#[view]` functions are available keeping the frontend and UX in mind.
@@ -32,7 +30,7 @@ into the hole, burning some of his RBITS.
 
 - Digging a hole will cost a small fee, something like 0.001Ξ. This is the dig fee and is used to disincentive spam and fund future extensions to the project.
 
-- Each dig will mint RBITS to its digger. This is the dig reward and will probably be in the ball park of 20-100 RBITS.
+- Each dig will mint RBIT to its digger. This is the dig reward and will be in the range of 20-100 RBITS.
 
 \*\* The exact numbers are still being thought about. Feedback, opinions, and thoughts are appreciated and ecouraged.
 
@@ -42,14 +40,14 @@ into the hole, burning some of his RBITS.
 
 ### Rabbits
 
-- Messages left (rabbits burned) are stored in a single `LegacyMap<u64, felt252>` data structure.
+- Messages (rabbits) are stored in a single `LegacyMap<u64, felt252>` data structure.
 - Each message occupies a contiguous range of slots based on its length in felts
 
   - For example, the message Bob burned is 167 characters long. This spans across 6 felts, assuming this is the first rabbit burned, Bob's message will fill slots 0, 1, 2, ..., 5.
 
-- Leaving a rabbit will burn 1.0 RBITS for each `felt252` the message fills.
+- Each `felt252` a message fills will cost its burner 1.0 RBIT. 75% is burned and 25% is sent to the digger of the hole.
 
-  - Therefore, Bob's message cost him 6.0 RBITS to burn.
+  - In the above example, Bob's message cost him 6.0 RBIT. 1.5 went to Alice, and 4.5 were burned.
 
 ## Current Development Status
 
@@ -64,8 +62,6 @@ Current tasks include:
 - Optimizing frontend on all devices
 
 ### Scarb Commands
-
-The project utilizes Scarb,The following commands are useful for working with the project:
 
 - `scarb build`
 - `scarb fmt`
