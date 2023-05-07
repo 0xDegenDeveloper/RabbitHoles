@@ -18,7 +18,7 @@ The basic flow of RabbitHoles involves the following steps:
 - Now that the "SHOWER THOUGHTS" hole is dug, anyone can burn a rabbit inside.
   Bob decides to leave the message,
 
-> Who would have thought that the first shower thought to be immortalized on the blockchain would be about the very concept of storing shower thoughts on the blockchain?"
+> Who would have thought that the first shower thought to be immortalized on a blockchain would be about the very concept of storing shower thoughts on a blockchain?"
 
 into the hole, burning some of his RBITS.
 
