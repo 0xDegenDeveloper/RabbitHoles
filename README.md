@@ -1,6 +1,6 @@
 # RabbitHoles
 
-A Permanent & Censorship-Resistant Discussion Board
+A Permanent & Censorship-Resistant Discussion Board. A demo can be found at https://rbits.space.
 
 ## Overview
 
@@ -43,15 +43,13 @@ in the hole, giving some RBIT to Alice and burning the rest
 - Messages (rabbits) are stored in a single `LegacyMap<u64, felt252>` data structure.
 - Each message occupies a contiguous range of slots based on its length in felts
 
-  - For example, the message Bob burned is 167 characters long. This spans across 6 felts, assuming this is the first rabbit burned, Bob's message will fill slots 0, 1, 2, ..., 5.
+  - For example, the message Bob burned is 164 characters long. This spans across 6 felts, assuming this is the first rabbit burned, Bob's message will fill slots 0, 1, 2, ..., 5.
 
 - Each `felt252` a message fills will cost its burner 1.0 RBIT. 75% is burned and 25% is sent to the digger of the hole.
 
-  - In the above example, Bob's message cost him 6.0 RBIT. 1.5 went to Alice, and 4.5 were burned.
+  - In the above example, Bob's message costs him 6.0 RBIT. 1.5 is sent to Alice, and 4.5 are burned.
 
 ## Current Development Status
-
-### A demo for the project can be found at https://rbits.space.
 
 Current tasks include:
 
