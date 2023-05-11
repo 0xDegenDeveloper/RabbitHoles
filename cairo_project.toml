@@ -1,2 +1,9 @@
 [crate_roots]
-rbits = "."
+rabbitholes = 'src'
+tests = 'tests'
+# rbits = 'rbits'
+# archive = 'archive'
+# manager = 'manager'
+# archive = 'contracts/archive'
+# manager = 'contracts/manager'
+
