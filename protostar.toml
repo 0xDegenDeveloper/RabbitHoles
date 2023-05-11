@@ -1,16 +1,9 @@
 [project]
 protostar-version = "0.10.0"
-# lib-path = "lib"
 # linked-libraries = ["rbits", "archive", "registry"]
 
 [contracts]
-rbits = ["rbits"]
-manager = ["manager"]
-archive = ["archive"]
+rbits = ["src/rbits"]
+manager = ["src/manager"]
+archive = ["src/archive"]
 
-
-# [crate_root]
-# rbits = 'rbits'
-# archive = 'archive'
-# registry = 'registry'
-# tests = 'tests'
