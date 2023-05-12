@@ -9,11 +9,8 @@ mod rbits {
     use starknet::get_caller_address;
     use starknet::ContractAddress;
     use starknet::ContractAddressIntoFelt252;
-    use starknet::ContractAddressZeroable;
     use starknet::Felt252TryIntoContractAddress;
-
     use zeroable::Zeroable;
-    // use integer::BoundedInt;
 
     struct Storage {
         _name: felt252,

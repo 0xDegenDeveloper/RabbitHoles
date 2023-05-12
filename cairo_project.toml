@@ -1,9 +1,6 @@
 [crate_roots]
 rabbitholes = 'src'
 tests = 'tests'
-# rbits = 'rbits'
-# archive = 'archive'
-# manager = 'manager'
-# archive = 'contracts/archive'
-# manager = 'contracts/manager'
-
+rbits = 'src/rbits/src'
+archive = 'src/archive/src'
+manager = 'src/manager/src'

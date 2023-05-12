@@ -2,11 +2,14 @@
 name = "rabbitholes"
 version = "0.1.0"
 
+# See more keys and their definitions at https://docs.swmansion.com/scarb/docs/reference/manifest
+
 [dependencies]
-# rbits = { path = "rbits" }
-# manager = { path = "manager" }
-# archive = { path = "archive" }
+rbits = { path = "src/rbits" }
+manager = { path = "src/manager" }
+archive = { path = "src/archive" }
 
 [scripts]
-test = "cairo-test --starknet tests/lib.cairo"
+# test = "cairo-test --starknet tests/lib.cairo"
+test = "cairo-test --starknet ."
 
