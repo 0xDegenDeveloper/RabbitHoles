@@ -20,39 +20,39 @@ mod integration_test {
     use integer::u256;
     use integer::u256_from_felt252;
     use debug::PrintTrait;
-    // #[test]
-    // fn test_transfer() {
-    //     // let (sender, supply) = setup();
-    //     0x1.print();
-    //     let account = contract_address::contract_address_const::<1>();
-    //     testing::set_caller_address(account);
-    //     0x2.print();
-    //     // archive::archive::get_balance(1);
+// #[test]
+// fn test_transfer() {
+//     // let (sender, supply) = setup();
+//     0x1.print();
+//     let account = contract_address::contract_address_const::<1>();
+//     testing::set_caller_address(account);
+//     0x2.print();
+//     // archive::archive::get_balance(1);
 
-    //     // let supply: u256 = u256_from_felt252(11111);
+//     // let supply: u256 = u256_from_felt252(11111);
 
-    //     // '123'.print();
+//     // '123'.print();
 
-    //     // let max_felt = u256_from_felt252(2 ** 252 - 1);
-    //     // let max = u64::MAX;
+//     // let max_felt = u256_from_felt252(2 ** 252 - 1);
+//     // let max = u64::MAX;
 
-    //     // max.print();
+//     // max.print();
 
-    //     0x0.print();
-    //     0.print();
-    //     '0'.print();
-    //     // account.print();
-    //     // '456'.print();
-    //     assert(0x0 == 0, 'b');
-    // }
+//     0x0.print();
+//     0.print();
+//     '0'.print();
+//     // account.print();
+//     // '456'.print();
+//     assert(0x0 == 0, 'b');
+// }
 }
 // // fn setup() -> (ContractAddress, u256) {
-    // let init_supply: u256 = u256_from_felt252(11111);
-    // let account: ContractAddress = contract_address_const::<1>();
-    // '111111111'.print();
-    // account.print();
-    // //rbits::constructor(init_supply, account);
-    // (account, init_supply)
+// let init_supply: u256 = u256_from_felt252(11111);
+// let account: ContractAddress = contract_address_const::<1>();
+// '111111111'.print();
+// account.print();
+// //rbits::constructor(init_supply, account);
+// (account, init_supply)
 // // }
 
 // use integer::u256;

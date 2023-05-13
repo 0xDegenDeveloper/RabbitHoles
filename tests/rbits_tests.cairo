@@ -1,4 +1,3 @@
-
 // #[cfg(test)]
 // mod rbits_tests {
 //     use starknet::ContractAddress;
@@ -6,7 +5,6 @@
 
 //     use integer::u256;
 //     use integer::u256_from_felt252;
-
 
 //     // use rbits_contract;
 
@@ -19,7 +17,6 @@
 //     #[test]
 //     fn rbits_test_02_minting() {}
 
-   
 //     fn setup() -> (ContractAddress, u256) {
 //         let initial_supply: u256 = u256_from_felt252(1111);
 //         let account: ContractAddress = contract_address_const::<1>();
@@ -28,4 +25,5 @@
 //     }
 // //...
 // }
+
 
