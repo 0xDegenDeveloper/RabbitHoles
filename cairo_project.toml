@@ -1,6 +1,13 @@
 [crate_roots]
 rabbitholes = 'src'
 tests = 'tests'
+#  for the above (implementaiton) tests, use manager::manager::Manager, archive::archive::Archive, etc.
 rbits = 'src/rbits/src'
 archive = 'src/archive/src'
 manager = 'src/manager/src'
+# Testing
+manager_testing = 'src/manager/tests'
+archive_testing = 'src/archive/tests'
+rbits_testing = 'src/rbits/tests'
+
+

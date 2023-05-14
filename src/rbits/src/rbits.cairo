@@ -1,156 +1,85 @@
+use starknet::ContractAddress;
+
+trait IRbits {
+    fn owner() -> ContractAddress;
+    fn transfer_ownership(new_owner: ContractAddress);
+    fn renounce_ownership();
+    fn update_manager_address(new_manager_address: ContractAddress);
+    fn mint(recipient: ContractAddress, amount: u256);
+    fn burn(owner: ContractAddress, amount: u256);
+}
+
+trait IERC20 {
+    fn name() -> felt252;
+    fn symbol() -> felt252;
+    fn decimals() -> u8;
+    fn total_supply() -> u256;
+    fn balance_of(account: ContractAddress) -> u256;
+    fn allowance(owner: ContractAddress, spender: ContractAddress) -> u256;
+    fn transfer(recipient: ContractAddress, amount: u256) -> bool;
+    fn transfer_from(sender: ContractAddress, recipient: ContractAddress, amount: u256) -> bool;
+    fn approve(spender: ContractAddress, amount: u256) -> bool;
+}
+
+#[abi]
+trait IManager {
+    #[view]
+    fn has_valid_permit(account: ContractAddress, right: felt252) -> bool;
+}
+
 #[contract]
 mod rbits {
-    // use super::IERC20;
-    // use super::IOwnable;
-    // use super::IRbits;
+    use super::IRbits;
+    use super::IERC20;
+    use super::IManager;
+
+    use super::IManagerDispatcher;
+    use super::IManagerDispatcherTrait;
+
     use traits::Into;
     use traits::TryInto;
     use option::OptionTrait;
     use starknet::get_caller_address;
     use starknet::ContractAddress;
+    // use starknet::ContractAddressZeroable;
     use starknet::ContractAddressIntoFelt252;
     use starknet::Felt252TryIntoContractAddress;
     use zeroable::Zeroable;
 
     struct Storage {
+        _RBITS_MANAGER: felt252,
+        _RBITS_MINT: felt252,
+        _RBITS_BURN: felt252,
+        _owner: ContractAddress, /// can change the manager address (only role)
+        _manager_address: ContractAddress, /// address of the manager contract (minters/burners)
         _name: felt252,
         _symbol: felt252,
+        _decimals: u8,
         _total_supply: u256,
         _balances: LegacyMap<ContractAddress, u256>,
         _allowances: LegacyMap<(ContractAddress, ContractAddress), u256>,
-        /// RBITS exclusive ///
-        _owner: ContractAddress,
-        _minters: LegacyMap<ContractAddress, bool>,
-        _burners: LegacyMap<ContractAddress, bool>,
     }
 
-    trait IRbits {
-        fn update_minter(minter: starknet::ContractAddress, status: bool);
-        fn update_burner(burner: starknet::ContractAddress, status: bool);
-    }
-
-    trait IOwnable {
-        fn owner() -> starknet::ContractAddress;
-        fn transfer_ownership(new_owner: starknet::ContractAddress);
-        fn renounce_ownership();
-    }
-
-    trait IERC20 {
-        fn name() -> felt252;
-        fn symbol() -> felt252;
-        fn decimals() -> u8;
-        fn total_supply() -> u256;
-        fn balance_of(account: starknet::ContractAddress) -> u256;
-        fn allowance(owner: starknet::ContractAddress, spender: starknet::ContractAddress) -> u256;
-        fn transfer(recipient: starknet::ContractAddress, amount: u256) -> bool;
-        fn transfer_from(
-            sender: starknet::ContractAddress, recipient: starknet::ContractAddress, amount: u256
-        ) -> bool;
-        fn approve(spender: starknet::ContractAddress, amount: u256) -> bool;
-    }
-
-    #[constructor]
-    fn constructor(initial_supply: u256, owner: ContractAddress, ) {
-        _initializer('RabbitHoles', 'RBITS');
-        _mint(owner, initial_supply);
-        IOwnable::transfer_ownership(owner);
-    }
-
-    /// RBITS ///
-    #[event]
-    fn MinterStatusUpdated(minter: ContractAddress, current_status: bool) {}
-
-    #[event]
-    fn BurnerStatusUpdated(burner: ContractAddress, current_status: bool) {}
-
-    impl Rbits of IRbits {
-        fn update_minter(minter: ContractAddress, status: bool) {
-            _only_owner();
-            _minters::write(minter, status);
-            MinterStatusUpdated(minter, status);
-        }
-        fn update_burner(burner: ContractAddress, status: bool) {
-            _only_owner();
-            _burners::write(burner, status);
-            BurnerStatusUpdated(burner, status);
-        }
-    }
-
-    #[view]
-    fn is_minter(minter: ContractAddress) -> bool {
-        _minters::read(minter)
-    }
-
-    #[view]
-    fn is_burner(burner: ContractAddress) -> bool {
-        _burners::read(burner)
-    }
-
-    #[external]
-    fn update_minter(minter: ContractAddress, status: bool) {
-        Rbits::update_minter(minter, status);
-    }
-
-    #[external]
-    fn update_burner(burner: ContractAddress, status: bool) {
-        Rbits::update_burner(burner, status);
-    }
-
-    /// Ownable ///
+    /// Events ///
     #[event]
     fn OwnershipTransferred(previous_owner: ContractAddress, new_owner: ContractAddress) {}
 
-    impl Ownable of IOwnable {
-        fn owner() -> ContractAddress {
-            _owner::read()
-        }
+    #[event]
+    fn ManagerAddressUpdated(caller: ContractAddress, new_manager_address: ContractAddress) {}
 
-        fn transfer_ownership(new_owner: ContractAddress) {
-            _only_owner();
-            let prev_owner = _owner::read();
-            _transfer_ownership(new_owner);
-            OwnershipTransferred(prev_owner, new_owner);
-        }
-
-        fn renounce_ownership() {
-            _only_owner();
-            let prev_owner = _owner::read();
-            let new_owner = 0.try_into().unwrap();
-            _transfer_ownership(new_owner);
-            OwnershipTransferred(_owner::read(), new_owner);
-        }
-    }
-
-    #[view]
-    fn owner() -> ContractAddress {
-        Ownable::owner()
-    }
-
-    #[external]
-    fn transfer_ownership(new_owner: ContractAddress) {
-        Ownable::transfer_ownership(new_owner);
-    }
-
-    #[external]
-    fn renounce_ownership() {
-        Ownable::renounce_ownership();
-    }
-
-    fn _only_owner() {
-        assert(get_caller_address() == _owner::read(), 'RBITS::Caller not owner');
-    }
-
-    fn _transfer_ownership(new_owner: ContractAddress) {
-        _owner::write(new_owner);
-    }
-
-    /// ERC20 ///
     #[event]
     fn Transfer(from: ContractAddress, to: ContractAddress, value: u256) {}
 
     #[event]
     fn Approval(owner: ContractAddress, spender: ContractAddress, value: u256) {}
 
+    /// Constructor ///
+    #[constructor]
+    fn constructor(init_supply: u256, owner: ContractAddress, ) {
+        _initializer('RabbitHoles', 'RBITS', 18_u8, owner, init_supply);  
+    }
+
+    /// Implementations ///
     impl ERC20 of IERC20 {
         fn name() -> felt252 {
             _name::read()
@@ -161,7 +90,7 @@ mod rbits {
         }
 
         fn decimals() -> u8 {
-            18_u8
+            _decimals::read()
         }
 
         fn total_supply() -> u256 {
@@ -198,6 +127,68 @@ mod rbits {
         }
     }
 
+    impl Rbits of IRbits {
+        fn owner() -> ContractAddress {
+            _owner::read()
+        }
+
+        fn transfer_ownership(new_owner: ContractAddress) {
+            assert(_is_manager(get_caller_address()), 'RBITS: Caller is non manager');
+            let prev_owner = _owner::read();
+            _owner::write(new_owner);
+            OwnershipTransferred(prev_owner, new_owner);
+        }
+
+        fn renounce_ownership() {
+            assert(_is_manager(get_caller_address()), 'RBITS: Caller is non manager');
+            let prev_owner = _owner::read();
+            let zero_owner = 0.try_into().unwrap();
+            _owner::write(zero_owner);
+            OwnershipTransferred(_owner::read(), zero_owner);
+        }
+        fn update_manager_address(new_manager_address: ContractAddress) {
+            let caller = get_caller_address();
+            assert(_is_manager(caller), 'RBITS: Caller is non manager');
+            _manager_address::write(new_manager_address);
+            ManagerAddressUpdated(caller, new_manager_address);
+        }
+
+        fn mint(recipient: ContractAddress, amount: u256) {
+            assert(
+                _has_valid_permit(get_caller_address(), _RBITS_MINT::read()), 'RBITS: Caller is non minter'
+            );
+            _mint(recipient, amount)
+        }
+
+        fn burn(owner: ContractAddress, amount: u256) {
+            assert(
+                _has_valid_permit(get_caller_address(), _RBITS_BURN::read()), 'RBITS: Caller is non burner'
+            );
+            _burn(owner, amount)
+        }
+    }
+
+    /// View Functions ///
+    #[view]
+    fn RBITS_MANAGER() -> felt252 {
+        _RBITS_MANAGER::read()
+    }
+
+    #[view]
+    fn manager_address() -> ContractAddress {
+        _manager_address::read()
+    }
+
+    #[view]
+    fn owner() -> ContractAddress {
+        Rbits::owner()
+    }
+
+    #[view]
+    fn is_manager(account: ContractAddress) -> bool {
+        _is_manager(account)
+    }
+
     #[view]
     fn name() -> felt252 {
         ERC20::name()
@@ -228,6 +219,22 @@ mod rbits {
         ERC20::allowance(owner, spender)
     }
 
+    /// External Functions ///
+    #[external]
+    fn update_manager_address(new_manager_address: ContractAddress) {
+        Rbits::update_manager_address(new_manager_address);
+    }
+
+    #[external]
+    fn transfer_ownership(new_owner: ContractAddress) {
+        Rbits::transfer_ownership(new_owner);
+    }
+
+    #[external]
+    fn renounce_ownership() {
+        Rbits::renounce_ownership();
+    }
+
     #[external]
     fn transfer(recipient: ContractAddress, amount: u256) -> bool {
         ERC20::transfer(recipient, amount)
@@ -245,55 +252,52 @@ mod rbits {
 
     #[external]
     fn increase_allowance(spender: ContractAddress, added_value: u256) -> bool {
-        _increase_allowance(spender, added_value)
-    }
-
-    #[external]
-    fn decrease_allowance(spender: ContractAddress, subtracted_value: u256) -> bool {
-        _decrease_allowance(spender, subtracted_value)
-    }
-
-    /// to do: ownership/restrict these 2
-
-    #[external]
-    fn mint(recipient: ContractAddress, amount: u256) {
-        _mint(recipient, amount)
-    }
-
-    #[external]
-    fn burn(owner: ContractAddress, amount: u256) {
-        _burn(owner, amount);
-    }
-
-    fn _initializer(name_: felt252, symbol_: felt252) {
-        _name::write(name_);
-        _symbol::write(symbol_);
-    }
-
-    fn _increase_allowance(spender: ContractAddress, added_value: u256) -> bool {
         let caller = get_caller_address();
         _approve(caller, spender, _allowances::read((caller, spender)) + added_value);
         true
     }
 
-    fn _decrease_allowance(spender: ContractAddress, subtracted_value: u256) -> bool {
+    #[external]
+    fn decrease_allowance(spender: ContractAddress, subtracted_value: u256) -> bool {
         let caller = get_caller_address();
         _approve(caller, spender, _allowances::read((caller, spender)) - subtracted_value);
         true
     }
 
-    fn _mint(recipient: ContractAddress, amount: u256) {
-        assert(!recipient.is_zero(), 'ERC20: mint to 0');
-        _total_supply::write(_total_supply::read() + amount);
-        _balances::write(recipient, _balances::read(recipient) + amount);
-        Transfer(Zeroable::zero(), recipient, amount);
+    #[external]
+    fn mint(recipient: ContractAddress, amount: u256) {
+        Rbits::mint(recipient, amount);
     }
 
-    fn _burn(account: ContractAddress, amount: u256) {
-        assert(!account.is_zero(), 'ERC20: burn from 0');
-        _total_supply::write(_total_supply::read() - amount);
-        _balances::write(account, _balances::read(account) - amount);
-        Transfer(account, Zeroable::zero(), amount);
+    #[external]
+    fn burn(owner: ContractAddress, amount: u256) {
+        Rbits::burn(owner, amount);
+    }
+
+    /// Internal Functions ///
+    fn _initializer(name: felt252, symbol: felt252, decimals: u8, init_owner: ContractAddress, init_supply: u256 ) {
+        _RBITS_MANAGER::write('RBITS_MANAGER');
+        _RBITS_MINT::write('RBITS_MINT');
+        _RBITS_BURN::write('RBITS_BURN');
+        
+        _name::write(name);
+        _symbol::write(symbol);
+        _decimals::write(decimals);
+        _owner::write(init_owner);
+        _mint(init_owner, init_supply);  
+    }
+    fn _is_manager(account: ContractAddress) -> bool {
+        let mut _is = _has_valid_permit(get_caller_address(), _RBITS_MANAGER::read());
+        if (get_caller_address() == _owner::read()) {
+            _is = true;
+        }
+        _is
+    }
+
+    fn _has_valid_permit(account: ContractAddress, right: felt252) -> bool {
+        IManagerDispatcher {
+            contract_address: _manager_address::read()
+        }.has_valid_permit(account, right)
     }
 
     fn _approve(owner: ContractAddress, spender: ContractAddress, amount: u256) {
@@ -320,4 +324,22 @@ mod rbits {
             _approve(owner, spender, current_allowance - amount);
         }
     }
+
+    fn _mint(recipient: ContractAddress, amount: u256) {
+        assert(!recipient.is_zero(), 'ERC20: mint to 0');
+        _total_supply::write(_total_supply::read() + amount);
+        _balances::write(recipient, _balances::read(recipient) + amount);
+        Transfer(Zeroable::zero(), recipient, amount);
+    }
+
+    fn _burn(account: ContractAddress, amount: u256) {
+        assert(!account.is_zero(), 'ERC20: burn from 0');
+        _total_supply::write(_total_supply::read() - amount);
+        _balances::write(account, _balances::read(account) - amount);
+        Transfer(account, Zeroable::zero(), amount);
+    }
 }
+
+//// re write manager to mimic this contract
+//  - need it to perform access control checks in IMPL
+//      - all view/external funcs should skip, move logic inside IMPL
