@@ -1,10 +1,6 @@
 use starknet::ContractAddress;
 
 trait IRBITS {
-    // fn owner() -> ContractAddress;
-    // fn transfer_ownership(new_owner: ContractAddress);
-    // fn renounce_ownership();
-    // fn update_manager_address(new_manager_address: ContractAddress);
     fn mint(recipient: ContractAddress, amount: u256);
     fn burn(owner: ContractAddress, amount: u256);
 }
@@ -28,7 +24,7 @@ trait IManager {
 }
 
 #[contract]
-mod rbits {
+mod Rbits {
     use super::IRBITS;
     use super::IERC20;
     use super::IManager;
@@ -47,10 +43,8 @@ mod rbits {
     use zeroable::Zeroable;
 
     struct Storage {
-        // _RBITS_MANAGER: felt252, /// permit to firt manager
         _RBITS_MINT: felt252, /// permit to mint tokens
         _RBITS_BURN: felt252, /// permit to burn tokens
-        // _owner: ContractAddress, /// can fire manager
         _manager_address: ContractAddress, /// address of the manager contract (minters/burners)
         _name: felt252,
         _symbol: felt252,
@@ -69,8 +63,8 @@ mod rbits {
 
     /// Constructor ///
     #[constructor]
-    fn constructor(init_supply: u256, owner: ContractAddress, ) {
-        _initializer('RabbitHoles', 'RBITS', 18_u8, owner, init_supply);
+    fn constructor(init_supply: u256, owner: ContractAddress, manager_address: ContractAddress) {
+        _initializer('RabbitHoles', 'RBITS', 18_u8, owner, init_supply, manager_address);
     }
 
     /// Implementations ///
@@ -150,6 +144,11 @@ mod rbits {
         _RBITS_BURN::read()
     }
 
+    #[view]
+    fn manager_address() -> ContractAddress {
+        _manager_address::read()
+    }
+
     /// ERC20 Read ///
     #[view]
     fn name() -> felt252 {
@@ -224,10 +223,16 @@ mod rbits {
 
     /// RBITS Internal ///
     fn _initializer(
-        name: felt252, symbol: felt252, decimals: u8, init_owner: ContractAddress, init_supply: u256
+        name: felt252,
+        symbol: felt252,
+        decimals: u8,
+        init_owner: ContractAddress,
+        init_supply: u256,
+        manager_address: ContractAddress
     ) {
         _RBITS_MINT::write('RBITS_MINT');
         _RBITS_BURN::write('RBITS_BURN');
+        _manager_address::write(manager_address);
 
         _name::write(name);
         _symbol::write(symbol);
@@ -260,8 +265,8 @@ mod rbits {
     fn _spend_allowance(owner: ContractAddress, spender: ContractAddress, amount: u256) {
         let current_allowance = _allowances::read((owner, spender));
         let ONES_MASK = 0xffffffffffffffffffffffffffffffff_u128;
-        let is_unlimited_allowance =
-            current_allowance.low == ONES_MASK & current_allowance.high == ONES_MASK;
+        let is_unlimited_allowance = current_allowance.low == ONES_MASK
+            & current_allowance.high == ONES_MASK;
         if !is_unlimited_allowance {
             _approve(owner, spender, current_allowance - amount);
         }

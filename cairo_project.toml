@@ -6,8 +6,9 @@ rbits = 'src/rbits/src'
 archive = 'src/archive/src'
 manager = 'src/manager/src'
 # Testing
-manager_testing = 'src/manager/tests'
-archive_testing = 'src/archive/tests'
-rbits_testing = 'src/rbits/tests'
+ManagerTesting = 'src/manager/tests'
+ArchiveTesting = 'src/archive/tests'
+RbitsTesting = 'src/rbits/tests'
+
 
 

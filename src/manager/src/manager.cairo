@@ -21,6 +21,7 @@ mod Manager {
 
     use starknet::get_caller_address;
     use starknet::get_block_timestamp;
+    use starknet::get_contract_address;
     use traits::Into;
     use traits::TryInto;
     use option::OptionTrait;
@@ -170,5 +171,15 @@ mod Manager {
 
     fn _transfer_ownership(new_owner: ContractAddress) {
         _owner::write(new_owner);
+    }
+
+    // #[ignore]
+    fn _address() -> ContractAddress {
+        get_contract_address()
+    }
+
+    // #[ignore]
+    fn _set_address(address_: ContractAddress) {
+        starknet::testing::set_contract_address(address_);
     }
 }

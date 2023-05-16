@@ -1,5 +1,3 @@
-// mod InternalTests;
-// mod ImplTests;
-// mod EntryPointTests;
-
+mod ERC20;
+mod Rbits;
 
