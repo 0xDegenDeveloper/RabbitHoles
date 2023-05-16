@@ -1,5 +1,8 @@
-/// contract to store just holes and rabbits
-/// manages who can add holes and rabbits (public registry, shovel registry, private registry, etc)
+//// contract to store holes stuff, uses another contract to store rabbits, (r_constructor(currentRCount = 0, (size of prev if making new)))
+//// seperate user contract ? or in hole registry ? 
+//// r_contract.burnRabbit => rabbit_id, to use with user's etc
+
+//// need to be able to toggle digging/burning through manager, incase depoloying new rabbit contract, no missed globals
 
 #[contract]
 mod archive {

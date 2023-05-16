@@ -11,6 +11,7 @@ mod EntryPointTests {
     #[test]
     #[available_gas(2000000)]
     fn owner() {
+        assert(Manager::owner() == contract_address_const::<0>(), 'Owner init wrong');
         let owner = _deploy();
         assert(Manager::owner() == owner, 'Owner not set');
     }
@@ -22,6 +23,7 @@ mod EntryPointTests {
         let new_owner = contract_address_const::<2>();
         _transfer_ownership_from_to(owner, new_owner);
         assert(Manager::owner() == new_owner, 'Owner not swapped');
+    /// @dev: test event
     }
 
     #[test]
@@ -65,8 +67,21 @@ mod EntryPointTests {
     fn set_permit() {
         let owner = _deploy();
         let account = contract_address_const::<2>();
-        _set_permit_from_for(owner, account, 'right', 1111);
-        assert(Manager::has_permit_until(account, 'right') == 1111, 'Incorrect timestamp');
+
+        /// Check account has no permit
+        assert(Manager::has_permit_until(account, 'right') == 0, 'Incorrect timestamp');
+        assert(!Manager::has_valid_permit(account, 'right'), 'False permit');
+
+        /// Set permit
+        _set_permit_from_for(owner, account, 'right', 123);
+
+        /// Check account has permit
+        assert(Manager::has_permit_until(account, 'right') == 123, 'Incorrect timestamp');
+        assert(Manager::has_valid_permit(account, 'right'), 'Broken permit');
+
+        /// Check permit expires
+        set_block_timestamp(124);
+        assert(!Manager::has_valid_permit(account, 'right'), 'Permit should expire');
     }
 
     #[test]
@@ -75,9 +90,7 @@ mod EntryPointTests {
     fn set_permit_with_zero() {
         let owner = _deploy();
         let account = contract_address_const::<2>();
-        let right = 0x0;
-        let timestamp = 1111;
-        _set_permit_from_for(owner, account, right, timestamp);
+        _set_permit_from_for(owner, account, 0x0, 123);
     }
 
     #[test]
@@ -86,62 +99,39 @@ mod EntryPointTests {
     fn set_permit_as_non_manager() {
         let owner = _deploy();
         let account = contract_address_const::<2>();
-        let right = 'MINT';
-        let timestamp = 1111;
-        _set_permit_from_for(account, account, right, timestamp);
+        _set_permit_from_for(account, account, 'MINT', 123);
     }
 
     #[test]
     #[available_gas(2000000)]
     fn set_permit_as_manager() {
         let owner = _deploy();
-        let new_manager = contract_address_const::<2>();
+        let manager = contract_address_const::<2>();
         let anon = contract_address_const::<3>();
 
-        let manager_right = 'MINT_MANAGER';
-        let right = 'MINT';
-        let timestamp = 1111;
+        /// Check anon has no permit
+        assert(!Manager::has_valid_permit(anon, 'MINT'), 'Should not have permit');
+        assert(Manager::has_permit_until(anon, 'MINT') == 0, 'Incorrect timestamp');
 
-        /// Set manager permit & bind right (MINT -> MINT_MANAGER)
-        _set_permit_from_for(owner, new_manager, manager_right, timestamp);
-        Manager::bind_manager_right(right, manager_right);
-        assert(!Manager::has_valid_permit(anon, right), 'Should not have permit');
-        assert(Manager::has_permit_until(anon, right) == 0, 'Incorrect timestamp');
-        assert(
-            Manager::has_valid_permit(new_manager, manager_right), 'Manager: Should have permit'
-        );
-        assert(
-            Manager::has_permit_until(new_manager, manager_right) == timestamp,
-            'Manager: Incorrect timestamp'
-        );
-        _set_permit_from_for(new_manager, anon, right, timestamp);
-        assert(Manager::has_valid_permit(anon, right), 'Manager: Should not have permit');
-        assert(Manager::has_permit_until(anon, right) == timestamp, 'Manager: Incorrect timestamp');
-    }
+        /// Assign manager & bind right (MINT -> MINT_MANAGER)
+        _set_permit_from_for(owner, manager, 'MINT MANAGER', 123);
+        Manager::bind_manager_right('MINT', 'MINT MANAGER');
 
-    #[test]
-    #[available_gas(2000000)]
-    fn has_permit_until_AND_has_valid_permit() {
-        let owner = _deploy();
-        let account = contract_address_const::<2>();
-        let right = 'MINT';
-        let timestamp = 1111;
-        assert(Manager::has_permit_until(account, right) == 0, 'Permit init wrong');
-        assert(!Manager::has_valid_permit(account, right), 'Permit init wrong');
-        _set_permit_from_for(owner, account, right, timestamp);
-        assert(Manager::has_permit_until(account, right) == timestamp, 'Incorrect timestamp');
-        assert(Manager::has_valid_permit(account, right), 'Permit not working');
+        /// Set permit as manager
+        _set_permit_from_for(manager, anon, 'MINT', 123);
+
+        /// Check anon has permit
+        assert(Manager::has_valid_permit(anon, 'MINT'), 'Should not have permit');
+        assert(Manager::has_permit_until(anon, 'MINT') == 123, 'Incorrect timestamp');
     }
 
     #[test]
     #[available_gas(2000000)]
     fn bind_manager_right() {
         let owner = _deploy();
-        let right = 'MINT';
-        let manager_right = 'MINT_MANAGER';
-        assert(Manager::manager_rights(right) == 0x0, 'Manager right init wrong');
-        Manager::bind_manager_right(right, manager_right);
-        assert(Manager::manager_rights(right) == manager_right, 'Manager right set wrong');
+        assert(Manager::manager_rights('MINT') == 0x0, 'Manager right init wrong');
+        Manager::bind_manager_right('MINT', 'MINT MANAGER');
+        assert(Manager::manager_rights('MINT') == 'MINT MANAGER', 'Manager right set wrong');
     }
 
     #[test]
@@ -150,23 +140,19 @@ mod EntryPointTests {
     fn bind_manager_right_no_permit() {
         let owner = _deploy();
         let anon = contract_address_const::<2>();
-        let right = 'MINT';
-        let manager_right = 'MINT_MANAGER';
         set_caller_address(anon);
-        Manager::bind_manager_right(right, manager_right);
+        Manager::bind_manager_right('MINT', 'MINT_MANAGER');
     }
 
     #[test]
     #[available_gas(2000000)]
     fn bind_manager_right_with_permit() {
         let owner = _deploy();
-        let anon = contract_address_const::<2>();
-        let right = 'MINT';
-        let manager_right = 'MINT_MANAGER';
-        _set_permit_from_for(owner, anon, Manager::MANAGER_RIGHT(), 1111);
-        set_caller_address(anon);
-        Manager::bind_manager_right(right, manager_right);
-        assert(Manager::manager_rights(right) == manager_right, 'Manager right set wrong');
+        let mananger = contract_address_const::<2>();
+        _set_permit_from_for(owner, mananger, Manager::MANAGER_RIGHT(), 1111);
+        set_caller_address(mananger);
+        Manager::bind_manager_right('MINT', 'MINT MANAGER');
+        assert(Manager::manager_rights('MINT') == 'MINT MANAGER', 'Manager right set wrong');
     }
 
     /// Helpers ///
