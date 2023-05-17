@@ -1,10 +1,6 @@
 use starknet::ContractAddress;
 
-trait IRBITS {
-    fn mint(recipient: ContractAddress, amount: u256);
-    fn burn(owner: ContractAddress, amount: u256);
-}
-
+#[abi]
 trait IERC20 {
     fn name() -> felt252;
     fn symbol() -> felt252;
@@ -15,6 +11,11 @@ trait IERC20 {
     fn transfer(recipient: ContractAddress, amount: u256) -> bool;
     fn transfer_from(sender: ContractAddress, recipient: ContractAddress, amount: u256) -> bool;
     fn approve(spender: ContractAddress, amount: u256) -> bool;
+    fn mint(recipient: ContractAddress, amount: u256);
+    fn burn(owner: ContractAddress, amount: u256);
+
+    fn RBITS_MINT() -> felt252;
+    fn RBITS_BURN() -> felt252;
 }
 
 #[abi]
@@ -25,8 +26,9 @@ trait IManager {
 
 #[contract]
 mod Rbits {
-    use super::IRBITS;
     use super::IERC20;
+    use super::IERC20Dispatcher;
+    use super::IERC20DispatcherTrait;
     use super::IManager;
 
     use super::IManagerDispatcher;
@@ -114,9 +116,7 @@ mod Rbits {
             _approve(caller, spender, amount);
             true
         }
-    }
 
-    impl Rbits of IRBITS {
         fn mint(recipient: ContractAddress, amount: u256) {
             assert(
                 _has_valid_permit(get_caller_address(), _RBITS_MINT::read()),
@@ -132,17 +132,26 @@ mod Rbits {
             );
             _burn(owner, amount)
         }
+
+        fn RBITS_MINT() -> felt252 {
+            _RBITS_MINT::read()
+        }
+
+        fn RBITS_BURN() -> felt252 {
+            _RBITS_BURN::read()
+        }
     }
 
-    /// RBITS Read ///
+
+    /// Read ///
     #[view]
     fn RBITS_MINT() -> felt252 {
-        _RBITS_MINT::read()
+        ERC20::RBITS_MINT()
     }
 
     #[view]
     fn RBITS_BURN() -> felt252 {
-        _RBITS_BURN::read()
+        ERC20::RBITS_BURN()
     }
 
     #[view]
@@ -150,7 +159,6 @@ mod Rbits {
         _manager_address::read()
     }
 
-    /// ERC20 Read ///
     #[view]
     fn name() -> felt252 {
         ERC20::name()
@@ -181,18 +189,17 @@ mod Rbits {
         ERC20::allowance(owner, spender)
     }
 
-    /// RBITS Write ///
+    /// Write ///
     #[external]
     fn mint(recipient: ContractAddress, amount: u256) {
-        Rbits::mint(recipient, amount);
+        ERC20::mint(recipient, amount);
     }
 
     #[external]
     fn burn(owner: ContractAddress, amount: u256) {
-        Rbits::burn(owner, amount);
+        ERC20::burn(owner, amount);
     }
 
-    /// ERC20 Write ///
     #[external]
     fn transfer(recipient: ContractAddress, amount: u256) -> bool {
         ERC20::transfer(recipient, amount)
@@ -222,7 +229,7 @@ mod Rbits {
         true
     }
 
-    /// RBITS Internal ///
+    /// Internal ///
     fn _initializer(
         name: felt252,
         symbol: felt252,
@@ -247,7 +254,6 @@ mod Rbits {
         }.has_valid_permit(account, right)
     }
 
-    /// ERC20 Internal ///
     fn _approve(owner: ContractAddress, spender: ContractAddress, amount: u256) {
         assert(!owner.is_zero(), 'ERC20: approve from 0');
         assert(!spender.is_zero(), 'ERC20: approve to 0');
@@ -287,8 +293,4 @@ mod Rbits {
         Transfer(account, Zeroable::zero(), amount);
     }
 }
-//// re write manager to mimic this contract
-//  - need it to perform access control checks in IMPL
-//      - all view/external funcs should skip, move logic inside IMPL
-
 

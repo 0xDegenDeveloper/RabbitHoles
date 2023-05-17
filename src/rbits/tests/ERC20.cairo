@@ -1,91 +1,131 @@
 #[cfg(test)]
 mod EntryPoint {
+    use manager::manager::Manager;
+    use manager::manager::IManagerDispatcher;
+    use manager::manager::IManagerDispatcherTrait;
     use rbits::rbits::Rbits;
+    use rbits::rbits::IERC20Dispatcher;
+    use rbits::rbits::IERC20DispatcherTrait;
     use starknet::ContractAddress;
     use starknet::contract_address_const;
+    use starknet::testing::set_contract_address;
+    use starknet::syscalls::deploy_syscall;
+    use starknet::class_hash::Felt252TryIntoClassHash;
     use starknet::testing::set_caller_address;
     use starknet::get_caller_address;
 
-    fn _deploy() -> ContractAddress {
-        let deployer = contract_address_const::<1>();
-        let manager = contract_address_const::<10>();
-        let init_supply = 123_u256;
-        set_caller_address(deployer);
-        Rbits::constructor(init_supply, deployer, manager);
-        deployer
+    use debug::PrintTrait;
+    use array::ArrayTrait;
+    use traits::Into;
+    use traits::TryInto;
+    use option::OptionTrait;
+    use result::ResultTrait;
+
+    fn deploy_suite() -> (IManagerDispatcher, IERC20Dispatcher) {
+        let owner = contract_address_const::<123>();
+        set_contract_address(owner);
+
+        let mut calldata = ArrayTrait::new();
+        calldata.append(owner.into());
+
+        let (manager_address, _) = deploy_syscall(
+            Manager::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
+        )
+            .unwrap();
+
+        let mut calldata = ArrayTrait::new();
+        // let init, owner, mananger
+        let init_supply_low = 123_u128;
+        let init_supply_high = 0_u128;
+        calldata.append(init_supply_low.into());
+        calldata.append(init_supply_high.into());
+        calldata.append(owner.into());
+        calldata.append(manager_address.into());
+
+        let (rbits_address, _) = deploy_syscall(
+            Rbits::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
+        )
+            .unwrap();
+
+        (
+            IManagerDispatcher {
+                contract_address: manager_address
+                }, IERC20Dispatcher {
+                contract_address: rbits_address
+            }
+        )
     }
 
     #[test]
     #[available_gas(2000000)]
     fn constructor() {
-        let deployer = _deploy();
-        assert(Rbits::balance_of(deployer) == 123_u256, 'Incorrect balance');
-        assert(Rbits::total_supply() == 123_u256, 'Incorrect total supply');
-        assert(Rbits::name() == 'RabbitHoles', 'Incorrect name');
-        assert(Rbits::symbol() == 'RBITS', 'Incorrect symbol');
-        assert(Rbits::decimals() == 18_u8, 'Incorrect decimals');
+        let (Manager, Rbits) = deploy_suite();
+        assert(Rbits.balance_of(Manager.owner()) == 123_u256, 'Incorrect balance');
+        assert(Rbits.total_supply() == 123_u256, 'Incorrect total supply');
+        assert(Rbits.name() == 'RabbitHoles', 'Incorrect name');
+        assert(Rbits.symbol() == 'RBITS', 'Incorrect symbol');
+        assert(Rbits.decimals() == 18_u8, 'Incorrect decimals');
     }
 
     #[test]
     #[available_gas(2000000)]
     fn total_supply() {
-        assert(Rbits::total_supply() == 0_u256, 'Incorrect total supply');
-        let deployer = _deploy();
-        assert(Rbits::total_supply() == 123_u256, 'Incorrect total supply');
-        Rbits::_burn(deployer, 1_u256);
-        assert(Rbits::total_supply() == 122_u256, 'Incorrect total supply');
+        let (Manager, Rbits) = deploy_suite();
+        assert(Rbits.total_supply() == 123_u256, 'Incorrect total supply');
+        Rbits.burn(Manager.owner(), 1_u256);
+        assert(Rbits.total_supply() == 122_u256, 'Incorrect total supply');
     }
 
     #[test]
     #[available_gas(2000000)]
     fn transfer() {
-        let deployer = _deploy();
-        let recipient = contract_address_const::<2>();
-        Rbits::transfer(recipient, 1_u256);
-        assert(Rbits::balance_of(deployer) == 122_u256, 'Incorrect balance');
-        assert(Rbits::balance_of(recipient) == 1_u256, 'Incorrect balance');
+        let (Manager, Rbits) = deploy_suite();
+        let recipient = contract_address_const::<222>();
+        Rbits.transfer(recipient, 1_u256);
+        assert(Rbits.balance_of(Manager.owner()) == 122_u256, 'Incorrect balance');
+        assert(Rbits.balance_of(recipient) == 1_u256, 'Incorrect balance');
     }
 
     #[test]
     #[available_gas(2000000)]
     fn transfer_from() {
-        let deployer = _deploy();
-        let recipient = contract_address_const::<2>();
-        let spender = contract_address_const::<3>();
-        Rbits::approve(spender, 1_u256);
-        set_caller_address(spender);
-        Rbits::transfer_from(deployer, recipient, 1_u256);
-        assert(Rbits::balance_of(deployer) == 122_u256, 'Incorrect balance');
-        assert(Rbits::balance_of(recipient) == 1_u256, 'Incorrect balance');
-        assert(Rbits::balance_of(spender) == 0_u256, 'Incorrect balance');
-        assert(Rbits::allowance(deployer, spender) == 0_u256, 'Incorrect allowance');
+        let (Manager, Rbits) = deploy_suite();
+        let recipient = contract_address_const::<222>();
+        let spender = contract_address_const::<333>();
+        Rbits.approve(spender, 1_u256);
+        set_contract_address(spender);
+        Rbits.transfer_from(Manager.owner(), recipient, 1_u256);
+        assert(Rbits.balance_of(Manager.owner()) == 122_u256, 'Incorrect balance');
+        assert(Rbits.balance_of(recipient) == 1_u256, 'Incorrect balance');
+        assert(Rbits.balance_of(spender) == 0_u256, 'Incorrect balance');
+        assert(Rbits.allowance(Manager.owner(), spender) == 0_u256, 'Incorrect allowance');
     }
 
     #[test]
     #[available_gas(2000000)]
-    #[should_panic(expected: ('u256_sub Overflow', ))]
+    #[should_panic(expected: ('u256_sub Overflow', 'ENTRYPOINT_FAILED'))]
     fn transfer_from_overflow() {
-        let deployer = _deploy();
-        let recipient = contract_address_const::<2>();
-        let spender = contract_address_const::<3>();
-        Rbits::approve(spender, 1_u256);
-        set_caller_address(spender);
-        Rbits::transfer_from(deployer, recipient, 1_u256);
-        assert(Rbits::allowance(deployer, spender) == 0_u256, 'Incorrect allowance');
-        Rbits::transfer_from(deployer, recipient, 1_u256);
+        let (Manager, Rbits) = deploy_suite();
+        let recipient = contract_address_const::<222>();
+        let spender = contract_address_const::<333>();
+        Rbits.approve(spender, 1_u256);
+        set_contract_address(spender);
+        Rbits.transfer_from(Manager.owner(), recipient, 1_u256);
+        assert(Rbits.allowance(Manager.owner(), spender) == 0_u256, 'Incorrect allowance');
+        Rbits.transfer_from(Manager.owner(), recipient, 1_u256);
     }
 
     #[test]
     #[available_gas(2000000)]
     fn transfer_from_unlimited() {
-        let deployer = _deploy();
-        let recipient = contract_address_const::<2>();
-        let spender = contract_address_const::<3>();
+        let (Manager, Rbits) = deploy_suite();
+        let recipient = contract_address_const::<222>();
+        let spender = contract_address_const::<333>();
         let unlimited = 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff_u256;
-        Rbits::approve(spender, unlimited);
-        set_caller_address(spender);
-        Rbits::transfer_from(deployer, recipient, 1_u256);
-        assert(Rbits::allowance(deployer, spender) == unlimited, 'Incorrect allowance');
+        Rbits.approve(spender, unlimited);
+        set_contract_address(spender);
+        Rbits.transfer_from(Manager.owner(), recipient, 1_u256);
+        assert(Rbits.allowance(Manager.owner(), spender) == unlimited, 'Incorrect allowance');
     }
 }
 

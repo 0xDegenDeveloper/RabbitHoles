@@ -1,4 +1,7 @@
+#[abi]
 trait IManager {
+    /// Constants ///
+    fn MANAGER_RIGHT() -> felt252;
     /// Ownable ///
     fn owner() -> starknet::ContractAddress;
     fn transfer_ownership(new_owner: starknet::ContractAddress);
@@ -8,11 +11,14 @@ trait IManager {
     fn has_permit_until(account: starknet::ContractAddress, right: felt252) -> u64;
     fn set_permit(account: starknet::ContractAddress, right: felt252, timestamp: u64);
     fn bind_manager_right(right: felt252, manager_right: felt252);
+    fn manager_rights(right: felt252) -> felt252;
 }
 
 #[contract]
 mod Manager {
     use super::IManager;
+    use super::IManagerDispatcher;
+    use super::IManagerDispatcherTrait;
     use starknet::ContractAddress;
     use starknet::Felt252TryIntoContractAddress;
     use starknet::ContractAddressIntoFelt252;
@@ -29,11 +35,11 @@ mod Manager {
     /// Storage ///
     struct Storage {
         _owner: ContractAddress, /// owner of contract (@dev: setup multi-sig/proxy)
+        _MANAGER_RIGHT: felt252, /// permit to bind manager rights
         _permissions: LegacyMap<(ContractAddress, felt252),
         u64>, /// address -> permission -> timestamp
         _manager_rights: LegacyMap<felt252,
         felt252>, /// right -> manager right 'MINT' -> 'MINT MANAGER'
-        _MANAGER_RIGHT: felt252, /// permit to bind manager rights
     }
 
     /// Events ///
@@ -110,6 +116,14 @@ mod Manager {
             _manager_rights::write(right, manager_right);
             ManagerRightBinded(get_caller_address(), right, manager_right);
         }
+
+        fn manager_rights(right: felt252) -> felt252 {
+            _manager_rights::read(right)
+        }
+
+        fn MANAGER_RIGHT() -> felt252 {
+            _MANAGER_RIGHT::read()
+        }
     }
 
     /// Read ///
@@ -130,12 +144,12 @@ mod Manager {
 
     #[view]
     fn manager_rights(right: felt252) -> felt252 {
-        _manager_rights::read(right)
+        ManagerImpl::manager_rights(right)
     }
 
     #[view]
     fn MANAGER_RIGHT() -> felt252 {
-        _MANAGER_RIGHT::read()
+        ManagerImpl::MANAGER_RIGHT()
     }
 
     /// Write ///
@@ -172,13 +186,4 @@ mod Manager {
     fn _transfer_ownership(new_owner: ContractAddress) {
         _owner::write(new_owner);
     }
-// #[ignore]
-// fn _address() -> ContractAddress {
-//     get_contract_address()
-// }
-
-// #[ignore]
-// fn _set_address(address_: ContractAddress) {
-//     starknet::testing::set_contract_address(address_);
-// }
 }
