@@ -5,6 +5,7 @@ tests = 'tests'
 rbits = 'src/rbits/src'
 archive = 'src/archive/src'
 manager = 'src/manager/src'
+HoleRegistry = 'src/HoleRegistry/src'
 # Testing
 ManagerTesting = 'src/manager/tests'
 ArchiveTesting = 'src/archive/tests'

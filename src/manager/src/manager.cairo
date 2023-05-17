@@ -172,14 +172,13 @@ mod Manager {
     fn _transfer_ownership(new_owner: ContractAddress) {
         _owner::write(new_owner);
     }
+// #[ignore]
+// fn _address() -> ContractAddress {
+//     get_contract_address()
+// }
 
-    // #[ignore]
-    fn _address() -> ContractAddress {
-        get_contract_address()
-    }
-
-    // #[ignore]
-    fn _set_address(address_: ContractAddress) {
-        starknet::testing::set_contract_address(address_);
-    }
+// #[ignore]
+// fn _set_address(address_: ContractAddress) {
+//     starknet::testing::set_contract_address(address_);
+// }
 }

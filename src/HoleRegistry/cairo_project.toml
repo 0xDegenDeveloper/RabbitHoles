@@ -1,0 +1,3 @@
+[crate_roots]
+HoleRegistry = 'src'
+tests = 'tests'

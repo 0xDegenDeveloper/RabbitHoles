@@ -1,3 +1,3 @@
-mod ERC20;
-mod Rbits;
+mod erc20;
+mod permits;
 

@@ -37,6 +37,7 @@ mod Rbits {
     use option::OptionTrait;
     use starknet::get_caller_address;
     use starknet::ContractAddress;
+    use starknet::get_contract_address;
     // use starknet::ContractAddressZeroable;
     use starknet::ContractAddressIntoFelt252;
     use starknet::Felt252TryIntoContractAddress;
