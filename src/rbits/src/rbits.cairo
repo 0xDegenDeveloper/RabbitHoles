@@ -13,9 +13,9 @@ trait IERC20 {
     fn approve(spender: ContractAddress, amount: u256) -> bool;
     fn mint(recipient: ContractAddress, amount: u256);
     fn burn(owner: ContractAddress, amount: u256);
-
     fn RBITS_MINT() -> felt252;
     fn RBITS_BURN() -> felt252;
+    fn MANAGER_ADDRESS() -> ContractAddress;
 }
 
 #[abi]
@@ -48,7 +48,7 @@ mod Rbits {
     struct Storage {
         _RBITS_MINT: felt252, /// permit to mint tokens
         _RBITS_BURN: felt252, /// permit to burn tokens
-        _manager_address: ContractAddress, /// address of the manager contract (minters/burners)
+        _MANAGER_ADDRESS: ContractAddress, /// address of the manager contract (minters/burners)
         _name: felt252,
         _symbol: felt252,
         _decimals: u8,
@@ -66,8 +66,8 @@ mod Rbits {
 
     /// Constructor ///
     #[constructor]
-    fn constructor(init_supply: u256, owner: ContractAddress, manager_address: ContractAddress) {
-        _initializer('RabbitHoles', 'RBITS', 18_u8, owner, init_supply, manager_address);
+    fn constructor(init_supply_: u256, owner_: ContractAddress, MANAGER_ADDRESS_: ContractAddress) {
+        _initializer('RabbitHoles', 'RBITS', 18_u8, owner_, init_supply_, MANAGER_ADDRESS_);
     }
 
     /// Implementations ///
@@ -140,6 +140,10 @@ mod Rbits {
         fn RBITS_BURN() -> felt252 {
             _RBITS_BURN::read()
         }
+
+        fn MANAGER_ADDRESS() -> ContractAddress {
+            _MANAGER_ADDRESS::read()
+        }
     }
 
 
@@ -155,8 +159,8 @@ mod Rbits {
     }
 
     #[view]
-    fn manager_address() -> ContractAddress {
-        _manager_address::read()
+    fn MANAGER_ADDRESS() -> ContractAddress {
+        ERC20::MANAGER_ADDRESS()
     }
 
     #[view]
@@ -231,26 +235,26 @@ mod Rbits {
 
     /// Internal ///
     fn _initializer(
-        name: felt252,
-        symbol: felt252,
-        decimals: u8,
-        init_owner: ContractAddress,
-        init_supply: u256,
-        manager_address: ContractAddress
+        name_: felt252,
+        symbol_: felt252,
+        decimals_: u8,
+        init_owner_: ContractAddress,
+        init_supply_: u256,
+        MANAGER_ADDRESS_: ContractAddress
     ) {
-        _RBITS_MINT::write('RBITS_MINT');
-        _RBITS_BURN::write('RBITS_BURN');
-        _manager_address::write(manager_address);
+        _RBITS_MINT::write('RBITS MINT');
+        _RBITS_BURN::write('RBITS BURN');
+        _MANAGER_ADDRESS::write(MANAGER_ADDRESS_);
 
-        _name::write(name);
-        _symbol::write(symbol);
-        _decimals::write(decimals);
-        _mint(init_owner, init_supply);
+        _name::write(name_);
+        _symbol::write(symbol_);
+        _decimals::write(decimals_);
+        _mint(init_owner_, init_supply_);
     }
 
     fn _has_valid_permit(account: ContractAddress, right: felt252) -> bool {
         IManagerDispatcher {
-            contract_address: _manager_address::read()
+            contract_address: _MANAGER_ADDRESS::read()
         }.has_valid_permit(account, right)
     }
 

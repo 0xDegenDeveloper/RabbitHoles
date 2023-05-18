@@ -5,11 +5,14 @@ tests = 'tests'
 rbits = 'src/rbits/src'
 archive = 'src/archive/src'
 manager = 'src/manager/src'
-HoleRegistry = 'src/HoleRegistry/src'
+hole_registry = 'src/hole_registry/src'
+RabbitRegistry = 'src/RabbitRegistry/src'
 # Testing
 ManagerTesting = 'src/manager/tests'
 ArchiveTesting = 'src/archive/tests'
 RbitsTesting = 'src/rbits/tests'
+hole_registry_testing = 'src/hole_registry/tests'
+RabbitRegistryTesting = 'src/RabbitRegistry/tests'
 
 
 

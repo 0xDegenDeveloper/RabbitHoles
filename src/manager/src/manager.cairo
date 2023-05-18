@@ -24,7 +24,6 @@ mod Manager {
     use starknet::ContractAddressIntoFelt252;
     use starknet::contract_address_const;
 
-
     use starknet::get_caller_address;
     use starknet::get_block_timestamp;
     use starknet::get_contract_address;

@@ -58,17 +58,6 @@ mod EntryPoint {
 
     #[test]
     #[available_gas(2000000)]
-    fn constructor() {
-        let (Manager, Rbits) = deploy_suite();
-        assert(Rbits.balance_of(Manager.owner()) == 123_u256, 'Incorrect balance');
-        assert(Rbits.total_supply() == 123_u256, 'Incorrect total supply');
-        assert(Rbits.name() == 'RabbitHoles', 'Incorrect name');
-        assert(Rbits.symbol() == 'RBITS', 'Incorrect symbol');
-        assert(Rbits.decimals() == 18_u8, 'Incorrect decimals');
-    }
-
-    #[test]
-    #[available_gas(2000000)]
     fn total_supply() {
         let (Manager, Rbits) = deploy_suite();
         assert(Rbits.total_supply() == 123_u256, 'Incorrect total supply');
@@ -133,6 +122,25 @@ mod EntryPoint {
 mod Internals {
     use rbits::rbits::Rbits;
     use starknet::contract_address_const;
+    use debug::PrintTrait;
+
+    #[test]
+    #[available_gas(2000000)]
+    fn _initializer() {
+        let owner = contract_address_const::<'owner'>();
+        let manager = contract_address_const::<'manager'>();
+
+        Rbits::constructor(123_u256, owner, manager);
+        assert(Rbits::RBITS_MINT() == 'RBITS MINT', 'Incorrect RBITS_MINT');
+        assert(Rbits::RBITS_BURN() == 'RBITS BURN', 'Incorrect RBITS_BURN');
+        assert(Rbits::MANAGER_ADDRESS() == manager, 'Incorrect MANAGER_ADDRESS');
+
+        assert(Rbits::name() == 'RabbitHoles', 'Incorrect name');
+        assert(Rbits::symbol() == 'RBITS', 'Incorrect symbol');
+        assert(Rbits::decimals() == 18_u8, 'Incorrect decimals');
+        assert(Rbits::total_supply() == 123_u256, 'Incorrect total supply');
+        assert(Rbits::balance_of(owner) == 123_u256, 'Incorrect balance');
+    }
 
     #[test]
     #[available_gas(2000000)]
