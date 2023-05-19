@@ -166,23 +166,34 @@ mod RabbitStorage {
         _msg_array
     }
 
+    /// writes a rabbit's message to the log 
+    /// @dev zero-based index (inclusive, exclusive]
     fn _burn_to_log(msg_: Array<felt252>) -> (u64, u64) {
+        /// @dev cast msg_ length to u64
         let len_felt: felt252 = msg_.len().into();
         let m_len: u64 = len_felt.try_into().unwrap();
+        assert(m_len > 0_u64, 'msg length must be > 0');
+        /// @dev slot for 1st msg chunk
         let m_start = _burn_pointer::read();
+        /// @dev slot for next rabbit to start at
         let m_end = m_start + m_len;
+        _burn_pointer::write(m_end);
+        /// @dev write msg_ chunks to log
         let mut i = 0_u64;
         loop {
+            /// @dev all chunks written
             if (i >= m_len) {
                 break ();
             }
+            /// @dev pointer for this chunk
             let bp = m_start + i;
-            let i_felt: felt252 = i.into();
-            let i_32: u32 = i_felt.try_into().unwrap();
-            _burn_log::write(bp, *msg_.at(i_32));
+            /// @dev cast i to u32
+            let ifelt: felt252 = i.into();
+            let i32: u32 = ifelt.try_into().unwrap();
+            /// @dev write msg_[i] to slot bp (m_start + i)
+            _burn_log::write(bp, *msg_.at(i32));
             i += 1;
         };
-        _burn_pointer::write(m_end);
         (m_start, m_end)
     }
 

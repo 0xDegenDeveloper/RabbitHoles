@@ -216,7 +216,7 @@ mod EntryPoint {
 
 #[cfg(test)]
 mod Internal {
-    use rabbit_registry::rabbit_registry::RabbitRegistry;
+    use rabbit_storage::rabbit_storage::RabbitStorage;
     use starknet::ContractAddress;
     use starknet::contract_address_const;
     use starknet::testing::set_caller_address;
@@ -228,11 +228,40 @@ mod Internal {
     use option::OptionTrait;
     use result::ResultTrait;
 
+
     fn _deploy() -> ContractAddress {
         let deployer = contract_address_const::<1>();
+        let manager = contract_address_const::<'manager'>();
         set_caller_address(deployer);
-        RabbitRegistry::constructor(deployer, deployer, deployer, deployer);
+        RabbitStorage::constructor(manager, 0_u64);
         deployer
     }
+
+    /// left off here
+
+    #[test]
+    #[available_gas(2000000)]
+    fn _burn_to_log() {
+        /// add multiple rabbits and make sure m_start and m_end return correctly
+        /// check each are in the correct slots (]
+        /// 0: 'hello', 1: 'world' => (0, 2) _burn_pointer is 2
+        /// 2: 'new rabbit' => (2, 3) _burn_pointer is 3
+        let mut rabbit = ArrayTrait::new();
+        rabbit.append('this is rabbit');
+    }
+
+    #[test]
+    #[available_gas(2000000)]
+    fn _store_rabbit() {}
+
+    #[test]
+    #[available_gas(2000000)]
+    fn _get_msg_from_log() { /// 
+    }
+
+
+    #[test]
+    #[available_gas(2000000)]
+    fn _toggle_cold_storage() {}
 }
 
