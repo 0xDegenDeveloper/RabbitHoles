@@ -2,17 +2,17 @@
 rabbitholes = 'src'
 tests = 'tests'
 #  for the above (implementaiton) tests, use manager::manager::Manager, archive::archive::Archive, etc.
-rbits = 'src/rbits/src'
-archive = 'src/archive/src'
 manager = 'src/manager/src'
+rbits = 'src/rbits/src'
 hole_registry = 'src/hole_registry/src'
-RabbitRegistry = 'src/RabbitRegistry/src'
+rabbit_registry = 'src/rabbit_registry/src'
+rabbit_storage = 'src/rabbit_storage/src'
 # Testing
-ManagerTesting = 'src/manager/tests'
-ArchiveTesting = 'src/archive/tests'
-RbitsTesting = 'src/rbits/tests'
+manager_testing = 'src/manager/tests'
+rbits_testing = 'src/rbits/tests'
 hole_registry_testing = 'src/hole_registry/tests'
-RabbitRegistryTesting = 'src/RabbitRegistry/tests'
+rabbit_registry_testing = 'src/rabbit_registry/tests'
+rabbit_storage_testing = 'src/rabbit_storage/tests'
 
 
 

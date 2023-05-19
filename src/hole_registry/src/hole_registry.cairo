@@ -2,18 +2,14 @@ use starknet::ContractAddress;
 
 #[abi]
 trait IRbits {
-    #[view]
-    fn balance_of(account: ContractAddress) -> u256;
-    #[view]
-    fn allowance(owner: ContractAddress, spender: ContractAddress) -> u256;
-    #[external]
-    fn transfer(recipient: ContractAddress, amount: u256) -> bool;
     #[external]
     fn transfer_from(sender: ContractAddress, recipient: ContractAddress, amount: u256) -> bool;
     #[external]
     fn mint(recipient: ContractAddress, amount: u256);
     #[external]
     fn burn(owner: ContractAddress, amount: u256);
+    #[external]
+    fn MANAGER_ADDRESS() -> ContractAddress;
 }
 
 #[abi]
@@ -24,23 +20,20 @@ trait IManager {
 
 #[abi]
 trait IHoleRegistry {
-    /// Consts/Immutables ///
     fn DIG_HOLES() -> felt252;
     fn PLACE_RABBITS() -> felt252;
     fn RBITS_ADDRESS() -> ContractAddress;
     fn MANAGER_ADDRESS() -> ContractAddress;
-    /// Tokenomics ///
     fn dig_fee() -> u256;
     fn dig_reward() -> u256;
     fn dig_token_address() -> ContractAddress;
-    /// Views ///
     fn get_hole(hole_id_: u64) -> HoleRegistry::Hole;
     fn get_hole_id(title_: felt252) -> u64;
+    fn get_hole_digger(hole_id_: u64) -> ContractAddress;
     fn total_holes() -> u64;
     fn the_rabbit_hole(hole_id_: u64, index_: u64) -> u64;
     fn user_stats(user_: ContractAddress) -> u64;
     fn user_holes(user_: ContractAddress, start_: u64, step_: u64) -> Array<u64>;
-    /// External ///
     fn dig_hole(title_: felt252) -> u64;
     fn dig_hole_permitted(title_: felt252, digger_: ContractAddress) -> u64;
     fn place_rabbit_in_hole(hole_id_: u64, rabbit_id_: u64, burner_: ContractAddress);
@@ -57,6 +50,7 @@ mod HoleRegistry {
     use super::IHoleRegistry;
     use super::IHoleRegistryDispatcher;
     use super::IHoleRegistryDispatcherTrait;
+
     use starknet::ContractAddress;
     use starknet::ContractAddressIntoFelt252;
     use starknet::get_block_timestamp;
@@ -76,24 +70,19 @@ mod HoleRegistry {
     use zeroable::Zeroable;
 
     struct Storage {
-        /// Consts/Immutables ///
         _DIG_HOLES: felt252,
         _PLACE_RABBITS: felt252,
-        _MANAGER_ADDRESS: ContractAddress,
         _RBITS_ADDRESS: ContractAddress,
-        /// Tokenomics ///
+        _MANAGER_ADDRESS: ContractAddress,
         _dig_fee: u256, /// fee for digging a hole
         _dig_reward: u256, /// reward for digging a hole
         _dig_token_address: ContractAddress, /// address of the token used for digging fee
-        /// State ///
         _holes: LegacyMap<u64, Hole>, /// hole.id -> hole
         _total_holes: u64,
         _hole_title_to_id: LegacyMap<felt252, u64>, /// hole.title -> hole.id
         _the_rabbit_hole: LegacyMap<(u64, u64), u64>, /// hole.id -> index -> rabbit.id
-        /// Users State ///
         _user_stats: LegacyMap<ContractAddress, u64>,
         _user_holes: LegacyMap<(ContractAddress, u64), u64>, // user.address, index -> hole.id
-        _user_rabbits: LegacyMap<(ContractAddress, u64), u64>, // user.address, index -> rabbit.id
     }
 
     /// Events ///
@@ -150,7 +139,6 @@ mod HoleRegistry {
             );
 
             _place_rabbit_in_hole(hole_id_, rabbit_id_, burner_);
-        // RabbitBurned(hole_id_, burner_, rabbit_id_, user_depth);
         }
 
         /// Reads ///
@@ -162,12 +150,12 @@ mod HoleRegistry {
             _PLACE_RABBITS::read()
         }
 
-        fn MANAGER_ADDRESS() -> ContractAddress {
-            _MANAGER_ADDRESS::read()
-        }
-
         fn RBITS_ADDRESS() -> ContractAddress {
             _RBITS_ADDRESS::read()
+        }
+
+        fn MANAGER_ADDRESS() -> ContractAddress {
+            _MANAGER_ADDRESS::read()
         }
 
         fn dig_fee() -> u256 {
@@ -190,6 +178,10 @@ mod HoleRegistry {
             _hole_title_to_id::read(title_)
         }
 
+        fn get_hole_digger(hole_id_: u64) -> ContractAddress {
+            _holes::read(hole_id_).digger
+        }
+
         fn total_holes() -> u64 {
             _total_holes::read()
         }
@@ -204,7 +196,7 @@ mod HoleRegistry {
 
         fn user_holes(user_: ContractAddress, start_: u64, step_: u64) -> Array<u64> {
             let mut start = start_;
-            if (start_ == 0_u64) {
+            if (start == 0_u64) {
                 start = 1_u64;
             }
             let mut len = step_;
@@ -234,18 +226,13 @@ mod HoleRegistry {
                         storage_read_syscall(
                             address_domain, storage_address_from_base_and_offset(base, 0_u8)
                         )?
-                    )
-                        .unwrap(),
+                    ).unwrap(),
                     timestamp: storage_read_syscall(
                         address_domain, storage_address_from_base_and_offset(base, 1_u8)
-                    )?
-                        .try_into()
-                        .unwrap(),
+                    )?.try_into().unwrap(),
                     depth: storage_read_syscall(
                         address_domain, storage_address_from_base_and_offset(base, 2_u8)
-                    )?
-                        .try_into()
-                        .unwrap(),
+                    )?.try_into().unwrap(),
                     title: storage_read_syscall(
                         address_domain, storage_address_from_base_and_offset(base, 3_u8)
                     )?,
@@ -286,14 +273,15 @@ mod HoleRegistry {
         HoleRegistryImpl::PLACE_RABBITS()
     }
 
-    #[view]
-    fn MANAGER_ADDRESS() -> ContractAddress {
-        HoleRegistryImpl::MANAGER_ADDRESS()
-    }
 
     #[view]
     fn RBITS_ADDRESS() -> ContractAddress {
         _RBITS_ADDRESS::read()
+    }
+
+    #[view]
+    fn MANAGER_ADDRESS() -> ContractAddress {
+        HoleRegistryImpl::MANAGER_ADDRESS()
     }
 
     #[view]
@@ -320,6 +308,11 @@ mod HoleRegistry {
     #[view]
     fn get_hole_id(title_: felt252) -> u64 {
         HoleRegistryImpl::get_hole_id(title_)
+    }
+
+    #[view]
+    fn get_hole_digger(hole_id_: u64) -> ContractAddress {
+        HoleRegistryImpl::get_hole_digger(hole_id_)
     }
 
     #[view]
@@ -363,7 +356,7 @@ mod HoleRegistry {
         dig_reward_: u256,
         dig_token_address_: ContractAddress,
         RBITS_ADDRESS_: ContractAddress,
-        MANAGER_ADDRESS_: ContractAddress
+        MANAGER_ADDRESS_: ContractAddress,
     ) {
         _DIG_HOLES::write('DIG HOLES');
         _PLACE_RABBITS::write('PLACE RABBITS');
@@ -377,18 +370,19 @@ mod HoleRegistry {
 
 
     fn _has_valid_permit(account_: ContractAddress, right_: felt252) -> bool {
-        IManagerDispatcher {
-            contract_address: _MANAGER_ADDRESS::read()
-        }.has_valid_permit(account_, right_)
+        let MANAGER_ADDRESS = IRbitsDispatcher {
+            contract_address: _RBITS_ADDRESS::read()
+        }.MANAGER_ADDRESS();
+
+        IManagerDispatcher { contract_address: MANAGER_ADDRESS }.has_valid_permit(account_, right_)
     }
 
     fn _take_dig_fee(digger_: ContractAddress) {
         IRbitsDispatcher {
             contract_address: _dig_token_address::read()
-        }
-            .transfer_from(
-                sender: digger_, recipient: get_contract_address(), amount: _dig_fee::read()
-            );
+        }.transfer_from(
+            sender: digger_, recipient: get_contract_address(), amount: _dig_fee::read()
+        );
     }
 
     fn _mint(address_: ContractAddress, amount_: u256) {

@@ -4,8 +4,8 @@ mod EntryPoint {
     use manager::manager::IManagerDispatcher;
     use manager::manager::IManagerDispatcherTrait;
     use rbits::rbits::Rbits;
-    use rbits::rbits::IERC20Dispatcher;
-    use rbits::rbits::IERC20DispatcherTrait;
+    use rbits::rbits::IRbitsDispatcher;
+    use rbits::rbits::IRbitsDispatcherTrait;
     use starknet::ContractAddress;
     use starknet::contract_address_const;
     use starknet::testing::set_contract_address;
@@ -21,7 +21,7 @@ mod EntryPoint {
     use option::OptionTrait;
     use result::ResultTrait;
 
-    fn deploy_suite() -> (IManagerDispatcher, IERC20Dispatcher) {
+    fn deploy_suite() -> (IManagerDispatcher, IRbitsDispatcher) {
         let owner = contract_address_const::<123>();
         set_contract_address(owner);
 
@@ -30,8 +30,7 @@ mod EntryPoint {
 
         let (manager_address, _) = deploy_syscall(
             Manager::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
-        )
-            .unwrap();
+        ).unwrap();
 
         let mut calldata = ArrayTrait::new();
         // let init, owner, mananger
@@ -44,13 +43,12 @@ mod EntryPoint {
 
         let (rbits_address, _) = deploy_syscall(
             Rbits::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
-        )
-            .unwrap();
+        ).unwrap();
 
         (
             IManagerDispatcher {
                 contract_address: manager_address
-                }, IERC20Dispatcher {
+                }, IRbitsDispatcher {
                 contract_address: rbits_address
             }
         )
@@ -131,8 +129,8 @@ mod Internals {
         let manager = contract_address_const::<'manager'>();
 
         Rbits::constructor(123_u256, owner, manager);
-        assert(Rbits::RBITS_MINT() == 'RBITS MINT', 'Incorrect RBITS_MINT');
-        assert(Rbits::RBITS_BURN() == 'RBITS BURN', 'Incorrect RBITS_BURN');
+        assert(Rbits::MINT_RBITS() == 'MINT RBITS', 'Incorrect MINT_RBITS');
+        assert(Rbits::BURN_RBITS() == 'BURN RBITS', 'Incorrect BURN_RBITS');
         assert(Rbits::MANAGER_ADDRESS() == manager, 'Incorrect MANAGER_ADDRESS');
 
         assert(Rbits::name() == 'RabbitHoles', 'Incorrect name');

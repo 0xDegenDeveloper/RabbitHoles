@@ -4,8 +4,8 @@ mod EntryPoint {
     use hole_registry::hole_registry::IHoleRegistryDispatcher;
     use hole_registry::hole_registry::IHoleRegistryDispatcherTrait;
     use rbits::rbits::Rbits;
-    use rbits::rbits::IERC20Dispatcher;
-    use rbits::rbits::IERC20DispatcherTrait;
+    use rbits::rbits::IRbitsDispatcher;
+    use rbits::rbits::IRbitsDispatcherTrait;
     use manager::manager::Manager;
     use manager::manager::IManagerDispatcher;
     use manager::manager::IManagerDispatcherTrait;
@@ -27,7 +27,7 @@ mod EntryPoint {
     use result::ResultTrait;
 
 
-    fn deploy_suite() -> (IManagerDispatcher, IERC20Dispatcher, IHoleRegistryDispatcher) {
+    fn deploy_suite() -> (IManagerDispatcher, IRbitsDispatcher, IHoleRegistryDispatcher) {
         set_block_timestamp(12345);
         let owner = contract_address_const::<123>();
         set_contract_address(owner);
@@ -37,8 +37,7 @@ mod EntryPoint {
 
         let (manager_address, _) = deploy_syscall(
             Manager::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
-        )
-            .unwrap();
+        ).unwrap();
 
         let Manager = IManagerDispatcher { contract_address: manager_address };
 
@@ -52,10 +51,9 @@ mod EntryPoint {
 
         let (rbits_address, _) = deploy_syscall(
             Rbits::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
-        )
-            .unwrap();
+        ).unwrap();
 
-        let Rbits = IERC20Dispatcher { contract_address: rbits_address };
+        let Rbits = IRbitsDispatcher { contract_address: rbits_address };
 
         let mut calldata = ArrayTrait::new();
         let dig_fee_low = 111_u128;
@@ -63,25 +61,22 @@ mod EntryPoint {
         let dig_reward_low = 222_u128;
         let dig_reward_high = 0_u128;
         let dig_token_address = rbits_address;
-        let RBITS_ADDRESS = rbits_address;
-        let MANAGER_ADDRESS = manager_address;
 
         calldata.append(dig_fee_low.into());
         calldata.append(dig_fee_high.into());
         calldata.append(dig_reward_low.into());
         calldata.append(dig_reward_high.into());
         calldata.append(dig_token_address.into());
-        calldata.append(RBITS_ADDRESS.into());
-        calldata.append(MANAGER_ADDRESS.into());
+        calldata.append(rbits_address.into());
+        calldata.append(manager_address.into());
 
         let (hole_registry_address, _) = deploy_syscall(
             HoleRegistry::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
-        )
-            .unwrap();
+        ).unwrap();
 
         let HoleRegistry = IHoleRegistryDispatcher { contract_address: hole_registry_address };
 
-        Manager.set_permit(HoleRegistry.contract_address, Rbits.RBITS_MINT(), 99999);
+        Manager.set_permit(HoleRegistry.contract_address, Rbits.MINT_RBITS(), 99999);
 
         (Manager, Rbits, HoleRegistry)
     }
@@ -132,6 +127,7 @@ mod EntryPoint {
         assert(hole.depth == 1_u64, 'Incorrect depth');
         assert(HoleRegistry.get_hole_id(title) == 1_u64, 'Hole id not mapped');
         assert(HoleRegistry.user_stats(digger) == 1_u64, 'Incorrect user hole count');
+        assert(HoleRegistry.get_hole_digger(1_u64) == digger, 'Incorrect hole digger');
         let holes = HoleRegistry.user_holes(digger, 0, 1);
         assert(*holes[0] == 1_u64 & holes.len() == 1_u32, 'Incorrect user holes');
     /// ** test event
@@ -253,7 +249,6 @@ mod Internal {
         assert(HoleRegistry::dig_reward() == 222_u256, 'Incorrect rabbit price');
         assert(HoleRegistry::dig_token_address() == deployer, 'Incorrect fee token');
         assert(HoleRegistry::RBITS_ADDRESS() == deployer, 'Incorrect rbits addr');
-        assert(HoleRegistry::MANAGER_ADDRESS() == deployer, 'Incorrect manager addr');
     }
 
     fn _dig_hole_helper(title_: felt252, from_: ContractAddress) -> (u64, u64) {

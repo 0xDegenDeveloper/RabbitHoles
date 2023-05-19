@@ -1,7 +1,13 @@
 use starknet::ContractAddress;
 
 #[abi]
-trait IERC20 {
+trait IManager {
+    #[view]
+    fn has_valid_permit(account: ContractAddress, right: felt252) -> bool;
+}
+
+#[abi]
+trait IRbits {
     fn name() -> felt252;
     fn symbol() -> felt252;
     fn decimals() -> u8;
@@ -13,24 +19,18 @@ trait IERC20 {
     fn approve(spender: ContractAddress, amount: u256) -> bool;
     fn mint(recipient: ContractAddress, amount: u256);
     fn burn(owner: ContractAddress, amount: u256);
-    fn RBITS_MINT() -> felt252;
-    fn RBITS_BURN() -> felt252;
+    fn MINT_RBITS() -> felt252;
+    fn BURN_RBITS() -> felt252;
     fn MANAGER_ADDRESS() -> ContractAddress;
-}
-
-#[abi]
-trait IManager {
-    #[view]
-    fn has_valid_permit(account: ContractAddress, right: felt252) -> bool;
 }
 
 #[contract]
 mod Rbits {
-    use super::IERC20;
-    use super::IERC20Dispatcher;
-    use super::IERC20DispatcherTrait;
-    use super::IManager;
+    use super::IRbits;
+    use super::IRbitsDispatcher;
+    use super::IRbitsDispatcherTrait;
 
+    use super::IManager;
     use super::IManagerDispatcher;
     use super::IManagerDispatcherTrait;
 
@@ -40,15 +40,14 @@ mod Rbits {
     use starknet::get_caller_address;
     use starknet::ContractAddress;
     use starknet::get_contract_address;
-    // use starknet::ContractAddressZeroable;
     use starknet::ContractAddressIntoFelt252;
     use starknet::Felt252TryIntoContractAddress;
     use zeroable::Zeroable;
 
     struct Storage {
-        _RBITS_MINT: felt252, /// permit to mint tokens
-        _RBITS_BURN: felt252, /// permit to burn tokens
-        _MANAGER_ADDRESS: ContractAddress, /// address of the manager contract (minters/burners)
+        _MINT_RBITS: felt252,
+        _BURN_RBITS: felt252,
+        _MANAGER_ADDRESS: ContractAddress,
         _name: felt252,
         _symbol: felt252,
         _decimals: u8,
@@ -71,7 +70,7 @@ mod Rbits {
     }
 
     /// Implementations ///
-    impl ERC20 of IERC20 {
+    impl RbitsImpl of IRbits {
         fn name() -> felt252 {
             _name::read()
         }
@@ -119,7 +118,7 @@ mod Rbits {
 
         fn mint(recipient: ContractAddress, amount: u256) {
             assert(
-                _has_valid_permit(get_caller_address(), _RBITS_MINT::read()),
+                _has_valid_permit(get_caller_address(), _MINT_RBITS::read()),
                 'RBITS: Caller non minter'
             );
             _mint(recipient, amount)
@@ -127,18 +126,18 @@ mod Rbits {
 
         fn burn(owner: ContractAddress, amount: u256) {
             assert(
-                _has_valid_permit(get_caller_address(), _RBITS_BURN::read()),
+                _has_valid_permit(get_caller_address(), _BURN_RBITS::read()),
                 'RBITS: Caller non burner'
             );
             _burn(owner, amount)
         }
 
-        fn RBITS_MINT() -> felt252 {
-            _RBITS_MINT::read()
+        fn MINT_RBITS() -> felt252 {
+            _MINT_RBITS::read()
         }
 
-        fn RBITS_BURN() -> felt252 {
-            _RBITS_BURN::read()
+        fn BURN_RBITS() -> felt252 {
+            _BURN_RBITS::read()
         }
 
         fn MANAGER_ADDRESS() -> ContractAddress {
@@ -146,77 +145,76 @@ mod Rbits {
         }
     }
 
-
     /// Read ///
     #[view]
-    fn RBITS_MINT() -> felt252 {
-        ERC20::RBITS_MINT()
+    fn MINT_RBITS() -> felt252 {
+        RbitsImpl::MINT_RBITS()
     }
 
     #[view]
-    fn RBITS_BURN() -> felt252 {
-        ERC20::RBITS_BURN()
+    fn BURN_RBITS() -> felt252 {
+        RbitsImpl::BURN_RBITS()
     }
 
     #[view]
     fn MANAGER_ADDRESS() -> ContractAddress {
-        ERC20::MANAGER_ADDRESS()
+        RbitsImpl::MANAGER_ADDRESS()
     }
 
     #[view]
     fn name() -> felt252 {
-        ERC20::name()
+        RbitsImpl::name()
     }
 
     #[view]
     fn symbol() -> felt252 {
-        ERC20::symbol()
+        RbitsImpl::symbol()
     }
 
     #[view]
     fn decimals() -> u8 {
-        ERC20::decimals()
+        RbitsImpl::decimals()
     }
 
     #[view]
     fn total_supply() -> u256 {
-        ERC20::total_supply()
+        RbitsImpl::total_supply()
     }
 
     #[view]
     fn balance_of(account: ContractAddress) -> u256 {
-        ERC20::balance_of(account)
+        RbitsImpl::balance_of(account)
     }
 
     #[view]
     fn allowance(owner: ContractAddress, spender: ContractAddress) -> u256 {
-        ERC20::allowance(owner, spender)
+        RbitsImpl::allowance(owner, spender)
     }
 
     /// Write ///
     #[external]
     fn mint(recipient: ContractAddress, amount: u256) {
-        ERC20::mint(recipient, amount);
+        RbitsImpl::mint(recipient, amount);
     }
 
     #[external]
     fn burn(owner: ContractAddress, amount: u256) {
-        ERC20::burn(owner, amount);
+        RbitsImpl::burn(owner, amount);
     }
 
     #[external]
     fn transfer(recipient: ContractAddress, amount: u256) -> bool {
-        ERC20::transfer(recipient, amount)
+        RbitsImpl::transfer(recipient, amount)
     }
 
     #[external]
     fn transfer_from(sender: ContractAddress, recipient: ContractAddress, amount: u256) -> bool {
-        ERC20::transfer_from(sender, recipient, amount)
+        RbitsImpl::transfer_from(sender, recipient, amount)
     }
 
     #[external]
     fn approve(spender: ContractAddress, amount: u256) -> bool {
-        ERC20::approve(spender, amount)
+        RbitsImpl::approve(spender, amount)
     }
 
     #[external]
@@ -242,20 +240,14 @@ mod Rbits {
         init_supply_: u256,
         MANAGER_ADDRESS_: ContractAddress
     ) {
-        _RBITS_MINT::write('RBITS MINT');
-        _RBITS_BURN::write('RBITS BURN');
+        _MINT_RBITS::write('MINT RBITS');
+        _BURN_RBITS::write('BURN RBITS');
         _MANAGER_ADDRESS::write(MANAGER_ADDRESS_);
 
         _name::write(name_);
         _symbol::write(symbol_);
         _decimals::write(decimals_);
         _mint(init_owner_, init_supply_);
-    }
-
-    fn _has_valid_permit(account: ContractAddress, right: felt252) -> bool {
-        IManagerDispatcher {
-            contract_address: _MANAGER_ADDRESS::read()
-        }.has_valid_permit(account, right)
     }
 
     fn _approve(owner: ContractAddress, spender: ContractAddress, amount: u256) {
@@ -276,8 +268,8 @@ mod Rbits {
     fn _spend_allowance(owner: ContractAddress, spender: ContractAddress, amount: u256) {
         let current_allowance = _allowances::read((owner, spender));
         let ONES_MASK = 0xffffffffffffffffffffffffffffffff_u128;
-        let is_unlimited_allowance = current_allowance.low == ONES_MASK
-            & current_allowance.high == ONES_MASK;
+        let is_unlimited_allowance =
+            current_allowance.low == ONES_MASK & current_allowance.high == ONES_MASK;
         if !is_unlimited_allowance {
             _approve(owner, spender, current_allowance - amount);
         }
@@ -296,5 +288,10 @@ mod Rbits {
         _balances::write(account, _balances::read(account) - amount);
         Transfer(account, Zeroable::zero(), amount);
     }
-}
 
+    fn _has_valid_permit(account: ContractAddress, right: felt252) -> bool {
+        IManagerDispatcher {
+            contract_address: _MANAGER_ADDRESS::read()
+        }.has_valid_permit(account, right)
+    }
+}

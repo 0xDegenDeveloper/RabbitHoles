@@ -7,7 +7,9 @@ version = "0.1.0"
 [dependencies]
 rbits = { path = "src/rbits" }
 manager = { path = "src/manager" }
-archive = { path = "src/archive" }
+hole_registry = { path = "src/hole_registry" }
+rabbit_registry = { path = "src/rabbit_registry" }
+rabbit_storage = { path = "src/rabbit_storage" }
 
 [scripts]
 # test = "cairo-test --starknet tests/lib.cairo"

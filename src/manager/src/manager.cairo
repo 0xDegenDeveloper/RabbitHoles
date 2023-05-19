@@ -1,12 +1,9 @@
 #[abi]
 trait IManager {
-    /// Constants ///
     fn MANAGER_RIGHT() -> felt252;
-    /// Ownable ///
     fn owner() -> starknet::ContractAddress;
     fn transfer_ownership(new_owner: starknet::ContractAddress);
     fn renounce_ownership();
-    /// Permit Control ///
     fn has_valid_permit(account: starknet::ContractAddress, right: felt252) -> bool;
     fn has_permit_until(account: starknet::ContractAddress, right: felt252) -> u64;
     fn set_permit(account: starknet::ContractAddress, right: felt252, timestamp: u64);
@@ -19,11 +16,11 @@ mod Manager {
     use super::IManager;
     use super::IManagerDispatcher;
     use super::IManagerDispatcherTrait;
+
     use starknet::ContractAddress;
     use starknet::Felt252TryIntoContractAddress;
     use starknet::ContractAddressIntoFelt252;
     use starknet::contract_address_const;
-
     use starknet::get_caller_address;
     use starknet::get_block_timestamp;
     use starknet::get_contract_address;

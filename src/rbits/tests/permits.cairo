@@ -6,8 +6,8 @@ mod EntryPoint {
     use manager::manager::IManagerDispatcher;
     use manager::manager::IManagerDispatcherTrait;
     use rbits::rbits::Rbits;
-    use rbits::rbits::IERC20Dispatcher;
-    use rbits::rbits::IERC20DispatcherTrait;
+    use rbits::rbits::IRbitsDispatcher;
+    use rbits::rbits::IRbitsDispatcherTrait;
     use starknet::ContractAddress;
     use starknet::contract_address_const;
     use starknet::testing::set_contract_address;
@@ -23,7 +23,7 @@ mod EntryPoint {
     use option::OptionTrait;
     use result::ResultTrait;
 
-    fn deploy_suite() -> (IManagerDispatcher, IERC20Dispatcher) {
+    fn deploy_suite() -> (IManagerDispatcher, IRbitsDispatcher) {
         let owner = contract_address_const::<123>();
         set_contract_address(owner);
 
@@ -32,8 +32,7 @@ mod EntryPoint {
 
         let (manager_address, _) = deploy_syscall(
             Manager::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
-        )
-            .unwrap();
+        ).unwrap();
 
         let mut calldata = ArrayTrait::new();
         // let init, owner, mananger
@@ -46,13 +45,12 @@ mod EntryPoint {
 
         let (rbits_address, _) = deploy_syscall(
             Rbits::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
-        )
-            .unwrap();
+        ).unwrap();
 
         (
             IManagerDispatcher {
                 contract_address: manager_address
-                }, IERC20Dispatcher {
+                }, IRbitsDispatcher {
                 contract_address: rbits_address
             }
         )
@@ -102,7 +100,7 @@ mod EntryPoint {
     fn mint_with_permit() {
         let (Manager, Rbits) = deploy_suite();
         let anon = contract_address_const::<'anon'>();
-        Manager.set_permit(anon, Rbits.RBITS_MINT(), 999);
+        Manager.set_permit(anon, Rbits.MINT_RBITS(), 999);
         set_contract_address(anon);
         Rbits.mint(anon, 1_u256);
         assert(Rbits.balance_of(anon) == 1_u256, 'Mints wrong amount');
@@ -113,7 +111,7 @@ mod EntryPoint {
     fn burn_with_permit() {
         let (Manager, Rbits) = deploy_suite();
         let anon = contract_address_const::<'anon'>();
-        Manager.set_permit(anon, Rbits.RBITS_BURN(), 999);
+        Manager.set_permit(anon, Rbits.BURN_RBITS(), 999);
         set_contract_address(anon);
         Rbits.burn(Manager.owner(), 122_u256);
         assert(Rbits.balance_of(Manager.owner()) == 1_u256, 'Mints wrong amount');
@@ -126,8 +124,8 @@ mod EntryPoint {
         let manager = contract_address_const::<'manager'>();
         let anon = contract_address_const::<'anon'>();
 
-        let right = Rbits.RBITS_MINT();
-        let manager_right = 'RBITS MINT MANAGER';
+        let right = Rbits.MINT_RBITS();
+        let manager_right = 'MINT RBITS MANAGER';
 
         Manager.set_permit(manager, manager_right, 999);
         Manager.bind_manager_right(right, manager_right);
@@ -147,8 +145,8 @@ mod EntryPoint {
         let manager = contract_address_const::<'manager'>();
         let anon = contract_address_const::<'anon'>();
 
-        let right = Rbits.RBITS_BURN();
-        let manager_right = 'RBITS BURN MANAGER';
+        let right = Rbits.BURN_RBITS();
+        let manager_right = 'BURN RBITS MANAGER';
 
         Manager.set_permit(manager, manager_right, 999);
         Manager.bind_manager_right(right, manager_right);

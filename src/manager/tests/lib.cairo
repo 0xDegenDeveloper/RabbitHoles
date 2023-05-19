@@ -181,8 +181,7 @@ mod EntryPoint {
 
         let (manager_address, _) = deploy_syscall(
             Manager::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
-        )
-            .unwrap();
+        ).unwrap();
         IManagerDispatcher { contract_address: manager_address }
     }
 
