@@ -1,8 +1,21 @@
+#[abi]
+trait IManager {
+    fn MANAGER() -> felt252;
+    fn owner() -> starknet::ContractAddress;
+    fn transfer_ownership(new_owner: starknet::ContractAddress);
+    fn renounce_ownership();
+    fn has_valid_permit(account: starknet::ContractAddress, right: felt252) -> bool;
+    fn has_permit_until(account: starknet::ContractAddress, right: felt252) -> u64;
+    fn set_permit(account: starknet::ContractAddress, right: felt252, timestamp: u64);
+    fn bind_manager_right(right: felt252, manager_right: felt252);
+    fn manager_rights(right: felt252) -> felt252;
+}
+
 #[cfg(test)]
 mod EntryPoint {
     use manager::manager::Manager;
-    use manager::manager::IManagerDispatcher;
-    use manager::manager::IManagerDispatcherTrait;
+    use super::IManagerDispatcher;
+    use super::IManagerDispatcherTrait;
 
     use starknet::syscalls::deploy_syscall;
     use starknet::class_hash::Felt252TryIntoClassHash;
@@ -164,7 +177,7 @@ mod EntryPoint {
         let owner = _deploy();
         let Manager = deploy_manager();
         let mananger = contract_address_const::<'manager'>();
-        _set_permit_from_for(Manager, Manager.owner(), mananger, Manager.MANAGER_RIGHT(), 1111);
+        _set_permit_from_for(Manager, Manager.owner(), mananger, Manager.MANAGER(), 1111);
         set_contract_address(mananger);
         Manager.bind_manager_right('MINT', 'MINT MANAGER');
         assert(Manager.manager_rights('MINT') == 'MINT MANAGER', 'Manager right set wrong');
@@ -181,7 +194,8 @@ mod EntryPoint {
 
         let (manager_address, _) = deploy_syscall(
             Manager::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
-        ).unwrap();
+        )
+            .unwrap();
         IManagerDispatcher { contract_address: manager_address }
     }
 

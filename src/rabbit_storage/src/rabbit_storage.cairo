@@ -94,33 +94,22 @@ mod RabbitStorage {
                         storage_read_syscall(
                             address_domain, storage_address_from_base_and_offset(base, 0_u8)
                         )?
-                    )
-                        .unwrap(),
+                    ).unwrap(),
                     timestamp: storage_read_syscall(
                         address_domain, storage_address_from_base_and_offset(base, 1_u8)
-                    )?
-                        .try_into()
-                        .unwrap(),
+                    )?.try_into().unwrap(),
                     m_start: storage_read_syscall(
                         address_domain, storage_address_from_base_and_offset(base, 2_u8)
-                    )?
-                        .try_into()
-                        .unwrap(),
+                    )?.try_into().unwrap(),
                     m_end: storage_read_syscall(
                         address_domain, storage_address_from_base_and_offset(base, 3_u8)
-                    )?
-                        .try_into()
-                        .unwrap(),
+                    )?.try_into().unwrap(),
                     hole_id: storage_read_syscall(
                         address_domain, storage_address_from_base_and_offset(base, 4_u8)
-                    )?
-                        .try_into()
-                        .unwrap(),
+                    )?.try_into().unwrap(),
                     burn_log_id: storage_read_syscall(
                         address_domain, storage_address_from_base_and_offset(base, 5_u8)
-                    )?
-                        .try_into()
-                        .unwrap(),
+                    )?.try_into().unwrap(),
                 }
             )
         }

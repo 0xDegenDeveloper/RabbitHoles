@@ -1,22 +1,5 @@
-#[abi]
-trait IManager {
-    fn MANAGER_RIGHT() -> felt252;
-    fn owner() -> starknet::ContractAddress;
-    fn transfer_ownership(new_owner: starknet::ContractAddress);
-    fn renounce_ownership();
-    fn has_valid_permit(account: starknet::ContractAddress, right: felt252) -> bool;
-    fn has_permit_until(account: starknet::ContractAddress, right: felt252) -> u64;
-    fn set_permit(account: starknet::ContractAddress, right: felt252, timestamp: u64);
-    fn bind_manager_right(right: felt252, manager_right: felt252);
-    fn manager_rights(right: felt252) -> felt252;
-}
-
 #[contract]
 mod Manager {
-    use super::IManager;
-    use super::IManagerDispatcher;
-    use super::IManagerDispatcherTrait;
-
     use starknet::ContractAddress;
     use starknet::Felt252TryIntoContractAddress;
     use starknet::ContractAddressIntoFelt252;
@@ -30,12 +13,14 @@ mod Manager {
 
     /// Storage ///
     struct Storage {
-        _owner: ContractAddress, /// owner of contract (@dev: setup multi-sig/proxy)
-        _MANAGER_RIGHT: felt252, /// permit to bind manager rights
-        _permissions: LegacyMap<(ContractAddress, felt252),
-        u64>, /// address -> permission -> timestamp
-        _manager_rights: LegacyMap<felt252,
-        felt252>, /// right -> manager right 'MINT' -> 'MINT MANAGER'
+        /// @dev owner of contract, set up multisig ?
+        _owner: ContractAddress,
+        /// @dev manager permit
+        _MANAGER: felt252,
+        /// @dev address -> permission -> timestamp
+        _permissions: LegacyMap<(ContractAddress, felt252), u64>,
+        /// @dev right -> manager_right (i.e 'MINT' -> 'MINT MANAGER')
+        _manager_rights: LegacyMap<felt252, felt252>,
     }
 
     /// Events ///
@@ -55,131 +40,85 @@ mod Manager {
     /// Constructor ///
     #[constructor]
     fn constructor(owner_: ContractAddress) {
-        _initializer(owner_);
-    }
-
-    /// Implementation ///
-    impl ManagerImpl of IManager {
-        fn owner() -> ContractAddress {
-            _owner::read()
-        }
-
-        fn transfer_ownership(new_owner: ContractAddress) {
-            _only_owner();
-            assert(new_owner != contract_address_const::<0>(), 'Manager: Incorrect renouncement');
-            let prev_owner = _owner::read();
-            _transfer_ownership(new_owner);
-            OwnershipTransferred(prev_owner, new_owner);
-        }
-
-        fn renounce_ownership() {
-            _only_owner();
-            let prev_owner = _owner::read();
-            let new_owner = contract_address_const::<0>(); //0.try_into().unwrap();
-            _transfer_ownership(new_owner);
-            OwnershipTransferred(prev_owner, new_owner);
-        }
-
-        fn has_permit_until(account: ContractAddress, right: felt252) -> u64 {
-            _permissions::read((account, right))
-        }
-
-        fn has_valid_permit(account: ContractAddress, right: felt252) -> bool {
-            if (account == _owner::read()) {
-                return true;
-            }
-            if (has_permit_until(account, right) > get_block_timestamp()) {
-                return true;
-            }
-            false
-        }
-
-        fn set_permit(account: ContractAddress, right: felt252, timestamp: u64) {
-            assert(right != 0x0, 'Manager: Setting Zero Right');
-            assert(
-                has_valid_permit(get_caller_address(), _manager_rights::read(right)),
-                'Manager: Invalid Permit'
-            );
-            _permissions::write((account, right), timestamp);
-            PermitIssued(get_caller_address(), account, right, timestamp);
-        }
-
-        fn bind_manager_right(right: felt252, manager_right: felt252) {
-            assert(
-                has_valid_permit(get_caller_address(), _MANAGER_RIGHT::read()),
-                'Manager: Invalid Permit'
-            );
-            _manager_rights::write(right, manager_right);
-            ManagerRightBinded(get_caller_address(), right, manager_right);
-        }
-
-        fn manager_rights(right: felt252) -> felt252 {
-            _manager_rights::read(right)
-        }
-
-        fn MANAGER_RIGHT() -> felt252 {
-            _MANAGER_RIGHT::read()
-        }
-    }
-
-    /// Read ///
-    #[view]
-    fn owner() -> ContractAddress {
-        ManagerImpl::owner()
-    }
-
-    #[view]
-    fn has_permit_until(account: ContractAddress, right: felt252) -> u64 {
-        ManagerImpl::has_permit_until(account, right)
-    }
-
-    #[view]
-    fn has_valid_permit(account: ContractAddress, right: felt252) -> bool {
-        ManagerImpl::has_valid_permit(account, right)
-    }
-
-    #[view]
-    fn manager_rights(right: felt252) -> felt252 {
-        ManagerImpl::manager_rights(right)
-    }
-
-    #[view]
-    fn MANAGER_RIGHT() -> felt252 {
-        ManagerImpl::MANAGER_RIGHT()
-    }
-
-    /// Write ///
-    #[external]
-    fn transfer_ownership(new_owner: ContractAddress) {
-        ManagerImpl::transfer_ownership(new_owner);
-    }
-
-    #[external]
-    fn renounce_ownership() {
-        ManagerImpl::renounce_ownership();
-    }
-
-    #[external]
-    fn set_permit(account: ContractAddress, right: felt252, timestamp: u64) {
-        ManagerImpl::set_permit(account, right, timestamp);
-    }
-
-    #[external]
-    fn bind_manager_right(right: felt252, manager_right: felt252) {
-        ManagerImpl::bind_manager_right(right, manager_right);
+        _MANAGER::write('MANAGER');
+        _owner::write(owner_);
     }
 
     /// Internal ///
-    fn _initializer(owner_: ContractAddress) {
-        _owner::write(owner_);
-        _MANAGER_RIGHT::write('MANAGER');
-    }
-
     fn _only_owner() {
         assert(get_caller_address() == _owner::read(), 'Manager: Caller not owner');
     }
 
     fn _transfer_ownership(new_owner: ContractAddress) {
         _owner::write(new_owner);
+    }
+
+    /// Read ///
+    #[view]
+    fn MANAGER() -> felt252 {
+        _MANAGER::read()
+    }
+
+    #[view]
+    fn owner() -> ContractAddress {
+        _owner::read()
+    }
+
+    #[view]
+    fn has_permit_until(account: ContractAddress, right: felt252) -> u64 {
+        _permissions::read((account, right))
+    }
+
+    #[view]
+    fn has_valid_permit(account: ContractAddress, right: felt252) -> bool {
+        if (account == _owner::read()) {
+            return true;
+        }
+        if (has_permit_until(account, right) > get_block_timestamp()) {
+            return true;
+        }
+        false
+    }
+
+    #[view]
+    fn manager_rights(right: felt252) -> felt252 {
+        _manager_rights::read(right)
+    }
+
+    /// Write ///
+    #[external]
+    fn transfer_ownership(new_owner: ContractAddress) {
+        _only_owner();
+        assert(new_owner != contract_address_const::<0>(), 'Manager: Incorrect renouncement');
+        let prev_owner = _owner::read();
+        _transfer_ownership(new_owner);
+        OwnershipTransferred(prev_owner, new_owner);
+    }
+
+    #[external]
+    fn renounce_ownership() {
+        _only_owner();
+        let prev_owner = _owner::read();
+        let new_owner = contract_address_const::<0>(); //0.try_into().unwrap();
+        _transfer_ownership(new_owner);
+        OwnershipTransferred(prev_owner, new_owner);
+    }
+
+    #[external]
+    fn set_permit(account_: ContractAddress, right_: felt252, timestamp_: u64) {
+        assert(right_ != 0x0, 'Manager: Setting Zero Right');
+        assert(
+            has_valid_permit(get_caller_address(), _manager_rights::read(right_)),
+            'Manager: Invalid Permit'
+        );
+        _permissions::write((account_, right_), timestamp_);
+        PermitIssued(get_caller_address(), account_, right_, timestamp_);
+    }
+
+    #[external]
+    fn bind_manager_right(right_: felt252, manager_right_: felt252) {
+        assert(has_valid_permit(get_caller_address(), _MANAGER::read()), 'Manager: Invalid Permit');
+        _manager_rights::write(right_, manager_right_);
+        ManagerRightBinded(get_caller_address(), right_, manager_right_);
     }
 }

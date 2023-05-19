@@ -1,13 +1,32 @@
-// /// @dev: Need to figure out contract addresses with testing
+use starknet::ContractAddress;
+
+#[abi]
+trait IManager {
+    fn owner() -> ContractAddress;
+    fn set_permit(account: ContractAddress, right: felt252, timestamp: u64);
+    fn bind_manager_right(right: felt252, manager_right: felt252);
+}
+
+#[abi]
+trait IRbits {
+    fn balance_of(account: ContractAddress) -> u256;
+    fn mint(recipient: ContractAddress, amount: u256);
+    fn burn(owner: ContractAddress, amount: u256);
+    fn MINT_RBITS() -> felt252;
+    fn BURN_RBITS() -> felt252;
+}
 
 #[cfg(test)]
 mod EntryPoint {
     use manager::manager::Manager;
-    use manager::manager::IManagerDispatcher;
-    use manager::manager::IManagerDispatcherTrait;
     use rbits::rbits::Rbits;
-    use rbits::rbits::IRbitsDispatcher;
-    use rbits::rbits::IRbitsDispatcherTrait;
+
+    use super::IManagerDispatcher;
+    use super::IManagerDispatcherTrait;
+
+    use super::IRbitsDispatcher;
+    use super::IRbitsDispatcherTrait;
+
     use starknet::ContractAddress;
     use starknet::contract_address_const;
     use starknet::testing::set_contract_address;
@@ -32,7 +51,8 @@ mod EntryPoint {
 
         let (manager_address, _) = deploy_syscall(
             Manager::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
-        ).unwrap();
+        )
+            .unwrap();
 
         let mut calldata = ArrayTrait::new();
         // let init, owner, mananger
@@ -45,7 +65,8 @@ mod EntryPoint {
 
         let (rbits_address, _) = deploy_syscall(
             Rbits::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
-        ).unwrap();
+        )
+            .unwrap();
 
         (
             IManagerDispatcher {

@@ -24,24 +24,6 @@ trait IHoleRegistry {
     fn place_rabbit_in_hole(hole_id_: u64, rabbit_id_: u64, burner_: ContractAddress);
 }
 
-#[abi]
-trait IRabbitRegistry {
-    fn ADD_RABBITS_STORAGE() -> felt252;
-    fn BURN_RABBITS() -> felt252;
-    fn HOLE_REGISTRY_ADDRESS() -> ContractAddress;
-    fn MANAGER_ADDRESS() -> ContractAddress;
-    fn RBITS_ADDRESS() -> ContractAddress;
-    fn total_rabbits() -> u64;
-    fn burn_logs_total() -> u64;
-    fn burn_logs(id_: u64) -> ContractAddress;
-    fn burn_logs_record(id_: u64) -> u64;
-    fn user_stats(user_: ContractAddress) -> u64;
-    fn user_rabbits(user_: ContractAddress, start_: u64, step_: u64) -> Array<u64>;
-    fn get_rabbit(rabbit_id_: u64) -> (ContractAddress, u64, Array<felt252>);
-    fn burn_rabbit(hole_id_: u64, msg_: Array<felt252>) -> u64;
-    fn add_rabbit_storage(address_: ContractAddress, id_of_first_rabbit_: u64);
-// fn burn_rabbit_permitted(hole_id_: u64, msg_: Array<felt252>, burner_: ContractAddress) -> u64;
-}
 
 #[abi]
 trait IRabbitStorage {
@@ -66,9 +48,9 @@ mod RabbitRegistry {
     use super::IHoleRegistry;
     use super::IHoleRegistryDispatcher;
     use super::IHoleRegistryDispatcherTrait;
-    use super::IRabbitRegistry;
-    use super::IRabbitRegistryDispatcher;
-    use super::IRabbitRegistryDispatcherTrait;
+    // use super::IRabbitRegistry;
+    // use super::IRabbitRegistryDispatcher;
+    // use super::IRabbitRegistryDispatcherTrait;
     use super::IRabbitStorage;
     use super::IRabbitStorageDispatcher;
     use super::IRabbitStorageDispatcherTrait;
@@ -215,106 +197,35 @@ mod RabbitRegistry {
         }
     }
 
-
-    impl RabbitRegistryImpl of IRabbitRegistry {
-        fn BURN_RABBITS() -> felt252 {
-            _BURN_RABBITS::read()
-        }
-
-        fn ADD_RABBITS_STORAGE() -> felt252 {
-            _ADD_RABBITS_STORAGE::read()
-        }
-
-        fn HOLE_REGISTRY_ADDRESS() -> ContractAddress {
-            _HOLE_REGISTRY_ADDRESS::read()
-        }
-
-        fn MANAGER_ADDRESS() -> ContractAddress {
-            _MANAGER_ADDRESS::read()
-        }
-
-        fn RBITS_ADDRESS() -> ContractAddress {
-            _RBITS_ADDRESS::read()
-        }
-
-        fn total_rabbits() -> u64 {
-            _total_rabbits::read()
-        }
-
-        fn burn_logs_total() -> u64 {
-            _burn_logs_total::read()
-        }
-
-        fn burn_logs(id_: u64) -> ContractAddress {
-            _burn_logs::read(id_)
-        }
-
-        fn burn_logs_record(id_: u64) -> u64 {
-            _burn_logs_record::read(id_)
-        }
-
-        fn user_stats(user_: ContractAddress) -> u64 {
-            _user_stats::read(user_)
-        }
-
-        fn user_rabbits(user_: ContractAddress, start_: u64, step_: u64) -> Array<u64> {
-            let mut start = start_;
-            if (start == 0_u64) {
-                start = 1_u64;
-            }
-            let mut len = step_;
-            let max = _user_stats::read(user_);
-            if (step_ + start > max) {
-                len = max - start + 1_u64;
-            }
-            let mut _arr = ArrayTrait::new();
-            let mut i = 0;
-            loop {
-                if (i >= len) {
-                    break ();
-                }
-                _arr.append(_user_rabbits::read((user_, start + i)));
-                i += 1_u64;
-            };
-            _arr
-        }
-
-        fn get_rabbit(rabbit_id_: u64) -> (ContractAddress, u64, Array<felt252>) {
-            let id = _find_burn_log_index(rabbit_id_);
-            let addr = _burn_logs::read(id);
-            IRabbitStorageDispatcher { contract_address: addr }.get_rabbit(rabbit_id_)
-        }
-
-        fn burn_rabbit(hole_id_: u64, msg_: Array<felt252>) -> u64 {
-            let burner = get_caller_address();
-            let (glob, user) = _burn_rabbit(hole_id_, burner, msg_);
-            RabbitBurned(hole_id_, burner, glob, user);
-            glob
-        }
-
-        fn add_rabbit_storage(address_: ContractAddress, id_of_first_rabbit_: u64) {
-            let new_log_id = _burn_logs_total::read() + 1_u64;
-            _burn_logs_total::write(new_log_id);
-            _burn_logs::write(new_log_id, address_);
-            _burn_logs_record::write(new_log_id, id_of_first_rabbit_);
-        //// event
-        }
-    }
-
     /// Reads ///
     #[view]
     fn HOLE_REGISTRY_ADDRESS() -> ContractAddress {
-        RabbitRegistryImpl::HOLE_REGISTRY_ADDRESS()
+        _HOLE_REGISTRY_ADDRESS::read()
     }
 
     #[view]
     fn MANAGER_ADDRESS() -> ContractAddress {
-        RabbitRegistryImpl::MANAGER_ADDRESS()
+        _MANAGER_ADDRESS::read()
     }
 
     #[view]
     fn ADD_RABBITS_STORAGE() -> felt252 {
-        RabbitRegistryImpl::ADD_RABBITS_STORAGE()
+        _ADD_RABBITS_STORAGE::read()
+    }
+
+    #[view]
+    fn BURN_RABBITS() -> felt252 {
+        _BURN_RABBITS::read()
+    }
+
+    #[view]
+    fn RBITS_ADDRESS() -> ContractAddress {
+        _RBITS_ADDRESS::read()
+    }
+
+    #[view]
+    fn total_rabbits() -> u64 {
+        _total_rabbits::read()
     }
 
     #[view]
@@ -333,19 +244,57 @@ mod RabbitRegistry {
     }
 
     #[view]
-    fn RBITS_ADDRESS() -> ContractAddress {
-        RabbitRegistryImpl::RBITS_ADDRESS()
+    fn user_stats(user_: ContractAddress) -> u64 {
+        _user_stats::read(user_)
     }
+
+    #[view]
+    fn user_rabbits(user_: ContractAddress, start_: u64, step_: u64) -> Array<u64> {
+        let mut start = start_;
+        if (start == 0_u64) {
+            start = 1_u64;
+        }
+        let mut len = step_;
+        let max = _user_stats::read(user_);
+        if (step_ + start > max) {
+            len = max - start + 1_u64;
+        }
+        let mut _arr = ArrayTrait::new();
+        let mut i = 0;
+        loop {
+            if (i >= len) {
+                break ();
+            }
+            _arr.append(_user_rabbits::read((user_, start + i)));
+            i += 1_u64;
+        };
+        _arr
+    }
+
+    #[view]
+    fn get_rabbit(rabbit_id_: u64) -> (ContractAddress, u64, Array<felt252>) {
+        let id = _find_burn_log_index(rabbit_id_);
+        let addr = _burn_logs::read(id);
+        IRabbitStorageDispatcher { contract_address: addr }.get_rabbit(rabbit_id_)
+    }
+
     /// Write ///
     #[external]
-    fn add_rabbit_storage(storage_address_: ContractAddress, id_of_first_rabbit_: u64) {
-        RabbitRegistryImpl::add_rabbit_storage(storage_address_, id_of_first_rabbit_);
+    fn burn_rabbit(hole_id_: u64, msg_: Array<felt252>) -> u64 {
+        let burner = get_caller_address();
+        let (glob, user) = _burn_rabbit(hole_id_, burner, msg_);
+        RabbitBurned(hole_id_, burner, glob, user);
+        glob
+    /// event
     }
 
     #[external]
-    fn burn_rabbit(hole_id_: u64, msg_: Array<felt252>) -> u64 {
-        RabbitRegistryImpl::burn_rabbit(hole_id_, msg_)
-    /// event
+    fn add_rabbit_storage(address_: ContractAddress, id_of_first_rabbit_: u64) {
+        let new_log_id = _burn_logs_total::read() + 1_u64;
+        _burn_logs_total::write(new_log_id);
+        _burn_logs::write(new_log_id, address_);
+        _burn_logs_record::write(new_log_id, id_of_first_rabbit_);
+    //// event
     }
 
     /// Internals ///

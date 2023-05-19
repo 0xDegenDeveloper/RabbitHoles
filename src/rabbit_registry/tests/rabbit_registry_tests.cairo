@@ -1,3 +1,23 @@
+use starknet::ContractAddress;
+
+#[abi]
+trait IRabbitRegistry {
+    fn ADD_RABBITS_STORAGE() -> felt252;
+    fn BURN_RABBITS() -> felt252;
+    fn HOLE_REGISTRY_ADDRESS() -> ContractAddress;
+    fn MANAGER_ADDRESS() -> ContractAddress;
+    fn RBITS_ADDRESS() -> ContractAddress;
+    fn total_rabbits() -> u64;
+    fn burn_logs_total() -> u64;
+    fn burn_logs(id_: u64) -> ContractAddress;
+    fn burn_logs_record(id_: u64) -> u64;
+    fn user_stats(user_: ContractAddress) -> u64;
+    fn user_rabbits(user_: ContractAddress, start_: u64, step_: u64) -> Array<u64>;
+    fn get_rabbit(rabbit_id_: u64) -> (ContractAddress, u64, Array<felt252>);
+    fn burn_rabbit(hole_id_: u64, msg_: Array<felt252>) -> u64;
+    fn add_rabbit_storage(address_: ContractAddress, id_of_first_rabbit_: u64);
+}
+
 #[cfg(test)]
 mod Internal {
     use rabbit_registry::rabbit_registry::RabbitRegistry;

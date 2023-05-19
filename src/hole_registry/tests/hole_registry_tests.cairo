@@ -1,14 +1,51 @@
+use starknet::ContractAddress;
+
+#[abi]
+trait IManager {
+    fn set_permit(account: ContractAddress, right: felt252, timestamp: u64);
+}
+
+#[abi]
+trait IRbits {
+    fn balance_of(account: ContractAddress) -> u256;
+    fn transfer(recipient: ContractAddress, amount: u256) -> bool;
+    fn approve(spender: ContractAddress, amount: u256) -> bool;
+    fn MINT_RBITS() -> felt252;
+    fn BURN_RBITS() -> felt252;
+}
+
+#[abi]
+trait IHoleRegistry {
+    fn DIG_HOLES() -> felt252;
+    fn PLACE_RABBITS() -> felt252;
+    fn RBITS_ADDRESS() -> ContractAddress;
+    fn MANAGER_ADDRESS() -> ContractAddress;
+    fn dig_fee() -> u256;
+    fn dig_reward() -> u256;
+    fn dig_token_address() -> ContractAddress;
+    fn get_hole(hole_id_: u64) -> hole_registry::hole_registry::HoleRegistry::Hole;
+    fn get_hole_id(title_: felt252) -> u64;
+    fn get_hole_digger(hole_id_: u64) -> ContractAddress;
+    fn total_holes() -> u64;
+    fn the_rabbit_hole(hole_id_: u64, index_: u64) -> u64;
+    fn user_stats(user_: ContractAddress) -> u64;
+    fn user_holes(user_: ContractAddress, start_: u64, step_: u64) -> Array<u64>;
+    fn dig_hole(title_: felt252) -> u64;
+    fn dig_hole_permitted(title_: felt252, digger_: ContractAddress) -> u64;
+    fn place_rabbit_in_hole(hole_id_: u64, rabbit_id_: u64, burner_: ContractAddress);
+}
+
 #[cfg(test)]
 mod EntryPoint {
     use hole_registry::hole_registry::HoleRegistry;
-    use hole_registry::hole_registry::IHoleRegistryDispatcher;
-    use hole_registry::hole_registry::IHoleRegistryDispatcherTrait;
+    use super::IHoleRegistryDispatcher;
+    use super::IHoleRegistryDispatcherTrait;
     use rbits::rbits::Rbits;
-    use rbits::rbits::IRbitsDispatcher;
-    use rbits::rbits::IRbitsDispatcherTrait;
+    use super::IRbitsDispatcher;
+    use super::IRbitsDispatcherTrait;
     use manager::manager::Manager;
-    use manager::manager::IManagerDispatcher;
-    use manager::manager::IManagerDispatcherTrait;
+    use super::IManagerDispatcher;
+    use super::IManagerDispatcherTrait;
 
     use starknet::syscalls::deploy_syscall;
     use starknet::class_hash::Felt252TryIntoClassHash;
@@ -37,7 +74,8 @@ mod EntryPoint {
 
         let (manager_address, _) = deploy_syscall(
             Manager::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
-        ).unwrap();
+        )
+            .unwrap();
 
         let Manager = IManagerDispatcher { contract_address: manager_address };
 
@@ -51,7 +89,8 @@ mod EntryPoint {
 
         let (rbits_address, _) = deploy_syscall(
             Rbits::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
-        ).unwrap();
+        )
+            .unwrap();
 
         let Rbits = IRbitsDispatcher { contract_address: rbits_address };
 
@@ -72,7 +111,8 @@ mod EntryPoint {
 
         let (hole_registry_address, _) = deploy_syscall(
             HoleRegistry::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
-        ).unwrap();
+        )
+            .unwrap();
 
         let HoleRegistry = IHoleRegistryDispatcher { contract_address: hole_registry_address };
 
