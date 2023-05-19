@@ -24,7 +24,6 @@ trait IHoleRegistry {
     fn place_rabbit_in_hole(hole_id_: u64, rabbit_id_: u64, burner_: ContractAddress);
 }
 
-
 #[abi]
 trait IRabbitStorage {
     fn get_rabbit(rabbit_id_: u64) -> (ContractAddress, u64, Array<felt252>);
@@ -40,19 +39,18 @@ trait IRabbitStorage {
 #[contract]
 mod RabbitRegistry {
     use super::IRbits;
-    use super::IRbitsDispatcher;
-    use super::IRbitsDispatcherTrait;
     use super::IManager;
-    use super::IManagerDispatcher;
-    use super::IManagerDispatcherTrait;
     use super::IHoleRegistry;
-    use super::IHoleRegistryDispatcher;
-    use super::IHoleRegistryDispatcherTrait;
-    // use super::IRabbitRegistry;
-    // use super::IRabbitRegistryDispatcher;
-    // use super::IRabbitRegistryDispatcherTrait;
     use super::IRabbitStorage;
+
+    use super::IRbitsDispatcher;
+    use super::IManagerDispatcher;
+    use super::IHoleRegistryDispatcher;
     use super::IRabbitStorageDispatcher;
+
+    use super::IRbitsDispatcherTrait;
+    use super::IManagerDispatcherTrait;
+    use super::IHoleRegistryDispatcherTrait;
     use super::IRabbitStorageDispatcherTrait;
 
     use starknet::ContractAddress;
@@ -101,19 +99,23 @@ mod RabbitRegistry {
         _hole_id: u64, _burner: ContractAddress, _global_index: u64, _user_index: u64
     ) {}
 
+    /// Constructor ///
     #[constructor]
     fn constructor(
         HOLE_REGISTRY_ADDRESS_: ContractAddress,
         MANAGER_ADDRESS_: ContractAddress,
-        RBITS_ADDRESS_: ContractAddress
+        RBITS_ADDRESS_: ContractAddress,
+        RABBIT_STORAGE_ADDR_0: ContractAddress,
     ) {
         _BURN_RABBITS::write('BURN RABBITS');
         _ADD_RABBITS_STORAGE::write('ADD RABBITS STORAGE');
         _HOLE_REGISTRY_ADDRESS::write(HOLE_REGISTRY_ADDRESS_);
         _MANAGER_ADDRESS::write(MANAGER_ADDRESS_);
         _RBITS_ADDRESS::write(RBITS_ADDRESS_);
+        _burn_logs::write(0_u64, RABBIT_STORAGE_ADDR_0)
     }
 
+    /// Struct & StorageAccessImpl ///
     #[derive(Serde, Drop)]
     struct Rabbit {
         burner: ContractAddress,
@@ -357,7 +359,6 @@ mod RabbitRegistry {
             contract_address: addr
         }.store_rabbit(rabbit_id_, hole_id_, msg_arr_, id, burner_);
     }
-
 
     fn _burn_and_transfer_rbits(burner_: ContractAddress, digger_: ContractAddress, amount_: u256) {
         let Rbits = IRbitsDispatcher { contract_address: _RBITS_ADDRESS::read() };

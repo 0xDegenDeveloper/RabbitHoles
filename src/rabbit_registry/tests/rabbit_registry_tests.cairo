@@ -35,7 +35,7 @@ mod Internal {
     fn _deploy() -> ContractAddress {
         let deployer = contract_address_const::<1>();
         set_caller_address(deployer);
-        RabbitRegistry::constructor(deployer, deployer, deployer);
+        RabbitRegistry::constructor(deployer, deployer, deployer, deployer);
         deployer
     }
 

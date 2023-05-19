@@ -11,26 +11,6 @@ trait IHoleRegistry {
     fn place_rabbit_in_hole(hole_id_: u64, rabbit_id_: u64, burner_: ContractAddress);
 }
 
-#[abi]
-trait IRabbitStorage {
-    fn MANAGER_ADDRESS() -> ContractAddress;
-    fn STORAGE_WRITER() -> felt252;
-    fn RABBIT_REGISTRY_ADDRESS() -> ContractAddress;
-    fn ID_OF_FIRST_RABBIT() -> u64;
-    ///
-    fn store_rabbit(
-        rabbit_id_: u64,
-        hole_id_: u64,
-        msg_: Array<felt252>,
-        this_burn_log_id_: u64,
-        burner_: ContractAddress
-    );
-    fn toggle_cold_storage();
-    fn is_cold_storage() -> bool;
-    /// 
-    fn get_rabbit(rabbit_id_: u64) -> (ContractAddress, u64, Array<felt252>);
-}
-
 #[contract]
 mod RabbitStorage {
     use super::IManager;
@@ -39,9 +19,6 @@ mod RabbitStorage {
     use super::IHoleRegistry;
     use super::IHoleRegistryDispatcher;
     use super::IHoleRegistryDispatcherTrait;
-    use super::IRabbitStorage;
-    use super::IRabbitStorageDispatcher;
-    use super::IRabbitStorageDispatcherTrait;
 
     use starknet::ContractAddress;
     use starknet::ContractAddressIntoFelt252;
@@ -63,7 +40,6 @@ mod RabbitStorage {
 
     struct Storage {
         _MANAGER_ADDRESS: ContractAddress,
-        _RABBIT_REGISTRY_ADDRESS: ContractAddress,
         _STORAGE_WRITER: felt252,
         _ID_OF_FIRST_RABBIT: u64,
         _is_cold_storage: bool,
@@ -94,22 +70,33 @@ mod RabbitStorage {
                         storage_read_syscall(
                             address_domain, storage_address_from_base_and_offset(base, 0_u8)
                         )?
-                    ).unwrap(),
+                    )
+                        .unwrap(),
                     timestamp: storage_read_syscall(
                         address_domain, storage_address_from_base_and_offset(base, 1_u8)
-                    )?.try_into().unwrap(),
+                    )?
+                        .try_into()
+                        .unwrap(),
                     m_start: storage_read_syscall(
                         address_domain, storage_address_from_base_and_offset(base, 2_u8)
-                    )?.try_into().unwrap(),
+                    )?
+                        .try_into()
+                        .unwrap(),
                     m_end: storage_read_syscall(
                         address_domain, storage_address_from_base_and_offset(base, 3_u8)
-                    )?.try_into().unwrap(),
+                    )?
+                        .try_into()
+                        .unwrap(),
                     hole_id: storage_read_syscall(
                         address_domain, storage_address_from_base_and_offset(base, 4_u8)
-                    )?.try_into().unwrap(),
+                    )?
+                        .try_into()
+                        .unwrap(),
                     burn_log_id: storage_read_syscall(
                         address_domain, storage_address_from_base_and_offset(base, 5_u8)
-                    )?.try_into().unwrap(),
+                    )?
+                        .try_into()
+                        .unwrap(),
                 }
             )
         }
@@ -148,89 +135,15 @@ mod RabbitStorage {
         }
     }
 
+    /// Constructor ///
     #[constructor]
-    fn constructor(
-        RABBIT_REGISTRY_ADDRESS_: ContractAddress,
-        MANAGER_ADDRESS_: ContractAddress,
-        ID_OF_FIRST_RABBIT_: u64
-    ) {
-        _initializer(RABBIT_REGISTRY_ADDRESS_, MANAGER_ADDRESS_, ID_OF_FIRST_RABBIT_);
+    fn constructor(MANAGER_ADDRESS_: ContractAddress, ID_OF_FIRST_RABBIT_: u64) {
+        _MANAGER_ADDRESS::write(MANAGER_ADDRESS_);
+        _ID_OF_FIRST_RABBIT::write(ID_OF_FIRST_RABBIT_);
+        _STORAGE_WRITER::write('STORAGE WRITER');
     }
 
-    impl RabbitStorageImpl of IRabbitStorage {
-        fn RABBIT_REGISTRY_ADDRESS() -> ContractAddress {
-            _RABBIT_REGISTRY_ADDRESS::read()
-        }
-
-        fn MANAGER_ADDRESS() -> ContractAddress {
-            _MANAGER_ADDRESS::read()
-        }
-
-        fn STORAGE_WRITER() -> felt252 {
-            _STORAGE_WRITER::read()
-        }
-
-        fn ID_OF_FIRST_RABBIT() -> u64 {
-            _ID_OF_FIRST_RABBIT::read()
-        }
-
-        fn is_cold_storage() -> bool {
-            _is_cold_storage::read()
-        }
-
-        fn toggle_cold_storage() {
-            assert(
-                _has_valid_permit(get_caller_address(), _STORAGE_WRITER::read()),
-                'Caller non storage writer'
-            );
-            let is_cold = _is_cold_storage::read();
-            _is_cold_storage::write(!is_cold);
-        }
-
-        fn store_rabbit(
-            rabbit_id_: u64,
-            hole_id_: u64,
-            msg_: Array<felt252>,
-            this_burn_log_id_: u64,
-            burner_: ContractAddress
-        ) {
-            assert(!_is_cold_storage::read(), 'Storage is cold');
-            assert(
-                _has_valid_permit(get_caller_address(), _STORAGE_WRITER::read()),
-                'Caller non storage writer'
-            );
-            /// @dev store msg chunks
-            let (m_start, m_end) = _burn_to_log(msg_);
-            /// @dev store rabbit details
-            let mut rabbit = Rabbit {
-                burner: burner_,
-                timestamp: get_block_timestamp(),
-                m_start: m_start,
-                m_end: m_end,
-                hole_id: hole_id_,
-                burn_log_id: this_burn_log_id_,
-            };
-            _rabbits::write(rabbit_id_, rabbit);
-        }
-
-        fn get_rabbit(rabbit_id_: u64) -> (ContractAddress, u64, Array<felt252>) {
-            let rabbit = _rabbits::read(rabbit_id_);
-            let msg = _get_msg_from_log(rabbit_id_);
-            (rabbit.burner, rabbit.timestamp, msg)
-        }
-    }
-
-    #[external]
-    fn store_rabbit(
-        rabbit_id_: u64,
-        hole_id_: u64,
-        msg_: Array<felt252>,
-        this_burn_log_id_: u64,
-        burner_: ContractAddress
-    ) {
-        RabbitStorageImpl::store_rabbit(rabbit_id_, hole_id_, msg_, this_burn_log_id_, burner_);
-    }
-
+    /// Internal ///
     fn _has_valid_permit(account_: ContractAddress, right_: felt252) -> bool {
         IManagerDispatcher {
             contract_address: _MANAGER_ADDRESS::read()
@@ -273,64 +186,86 @@ mod RabbitStorage {
         (m_start, m_end)
     }
 
-    /// Read ///
-    #[view]
-    fn RABBIT_REGISTRY_ADDRESS() -> ContractAddress {
-        RabbitStorageImpl::RABBIT_REGISTRY_ADDRESS()
+    fn _store_rabbit(
+        rabbit_id_: u64,
+        hole_id_: u64,
+        msg_: Array<felt252>,
+        this_burn_log_id_: u64,
+        burner_: ContractAddress
+    ) {
+        /// @dev store msg chunks
+        let (m_start, m_end) = _burn_to_log(msg_);
+        /// @dev store rabbit details
+        let mut rabbit = Rabbit {
+            burner: burner_,
+            timestamp: get_block_timestamp(),
+            m_start: m_start,
+            m_end: m_end,
+            hole_id: hole_id_,
+            burn_log_id: this_burn_log_id_,
+        };
+        _rabbits::write(rabbit_id_, rabbit);
     }
 
+    fn _toggle_cold_storage() {
+        let is_cold = _is_cold_storage::read();
+        _is_cold_storage::write(!is_cold);
+    }
 
+    /// Read /// 
     #[view]
     fn MANAGER_ADDRESS() -> ContractAddress {
-        RabbitStorageImpl::MANAGER_ADDRESS()
+        _MANAGER_ADDRESS::read()
     }
 
     #[view]
     fn STORAGE_WRITER() -> felt252 {
-        RabbitStorageImpl::STORAGE_WRITER()
+        _STORAGE_WRITER::read()
     }
 
     #[view]
     fn ID_OF_FIRST_RABBIT() -> u64 {
-        RabbitStorageImpl::ID_OF_FIRST_RABBIT()
+        _ID_OF_FIRST_RABBIT::read()
     }
 
     #[view]
     fn is_cold_storage() -> bool {
-        RabbitStorageImpl::is_cold_storage()
+        _is_cold_storage::read()
     }
 
     #[view]
     fn get_rabbit(rabbit_id_: u64) -> (ContractAddress, u64, Array<felt252>) {
-        RabbitStorageImpl::get_rabbit(rabbit_id_)
+        let rabbit = _rabbits::read(rabbit_id_);
+        let msg = _get_msg_from_log(rabbit_id_);
+        (rabbit.burner, rabbit.timestamp, msg)
     }
 
 
     /// Write ///
-
-    /// Internals /// 
-    fn _initializer(
-        RABBIT_REGISTRY_ADDRESS_: ContractAddress,
-        MANAGER_ADDRESS_: ContractAddress,
-        ID_OF_FIRST_RABBIT_: u64
-    ) {
-        _RABBIT_REGISTRY_ADDRESS::write(RABBIT_REGISTRY_ADDRESS_);
-        _MANAGER_ADDRESS::write(MANAGER_ADDRESS_);
-        _ID_OF_FIRST_RABBIT::write(ID_OF_FIRST_RABBIT_);
-        _STORAGE_WRITER::write('STORAGE WRITER');
+    #[external]
+    fn toggle_cold_storage() {
+        assert(
+            _has_valid_permit(get_caller_address(), _STORAGE_WRITER::read()),
+            'Caller non storage writer'
+        );
+        _toggle_cold_storage();
     }
-} /// events:
-// #[event]
-// fn RabbitBurned(_hole_id: u64, _burner: ContractAddress, _global_index: u64, _user_index: u64) {}
 
-/// structs:
-// #[derive(Serde, Drop)]
-// struct Rabbit {
-//     burner: ContractAddress,
-//     timestamp: u64,
-//     m_start: u64,
-//     m_end: u64,
-//     hole_id: u64,
-// }
 
+    #[external]
+    fn store_rabbit(
+        rabbit_id_: u64,
+        hole_id_: u64,
+        msg_: Array<felt252>,
+        this_burn_log_id_: u64,
+        burner_: ContractAddress
+    ) {
+        assert(!_is_cold_storage::read(), 'Storage is cold');
+        assert(
+            _has_valid_permit(get_caller_address(), _STORAGE_WRITER::read()),
+            'Caller non storage writer'
+        );
+        _store_rabbit(rabbit_id_, hole_id_, msg_, this_burn_log_id_, burner_);
+    }
+}
 
