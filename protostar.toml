@@ -1,11 +1,11 @@
-[project]
-protostar-version = "0.14.0"
-# linked-libraries = ["erc20"]
+# [project]
+# protostar-version = "0.14.0"
+# # linked-libraries = ["erc20"]
 
-[contracts]
-erc20 = ["src/erc20"]
-manager = ["src/manager"]
-# rabbitholes = ["src"]
-# rabbitholes = ["."]
-# rabbitholes = ["src"]
-# erc20 = ["erc20/src"]
+# [contracts]
+# erc20 = ["src/erc20"]
+# manager = ["src/manager"]
+# # rabbitholes = ["src"]
+# # rabbitholes = ["."]
+# # rabbitholes = ["src"]
+# # erc20 = ["erc20/src"]
