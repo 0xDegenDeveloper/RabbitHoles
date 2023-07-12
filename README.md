@@ -14,7 +14,7 @@ The basic flow involves the following steps:
 - As a reward, she is minted some RBITS
 - Since they are ERC-20 tokens, she sends a few to Bob.
 - Now that the "SHOWER THOUGHTS" hole is dug, anyone can burn a rabbit inside
-  Bob decides to leave the message,
+- Bob decides to leave the message,
 
 > Who would have thought that the first shower thought to be immortalized on a blockchain would be about the very concept of storing shower thoughts on a blockchain?"
 
