@@ -30,7 +30,7 @@ in the hole, giving some RBIT to Alice and burning the rest
 
 - Digging a hole will cost a small fee, something like 0.001Ξ. This is the dig fee and is used to disincentive spam and fund future extensions to the project.
 
-- Each dig will mint RBIT to its digger. This is the dig reward and will be in the range of 20-100 RBITS.
+- Each dig will mint RBITS to its digger. This is the dig reward and will be in the range of 20-100 RBITS.
 
 \*\* The exact numbers are still being thought about. Feedback, opinions, and thoughts are appreciated and ecouraged.
 
@@ -45,33 +45,22 @@ in the hole, giving some RBIT to Alice and burning the rest
 
   - For example, the message Bob burned is 164 characters long. This spans across 6 felts, assuming this is the first rabbit burned, Bob's message will fill slots 0, 1, 2, ..., 5.
 
-- Each `felt252` a message fills will cost its burner 1.0 RBIT. 75% is burned and 25% is sent to the digger of the hole.
+- Each `felt252` a message fills will cost its burner 1.0 RBIT. A % of these RBITS are sent to the hole's digger, and the rest are burned.
 
-  - In the above example, Bob's message costs him 6.0 RBIT. 1.5 is sent to Alice, and 4.5 are burned.
+  - In the above example, Bob's message costs him 6.0 RBIT. Some were sent to Alice, and the rest were burned.
 
 ## Current Development Status
 
 Current tasks include:
 
-- Finalizing contract design/testing
-  - Accounting for future expansion
-- Waiting for alphaV7 network upgrade
-  - To connect to the demo site
-- Optimizing frontend on all devices
+- Finishing RabbitholesV1 tests
+- Finalizing frontend
+- Connecting frontend -> contracts
 
 ### Scarb Commands
 
 - `scarb build`
-- `scarb fmt`
-
-### Activate Environment (awaiting alphav7 upgrade)
-
-- `python3.9 -m venv ~/cairo_venv`
-- `source ~/cairo_venv/bin/activate`
-- `export STARKNET_NETWORK=alpha-goerli`
-- `export STARKNET_WALLET=starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount`
-- `export CAIRO_COMPILER_DIR=~/.cairo/target/release/`
-- `export CAIRO_COMPILER_ARGS=--add-pythonic-hints`
+- `scarb test`
 
 ### Other commands
 
