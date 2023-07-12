@@ -1,24 +1,14 @@
-[[target.starknet-contract]]
-[lib]
-casm = false
-sierra = true
-# casm-add-pythonic-hints = true
-
-
-
-
+# See more keys and their definitions at https://docs.swmansion.com/scarb/docs/reference/manifest
 [package]
-name = "rbits"
+name = "rabbitholes"
 version = "0.1.0"
-authors = ["Matt Carter <novemberfork@proton.me"]
-readme = "README.md"
-homepage = "https://novemberfork.io/"
-repository = "https://github.com/0xDegenDeveloper/RabbitHoles"
-description = "---"
 
 [dependencies]
-quaireaux_math = { git = "https://github.com/keep-starknet-strange/quaireaux.git" }
+starknet = "2.0.0-rc6"
 
-[scripts]
-compile = "starknet-compile src/lib.cairo target/rbits.json"
-# sierra-compile = "starknet-sierra-compile src/lib.cairo sierra/rbits.json"
+[[target.starknet-contract]]
+
+# [scripts]
+
+# [cairo]
+# sierra-replace-ids = true
