@@ -18,11 +18,9 @@ The basic flow involves the following steps:
 
 > Who would have thought that the first shower thought to be immortalized on a blockchain would be about the very concept of storing shower thoughts on a blockchain?"
 
-in the hole, giving some RBIT to Alice and burning the rest
+in the hole, costing him RBITS
 
 - Bob's message is timestamped and stored in the contract.
-- Several `#[view]` functions are available keeping the frontend and UX in mind.
-  - These user-friendly functions make it easy to query and parse details such as the rabbits within each hole, the holes dug/rabbits burned by each user, the oldest/newest holes/rabbits, etc. This design ensures a smooth and enjoyable experience while interacting with the contracts directly or through the frontend.
 
 ## Technical Details
 
@@ -36,7 +34,7 @@ in the hole, giving some RBIT to Alice and burning the rest
 
 - A hole's title, ("SHOWER THOUGHTS"), is stored as a single `felt252`, meaning every title must be 31 characters or fewer in length.
 
-- The dApp will encourage syntax and a guide outlining best practices for digging holes relating to people, dates, events, and more will be released. This, along with a dedicated backend should reduce the chances of similar holes being dug.
+- The dApp will encourage syntax and a guide outlining best practices for digging holes relating to people, dates, events, and more will be released. This, along with a dedicated backend should reduce the chances of similar holes being dug (Jeffrey Epstein vs JEFFERY EPSTEIN).
 
 ### Rabbits
 
