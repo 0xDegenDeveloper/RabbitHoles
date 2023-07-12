@@ -1,17 +1,14 @@
+# See more keys and their definitions at https://docs.swmansion.com/scarb/docs/reference/manifest
 [package]
 name = "rabbitholes"
 version = "0.1.0"
 
-# See more keys and their definitions at https://docs.swmansion.com/scarb/docs/reference/manifest
-
 [dependencies]
-rbits = { path = "src/rbits" }
-manager = { path = "src/manager" }
-hole_registry = { path = "src/hole_registry" }
-rabbit_registry = { path = "src/rabbit_registry" }
-rabbit_storage = { path = "src/rabbit_storage" }
+starknet = "2.0.0-rc6"
 
-[scripts]
-# test = "cairo-test --starknet tests/lib.cairo"
-test = "cairo-test --starknet ."
+[[target.starknet-contract]]
 
+# [scripts]
+
+# [cairo]
+# sierra-replace-ids = true

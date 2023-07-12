@@ -1,9 +1,11 @@
 [project]
-protostar-version = "0.10.0"
-# linked-libraries = ["rbits", "archive", "registry"]
+protostar-version = "0.14.0"
+# linked-libraries = ["erc20"]
 
 [contracts]
-rbits = ["src/rbits"]
+erc20 = ["src/erc20"]
 manager = ["src/manager"]
-archive = ["src/archive"]
-
+# rabbitholes = ["src"]
+# rabbitholes = ["."]
+# rabbitholes = ["src"]
+# erc20 = ["erc20/src"]
