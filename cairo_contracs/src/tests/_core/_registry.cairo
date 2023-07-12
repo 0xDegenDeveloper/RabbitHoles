@@ -8,7 +8,6 @@ use rabbitholes::{
         erc20::{ERC20, IERC20, IERC20DispatcherTrait, IERC20Dispatcher},
         registry::{Registry, IRegistry, IRegistryDispatcherTrait, IRegistryDispatcher}
     },
-    tests::_core::_manager::{_set_permit_from_for}
 };
 use result::ResultTrait;
 use starknet::{
@@ -18,7 +17,7 @@ use starknet::{
 };
 use traits::{Into, TryInto};
 
-/// Helpers
+/// helpers
 fn deploy_suite() -> (IManagerDispatcher, IERC20Dispatcher, IRegistryDispatcher) {
     let owner = contract_address_const::<'owner'>();
     let mut calldata = ArrayTrait::new();
@@ -31,13 +30,13 @@ fn deploy_suite() -> (IManagerDispatcher, IERC20Dispatcher, IRegistryDispatcher)
         .unwrap();
 
     calldata = ArrayTrait::new();
+    calldata.append(manager_address.into());
     calldata.append('RabbitHoles');
     calldata.append('RBITS');
     calldata.append(6_u8.into());
     calldata.append(123_u128.into());
     calldata.append(0_u128.into());
     calldata.append(owner.into());
-    calldata.append(manager_address.into());
 
     let (rbits_address, _) = deploy_syscall(
         ERC20::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
@@ -90,7 +89,7 @@ fn get_hole(Registry: IRegistryDispatcher, id: u64) -> Registry::Hole {
     }
 }
 
-/// Test helpers
+/// testers
 fn test_rabbit(
     Registry: IRegistryDispatcher,
     id: u64,
@@ -117,7 +116,6 @@ fn test_rabbit(
     };
 }
 
-
 fn test_hole(
     Registry: IRegistryDispatcher,
     id: u64,
@@ -137,7 +135,7 @@ fn test_hole(
     assert(Registry.title_to_id(title) == id, 'Incorrect hole id');
 }
 
-
+/// tests
 #[test]
 #[available_gas(2000000)]
 fn constructor() {
@@ -206,27 +204,27 @@ fn create_rabbit_zero_hole() {
 fn create_holes() {
     let (Manager, Rbits, Registry) = deploy_suite();
     let anon = contract_address_const::<'anon'>();
-    /// Create the holes
+    /// create holes
     set_block_timestamp(111);
     Registry.create_hole('title', anon);
     set_block_timestamp(222);
     Registry.create_hole('title2', anon);
-    /// Test holes
+    /// test holes
     test_hole(Registry, 1, anon, 'title', 111, 0, 0);
     test_hole(Registry, 2, anon, 'title2', 222, 0, 0);
-    /// Test (global) stats
+    /// test (global) stats
     let stats = Registry.get_global_stats();
     assert(stats.holes == 2, 'Incorrect holes count');
     assert(stats.rabbits == 0, 'Incorrect rabbits count');
     assert(stats.depth == 0, 'Incorrect depth');
-    /// Test user stats
+    /// test user stats
     let mut a = ArrayTrait::<ContractAddress>::new();
     a.append(anon);
     let user_stats = *Registry.get_user_stats(a).at(0);
     assert(user_stats.holes == 2, 'Incorrect holes count');
     assert(user_stats.rabbits == 0, 'Incorrect rabbits count');
     assert(user_stats.depth == 0, 'Incorrect depth');
-    /// Test user holes table
+    /// test user holes table
     let mut indexes = ArrayTrait::<u64>::new();
     indexes.append(1);
     indexes.append(2);
@@ -245,10 +243,10 @@ fn create_rabbits() {
     let (Manager, Rbits, Registry) = deploy_suite();
     let anon = contract_address_const::<'anon'>();
     let burner = contract_address_const::<'burner'>();
-    /// Create holes
+    /// create holes
     Registry.create_hole('title', anon);
     Registry.create_hole('title2', anon);
-    /// Create rabbits
+    /// create rabbits
     let mut m1 = ArrayTrait::<felt252>::new();
     let mut m2 = ArrayTrait::<felt252>::new();
     let mut m3 = ArrayTrait::<felt252>::new();
@@ -267,24 +265,24 @@ fn create_rabbits() {
     Registry.create_rabbit(burner, m3.clone(), 2);
     set_block_timestamp(444);
     Registry.create_rabbit(burner, m4.clone(), 2);
-    /// Test rabbits 
+    /// test rabbits 
     test_rabbit(Registry, 1, burner, m1, 1, 111, 1);
     test_rabbit(Registry, 2, burner, m2, 1, 222, 2);
     test_rabbit(Registry, 3, burner, m3, 2, 333, 3);
     test_rabbit(Registry, 4, burner, m4, 2, 444, 4);
-    /// Test (global) stats
+    /// test (global) stats
     let stats = Registry.get_global_stats();
     assert(stats.holes == 2, 'Incorrect holes count');
     assert(stats.rabbits == 4, 'Incorrect rabbits count');
     assert(stats.depth == 6, 'Incorrect depth');
-    /// Test user stats 
+    /// test user stats 
     let mut a = ArrayTrait::<ContractAddress>::new();
     a.append(burner);
     let user_stats = *Registry.get_user_stats(a).at(0);
     assert(user_stats.holes == 0, 'Incorrect holes count');
     assert(user_stats.rabbits == 4, 'Incorrect rabbits count');
     assert(user_stats.depth == 6, 'Incorrect depth');
-    /// Test user rabbits table
+    /// test user rabbits table
     let mut indexes = ArrayTrait::<u64>::new();
     indexes.append(1);
     indexes.append(2);
@@ -296,7 +294,7 @@ fn create_rabbits() {
     assert(*rabbits.at(1).index == 2, 'Incorrect hole_id');
     assert(*rabbits.at(2).index == 3, 'Incorrect hole_id');
     assert(*rabbits.at(3).index == 4, 'Incorrect hole_id');
-    /// Test rabbits in hole 
+    /// test rabbits in hole 
     let mut indexes = ArrayTrait::<u64>::new();
     indexes.append(1);
     indexes.append(2);
@@ -308,7 +306,7 @@ fn create_rabbits() {
     assert(rabbits.len() == 2, 'Incorrect rabbits count');
     assert(*rabbits.at(0).index == 3, 'Incorrect hole_id');
     assert(*rabbits.at(1).index == 4, 'Incorrect hole_id');
-    /// Re-test holes
+    /// re-test holes
     test_hole(Registry, 1, anon, 'title', 0, 2, 2);
     test_hole(Registry, 2, anon, 'title2', 0, 2, 4);
 }

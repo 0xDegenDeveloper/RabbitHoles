@@ -2,10 +2,10 @@ use starknet::ContractAddress;
 
 #[starknet::interface]
 trait IRegistry<TContractState> {
-    /// Reads
+    /// read
+    fn MANAGER_ADDRESS(self: @TContractState) -> ContractAddress;
     fn CREATE_HOLE_PERMIT(self: @TContractState) -> felt252;
     fn CREATE_RABBIT_PERMIT(self: @TContractState) -> felt252;
-    fn MANAGER_ADDRESS(self: @TContractState) -> ContractAddress;
     fn title_to_id(self: @TContractState, title: felt252) -> u64;
     fn get_holes(self: @TContractState, ids: Array<u64>) -> Array<Registry::Hole>;
     fn get_rabbits(self: @TContractState, ids: Array<u64>) -> Array<Registry::RabbitHot>;
@@ -22,7 +22,7 @@ trait IRegistry<TContractState> {
         self: @TContractState, users: Array<ContractAddress>
     ) -> Array<Registry::Stats>;
     fn get_global_stats(self: @TContractState) -> Registry::Stats;
-    /// Writes
+    /// write
     fn create_hole(ref self: TContractState, title: felt252, digger: ContractAddress);
     fn create_rabbit(
         ref self: TContractState, burner: ContractAddress, msg: Array<felt252>, hole_id: u64
@@ -46,9 +46,9 @@ mod Registry {
 
     #[storage]
     struct Storage {
+        s_MANAGER_ADDRESS: ContractAddress,
         s_CREATE_HOLE_PERMIT: felt252,
         s_CREATE_RABBIT_PERMIT: felt252,
-        s_manager_contract: IManagerDispatcher,
         s_total_holes: u64,
         s_total_rabbits: u64,
         s_total_depth: u64,
@@ -64,9 +64,9 @@ mod Registry {
 
     #[constructor]
     fn constructor(ref self: ContractState, manager_address: ContractAddress) {
+        self.s_MANAGER_ADDRESS.write(manager_address);
         self.s_CREATE_HOLE_PERMIT.write('CREATE_HOLE_PERMIT');
         self.s_CREATE_RABBIT_PERMIT.write('CREATE_RABBIT_PERMIT');
-        self.s_manager_contract.write(IManagerDispatcher { contract_address: manager_address });
     }
 
     #[event]
@@ -133,17 +133,17 @@ mod Registry {
 
     #[external(v0)]
     impl Registry of super::IRegistry<ContractState> {
-        /// Reads
+        /// read
+        fn MANAGER_ADDRESS(self: @ContractState) -> ContractAddress {
+            self.s_MANAGER_ADDRESS.read()
+        }
+
         fn CREATE_HOLE_PERMIT(self: @ContractState) -> felt252 {
             self.s_CREATE_HOLE_PERMIT.read()
         }
 
         fn CREATE_RABBIT_PERMIT(self: @ContractState) -> felt252 {
             self.s_CREATE_RABBIT_PERMIT.read()
-        }
-
-        fn MANAGER_ADDRESS(self: @ContractState) -> ContractAddress {
-            self.s_manager_contract.read().contract_address
         }
 
         fn get_holes(self: @ContractState, ids: Array<u64>) -> Array<Hole> {
@@ -158,7 +158,6 @@ mod Registry {
             };
             res
         }
-
 
         fn get_rabbits(self: @ContractState, ids: Array<u64>) -> Array<RabbitHot> {
             let mut res = ArrayTrait::<RabbitHot>::new();
@@ -250,10 +249,10 @@ mod Registry {
             self.s_titles_to_ids.read(title)
         }
 
-        /// Writes
+        /// write
         fn create_hole(ref self: ContractState, title: felt252, digger: ContractAddress) {
-            assert(self.s_titles_to_ids.read(title).is_zero(), 'Registry: hole already dug');
             self.has_valid_permit(self.s_CREATE_HOLE_PERMIT.read());
+            assert(self.s_titles_to_ids.read(title).is_zero(), 'Registry: hole already dug');
 
             self.create_hole_helper(title, digger);
         }
@@ -261,9 +260,9 @@ mod Registry {
         fn create_rabbit(
             ref self: ContractState, burner: ContractAddress, msg: Array<felt252>, hole_id: u64
         ) {
+            self.has_valid_permit(self.s_CREATE_RABBIT_PERMIT.read());
             assert(hole_id.is_non_zero(), 'Registry: invalid hole id');
             assert(hole_id <= self.s_total_holes.read(), 'Registry: invalid hole id');
-            self.has_valid_permit(self.s_CREATE_RABBIT_PERMIT.read());
 
             self.create_rabbit_helper(burner, msg, hole_id);
         }
@@ -282,14 +281,7 @@ mod Registry {
             }
         }
 
-        /// 0 based index
         fn fetch_msg(self: @ContractState, rabbit_id: u64) -> Array<felt252> {
-            // assert(
-            //     m_start <= self.s_total_depth.read(), 'Registry: out of bounds'
-            // ); /// might be able to omit
-            // if (m_start + m_len > self.s_total_depth.read()) {
-            //     m_len = self.s_total_depth.read() - m_start;
-            // }
             let m_start = self.s_rabbits.read(rabbit_id).m_start;
             let mut m_len = self.s_rabbits.read(rabbit_id).m_len;
             let mut res = ArrayTrait::<felt252>::new();
@@ -305,52 +297,6 @@ mod Registry {
             res
         }
 
-        /// 1 based index
-        fn fetch_user_holes(
-            self: @ContractState, user: ContractAddress, fetch_start: u64, mut fetch_len: u64
-        ) -> Array<u64> {
-            let stats = self.s_stats.read(user);
-            assert(fetch_start.is_non_zero(), 'Registry: invalid fetch start');
-            assert(fetch_start <= stats.holes, 'Registry: out of bounds');
-            if (fetch_start + fetch_len > stats.holes + 1) {
-                fetch_len = stats.holes - fetch_start + 1;
-            }
-            let mut res = ArrayTrait::<u64>::new();
-            let mut i = 0;
-            loop {
-                if (i >= fetch_len) {
-                    break ();
-                }
-                res.append(self.s_user_holes_table.read((user, fetch_start + i)));
-                i += 1;
-            };
-            res
-        }
-
-        /// test above first 
-        /// 1 based index 
-        fn fetch_user_rabbits(
-            self: @ContractState, user: ContractAddress, fetch_start: u64, mut fetch_len: u64
-        ) -> Array<u64> {
-            let stats = self.s_stats.read(user);
-            assert(fetch_start.is_non_zero(), 'Registry: invalid fetch start');
-            assert(fetch_start <= stats.rabbits, 'Registry: out of bounds');
-            if (fetch_start + fetch_len > stats.rabbits + 1) {
-                fetch_len = stats.rabbits - fetch_start + 1;
-            }
-            let mut res = ArrayTrait::<u64>::new();
-            let mut i = 0;
-            loop {
-                if (i >= fetch_len) {
-                    break ();
-                }
-                res.append(self.s_user_rabbits_table.read((user, fetch_start + i)));
-                i += 1;
-            };
-            res
-        }
-
-
         fn write_msg(ref self: ContractState, msg: Array<felt252>) -> (u64, u64) {
             let mut i = 0;
             let m_len: u64 = msg.len().into();
@@ -365,8 +311,6 @@ mod Registry {
             };
             (m_start, m_len)
         }
-
-        ///  
 
         fn create_hole_helper(ref self: ContractState, title: felt252, digger: ContractAddress, ) {
             let mut stats = self.s_stats.read(digger);
@@ -386,7 +330,6 @@ mod Registry {
                         index: id
                     }
                 );
-
             stats.holes += 1;
             self.s_user_holes_table.write((digger, stats.holes), id);
             self.s_stats.write(digger, stats);
@@ -400,12 +343,10 @@ mod Registry {
             let mut hole = self.s_holes.read(hole_id);
             let mut stats = self.s_stats.read(burner);
             let id = self.s_total_rabbits.read() + 1;
-            /// Write msg to storage (0 based index)
             let (m_start, m_len) = self.write_msg(msg);
-            /// Update hole
+
             hole.digs += 1;
             hole.depth += m_len;
-            /// Update user stats
             stats.rabbits += 1;
             stats.depth += m_len;
 
@@ -414,23 +355,24 @@ mod Registry {
             self.s_total_rabbits.write(id);
             self.s_user_rabbits_table.write((burner, stats.rabbits), id);
             self.s_holes.write(hole_id, hole);
+            self.s_stats.write(burner, stats);
             self
                 .s_rabbits
                 .write(
                     id,
                     RabbitCold { burner, m_start, m_len, timestamp: get_block_timestamp(), hole_id }
                 );
-            self.s_stats.write(burner, stats);
+
+            self.emit(RabbitCreated { creator: get_caller_address(), burner, depth: m_len, id });
         }
 
         fn has_valid_permit(ref self: ContractState, permit: felt252) {
             assert(
-                self.s_manager_contract.read().has_valid_permit(get_caller_address(), permit),
+                IManagerDispatcher {
+                    contract_address: self.s_MANAGER_ADDRESS.read()
+                }.has_valid_permit(get_caller_address(), permit),
                 'Registry: invalid permit'
             );
         }
     }
 }
-/// -------------------- tests --------------------
-
-

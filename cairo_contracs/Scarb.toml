@@ -12,3 +12,5 @@ starknet = "2.0.0-rc6"
 # sierra-compile = "starknet-sierra-compile src/lib.cairo sierra/rbits.json"
 
 [[target.starknet-contract]]
+allowed-libfuncs = true
+allowed-libfuncs-list.name = "experimental"

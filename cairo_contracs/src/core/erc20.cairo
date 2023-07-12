@@ -3,32 +3,33 @@ use starknet::ContractAddress;
 
 #[starknet::interface]
 trait IERC20<TContractState> {
-    /// Reads
-    fn SUDO_BURN(self: @TContractState) -> felt252;
-    fn SUDO_MINT(self: @TContractState) -> felt252;
+    /// read
+    fn MANAGER_ADDRESS(self: @TContractState) -> ContractAddress;
+    fn BURN_PERMIT(self: @TContractState) -> felt252;
+    fn MINT_PERMIT(self: @TContractState) -> felt252;
     fn allowance(self: @TContractState, owner: ContractAddress, spender: ContractAddress) -> u256;
     fn balance_of(self: @TContractState, account: ContractAddress) -> u256;
     fn decimals(self: @TContractState) -> u8;
-    fn manager_address(self: @TContractState) -> ContractAddress;
     fn name(self: @TContractState) -> felt252;
     fn symbol(self: @TContractState) -> felt252;
     fn total_supply(self: @TContractState) -> u256;
-    /// Writes
+    /// write
     fn approve(ref self: TContractState, spender: ContractAddress, amount: u256);
+    fn burn(ref self: TContractState, owner: ContractAddress, amount: u256);
     fn decrease_allowance(
         ref self: TContractState, spender: ContractAddress, subtracted_value: u256
     );
     fn increase_allowance(ref self: TContractState, spender: ContractAddress, added_value: u256);
+    fn mint(ref self: TContractState, recipient: ContractAddress, amount: u256);
     fn transfer(ref self: TContractState, recipient: ContractAddress, amount: u256);
     fn transfer_from(
         ref self: TContractState, sender: ContractAddress, recipient: ContractAddress, amount: u256
     );
-    fn sudo_burn(ref self: TContractState, owner: ContractAddress, amount: u256);
-    fn sudo_mint(ref self: TContractState, recipient: ContractAddress, amount: u256);
 }
 
 #[starknet::contract]
 mod ERC20 {
+    use core::integer::BoundedInt;
     use rabbitholes::core::manager::{IManager, IManagerDispatcherTrait, IManagerDispatcher};
     use starknet::{get_caller_address, contract_address_const, ContractAddress};
     use zeroable::Zeroable;
@@ -41,9 +42,9 @@ mod ERC20 {
         s_total_supply: u256,
         s_balances: LegacyMap::<ContractAddress, u256>,
         s_allowances: LegacyMap::<(ContractAddress, ContractAddress), u256>,
-        s_manager_contract: IManagerDispatcher,
-        s_SUDO_MINT: felt252,
-        s_SUDO_BURN: felt252,
+        s_MANAGER_ADDRESS: ContractAddress,
+        s_MINT_PERMIT: felt252,
+        s_BURN_PERMIT: felt252,
     }
 
     #[event]
@@ -51,15 +52,6 @@ mod ERC20 {
     enum Event {
         Transfer: Transfer,
         Approval: Approval,
-    }
-
-    #[derive(Drop, starknet::Event)]
-    struct Transfer {
-        #[key]
-        from: ContractAddress,
-        #[key]
-        to: ContractAddress,
-        value: u256,
     }
 
     #[derive(Drop, starknet::Event)]
@@ -71,35 +63,48 @@ mod ERC20 {
         value: u256,
     }
 
+    #[derive(Drop, starknet::Event)]
+    struct Transfer {
+        #[key]
+        from: ContractAddress,
+        #[key]
+        to: ContractAddress,
+        value: u256,
+    }
+
     #[constructor]
     fn constructor(
         ref self: ContractState,
+        manager_address: ContractAddress,
         name_: felt252,
         symbol_: felt252,
         decimals_: u8,
         initial_supply: u256,
         recipient: ContractAddress,
-        manager_address: ContractAddress,
     ) {
+        self.s_MANAGER_ADDRESS.write(manager_address);
+        self.s_MINT_PERMIT.write('MINT_PERMIT');
+        self.s_BURN_PERMIT.write('BURN_PERMIT');
         self.s_name.write(name_);
         self.s_symbol.write(symbol_);
         self.s_decimals.write(decimals_);
         assert(!recipient.is_zero(), 'ERC20: mint to the 0 address');
         self.update(contract_address_const::<0>(), recipient, initial_supply);
-        self.s_manager_contract.write(IManagerDispatcher { contract_address: manager_address });
-        self.s_SUDO_MINT.write('SUDO_MINT');
-        self.s_SUDO_BURN.write('SUDO_BURN');
     }
 
     #[external(v0)]
     impl ERC20 of super::IERC20<ContractState> {
-        /// Reads
-        fn SUDO_BURN(self: @ContractState) -> felt252 {
-            self.s_SUDO_BURN.read()
+        /// read
+        fn MANAGER_ADDRESS(self: @ContractState) -> ContractAddress {
+            self.s_MANAGER_ADDRESS.read()
         }
 
-        fn SUDO_MINT(self: @ContractState) -> felt252 {
-            self.s_SUDO_MINT.read()
+        fn MINT_PERMIT(self: @ContractState) -> felt252 {
+            self.s_MINT_PERMIT.read()
+        }
+
+        fn BURN_PERMIT(self: @ContractState) -> felt252 {
+            self.s_BURN_PERMIT.read()
         }
 
         fn allowance(
@@ -116,10 +121,6 @@ mod ERC20 {
             self.s_decimals.read()
         }
 
-        fn manager_address(self: @ContractState) -> ContractAddress {
-            self.s_manager_contract.read().contract_address
-        }
-
         fn name(self: @ContractState) -> felt252 {
             self.s_name.read()
         }
@@ -132,10 +133,17 @@ mod ERC20 {
             self.s_total_supply.read()
         }
 
-        /// Writes
+        /// write
         fn approve(ref self: ContractState, spender: ContractAddress, amount: u256) {
             let caller = get_caller_address();
             self.approve_helper(caller, spender, amount);
+        }
+
+        fn burn(ref self: ContractState, owner: ContractAddress, amount: u256) {
+            let caller = get_caller_address();
+            self.has_valid_permit(self.s_BURN_PERMIT.read());
+            self.spend_allowance(owner, caller, amount);
+            self.update(owner, contract_address_const::<0>(), amount);
         }
 
         fn decrease_allowance(
@@ -158,6 +166,11 @@ mod ERC20 {
                 );
         }
 
+        fn mint(ref self: ContractState, recipient: ContractAddress, amount: u256) {
+            self.has_valid_permit(self.s_MINT_PERMIT.read());
+            self.update(contract_address_const::<0>(), recipient, amount);
+        }
+
         fn transfer(ref self: ContractState, recipient: ContractAddress, amount: u256) {
             let sender = get_caller_address();
             self.transfer_helper(sender, recipient, amount);
@@ -173,18 +186,6 @@ mod ERC20 {
             self.spend_allowance(sender, caller, amount);
             self.transfer_helper(sender, recipient, amount);
         }
-
-        fn sudo_burn(ref self: ContractState, owner: ContractAddress, amount: u256) {
-            let caller = get_caller_address();
-            self.has_valid_permit(self.s_SUDO_BURN.read());
-            self.spend_allowance(owner, caller, amount);
-            self.update(owner, contract_address_const::<0>(), amount);
-        }
-
-        fn sudo_mint(ref self: ContractState, recipient: ContractAddress, amount: u256) {
-            self.has_valid_permit(self.s_SUDO_MINT.read());
-            self.update(contract_address_const::<0>(), recipient, amount);
-        }
     }
 
     #[generate_trait]
@@ -199,7 +200,9 @@ mod ERC20 {
 
         fn has_valid_permit(ref self: ContractState, permit: felt252) {
             assert(
-                self.s_manager_contract.read().has_valid_permit(get_caller_address(), permit),
+                IManagerDispatcher {
+                    contract_address: self.s_MANAGER_ADDRESS.read()
+                }.has_valid_permit(get_caller_address(), permit),
                 'ERC20: invalid permit'
             );
         }
@@ -208,9 +211,10 @@ mod ERC20 {
             ref self: ContractState, owner: ContractAddress, spender: ContractAddress, amount: u256
         ) {
             let current_allowance = self.s_allowances.read((owner, spender));
-            let ONES_MASK = 0xffffffffffffffffffffffffffffffff_u128;
-            let is_unlimited_allowance = current_allowance.low == ONES_MASK
-                && current_allowance.high == ONES_MASK;
+            let MAX_ALLOWANCE = BoundedInt::max();
+
+            let is_unlimited_allowance = current_allowance.low == MAX_ALLOWANCE
+                && current_allowance.high == MAX_ALLOWANCE;
             if !is_unlimited_allowance {
                 assert(current_allowance >= amount, 'ERC20: insufficient allowance');
                 self.approve_helper(owner, spender, current_allowance - amount);
@@ -231,7 +235,6 @@ mod ERC20 {
         fn update(
             ref self: ContractState, from: ContractAddress, to: ContractAddress, amount: u256
         ) {
-            /// From
             if (from.is_zero()) {
                 self.s_total_supply.write(self.s_total_supply.read() + amount);
             } else {
@@ -239,7 +242,7 @@ mod ERC20 {
                 assert(from_balance >= amount, 'ERC20: insufficient balance');
                 self.s_balances.write(from, from_balance - amount);
             }
-            /// To
+
             if (to.is_zero()) {
                 self.s_total_supply.write(self.s_total_supply.read() - amount);
             } else {

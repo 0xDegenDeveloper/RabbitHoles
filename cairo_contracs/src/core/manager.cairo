@@ -2,13 +2,13 @@ use starknet::ContractAddress;
 
 #[starknet::interface]
 trait IManager<TContractState> {
-    /// Reads
-    fn MANAGER_PERMIT(self: @TContractState) -> felt252;
+    /// read
+    fn SUDO_PERMIT(self: @TContractState) -> felt252;
     fn has_permit_until(self: @TContractState, account: ContractAddress, permit: felt252) -> u64;
     fn has_valid_permit(self: @TContractState, account: ContractAddress, permit: felt252) -> bool;
-    fn manager_permits(self: @TContractState, permit: felt252) -> felt252;
+    fn sudo_permits(self: @TContractState, permit: felt252) -> felt252;
     fn owner(self: @TContractState) -> ContractAddress;
-    /// Writes
+    /// write
     fn renounce_ownership(ref self: TContractState);
     fn set_permit(
         ref self: TContractState, account: ContractAddress, permit: felt252, timestamp: u64
@@ -25,7 +25,7 @@ mod Manager {
 
     #[storage]
     struct Storage {
-        s_MANAGER_PERMIT: felt252,
+        s_SUDO_PERMIT: felt252,
         s_owner: ContractAddress,
         s_permits: LegacyMap<(ContractAddress, felt252), u64>,
         s_sudo_permits: LegacyMap<felt252, felt252>,
@@ -71,14 +71,14 @@ mod Manager {
     #[constructor]
     fn constructor(ref self: ContractState, _owner: ContractAddress) {
         self.write_owner(_owner);
-        self.s_MANAGER_PERMIT.write('MANAGER');
+        self.s_SUDO_PERMIT.write('SUDO');
     }
 
     #[external(v0)]
     impl Manager of super::IManager<ContractState> {
-        /// Reads
-        fn MANAGER_PERMIT(self: @ContractState) -> felt252 {
-            self.s_MANAGER_PERMIT.read()
+        /// read
+        fn SUDO_PERMIT(self: @ContractState) -> felt252 {
+            self.s_SUDO_PERMIT.read()
         }
 
         fn has_permit_until(
@@ -93,7 +93,7 @@ mod Manager {
             self.has_valid_permit_helper(account, permit)
         }
 
-        fn manager_permits(self: @ContractState, permit: felt252) -> felt252 {
+        fn sudo_permits(self: @ContractState, permit: felt252) -> felt252 {
             self.s_sudo_permits.read(permit)
         }
 
@@ -101,7 +101,7 @@ mod Manager {
             self.s_owner.read()
         }
 
-        /// Writes
+        /// write
         fn renounce_ownership(ref self: ContractState) {
             self.only_owner();
             let zero_address = contract_address_const::<0>();
@@ -134,7 +134,7 @@ mod Manager {
 
         fn set_sudo_permit(ref self: ContractState, permit: felt252, sudo_permit: felt252) {
             assert(
-                self.has_valid_permit_helper(get_caller_address(), self.s_MANAGER_PERMIT.read()),
+                self.has_valid_permit_helper(get_caller_address(), self.s_SUDO_PERMIT.read()),
                 'Manager: Caller non manager'
             );
             self.s_sudo_permits.write(permit, sudo_permit);
@@ -172,6 +172,3 @@ mod Manager {
         }
     }
 }
-/// -------------------- tests --------------------
-
-

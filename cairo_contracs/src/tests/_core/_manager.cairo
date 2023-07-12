@@ -9,7 +9,7 @@ use starknet::syscalls::deploy_syscall;
 use starknet::testing::{set_caller_address, set_contract_address, set_block_timestamp};
 use traits::{Into, TryInto};
 
-/// Helpers ///
+/// helper
 fn deploy_manager() -> IManagerDispatcher {
     let owner: ContractAddress = contract_address_const::<'owner'>();
     let mut calldata = ArrayTrait::new();
@@ -24,17 +24,6 @@ fn deploy_manager() -> IManagerDispatcher {
     IManagerDispatcher { contract_address: manager_address }
 }
 
-fn _set_permit_from_for(
-    Manager: IManagerDispatcher,
-    from: ContractAddress,
-    for: ContractAddress,
-    permit: felt252,
-    timestamp: u64
-) {
-    set_contract_address(from);
-    Manager.set_permit(for, permit, timestamp);
-}
-
 fn _transfer_ownership_from_to(
     Manager: IManagerDispatcher, from: ContractAddress, to: ContractAddress
 ) {
@@ -42,16 +31,15 @@ fn _transfer_ownership_from_to(
     Manager.transfer_ownership(to);
 }
 
-/// Deployment
+/// tests
 #[test]
 #[available_gas(3000000)]
 fn constructor() {
     let Manager = deploy_manager();
     assert(Manager.owner().into() == 'owner', 'Owner fail');
-    assert(Manager.MANAGER_PERMIT() == 'MANAGER', 'MANAGER_PERMIT fail')
+    assert(Manager.SUDO_PERMIT() == 'SUDO', 'SUDO fail')
 }
 
-/// Ownable
 #[test]
 #[available_gas(2000000)]
 fn transfer_ownership_as_owner() {
@@ -79,7 +67,6 @@ fn transfer_ownership_to_zero() {
     _transfer_ownership_from_to(Manager, Manager.owner(), zero_addr);
 }
 
-
 #[test]
 #[available_gas(2000000)]
 fn renounce_ownership() {
@@ -99,21 +86,20 @@ fn renounce_ownership_as_anon() {
     Manager.renounce_ownership();
 }
 
-/// Managerial
 #[test]
 #[available_gas(2000000)]
 fn set_permit_as_owner() {
     let Manager = deploy_manager();
     let account = contract_address_const::<555>();
-    /// Check account has no permit
+    /// check account has no permit
     assert(Manager.has_permit_until(account, 'permit') == 0, 'Incorrect timestamp');
     assert(!Manager.has_valid_permit(account, 'permit'), 'False permit');
-    /// Set permit
-    _set_permit_from_for(Manager, Manager.owner(), account, 'permit', 123);
-    /// Check account has permit
+    /// set permit
+    Manager.set_permit(account, 'permit', 123);
+    /// check account has permit
     assert(Manager.has_permit_until(account, 'permit') == 123, 'Incorrect timestamp');
     assert(Manager.has_valid_permit(account, 'permit'), 'Broken permit');
-    /// Check permit expires
+    /// check permit expires
     set_block_timestamp(124);
     assert(!Manager.has_valid_permit(account, 'permit'), 'Permit should expire');
 }
@@ -124,7 +110,8 @@ fn set_permit_as_owner() {
 fn set_permit_as_anon() {
     let Manager = deploy_manager();
     let account = contract_address_const::<666>();
-    _set_permit_from_for(Manager, account, account, 'permit', 123);
+    set_contract_address(account);
+    Manager.set_permit(account, 'permit', 123);
 }
 
 #[test]
@@ -133,15 +120,16 @@ fn set_permit_as_manager() {
     let Manager = deploy_manager();
     let manager = contract_address_const::<'manager'>();
     let anon = contract_address_const::<'anon'>();
-    /// Check anon has no permit
+    /// check anon has no permit
     assert(!Manager.has_valid_permit(anon, 'MINT'), 'Should not have permit');
     assert(Manager.has_permit_until(anon, 'MINT') == 0, 'Incorrect timestamp');
-    /// Assign manager & set sudo permit (MINT -> MINT_MANAGER)
-    _set_permit_from_for(Manager, Manager.owner(), manager, 'MINT MANAGER', 123);
-    Manager.set_sudo_permit('MINT', 'MINT MANAGER');
-    /// Set permit as manager
-    _set_permit_from_for(Manager, manager, anon, 'MINT', 123);
-    /// Check anon has permit
+    /// assign manager & set sudo permit (MINT -> MINT_MANAGER)
+    Manager.set_permit(manager, 'SUDO_MINT', 123);
+    Manager.set_sudo_permit('MINT', 'SUDO_MINT');
+    /// set permit as manager
+    set_contract_address(manager);
+    Manager.set_permit(anon, 'MINT', 123);
+    /// check anon has permit
     assert(Manager.has_valid_permit(anon, 'MINT'), 'Should not have permit');
     assert(Manager.has_permit_until(anon, 'MINT') == 123, 'Incorrect timestamp');
 }
@@ -152,17 +140,17 @@ fn set_permit_as_manager() {
 fn set_permit_with_zero() {
     let Manager = deploy_manager();
     let account = contract_address_const::<666>();
-    _set_permit_from_for(Manager, Manager.owner(), account, 0x0, 123);
+    Manager.set_permit(account, 0x0, 1234);
 }
 
 #[test]
 #[available_gas(2000000)]
 fn set_sudo_permit_as_owner() {
     let Manager = deploy_manager();
-    assert(Manager.manager_permits('MINT') == 0x0, 'Manager permit init wrong');
+    assert(Manager.sudo_permits('MINT') == 0x0, 'Manager permit init wrong');
     set_contract_address(Manager.owner());
-    Manager.set_sudo_permit('MINT', 'MINT MANAGER');
-    assert(Manager.manager_permits('MINT') == 'MINT MANAGER', 'Manager permit set wrong');
+    Manager.set_sudo_permit('MINT', 'SUDO_MINT');
+    assert(Manager.sudo_permits('MINT') == 'SUDO_MINT', 'Manager permit set wrong');
 }
 
 #[test]
@@ -178,10 +166,28 @@ fn set_sudo_permit_as_anon() {
 #[available_gas(2000000)]
 fn set_sudo_permit_as_manager() {
     let Manager = deploy_manager();
-    let mananger = contract_address_const::<'manager'>();
-    _set_permit_from_for(Manager, Manager.owner(), mananger, Manager.MANAGER_PERMIT(), 1111);
-    set_contract_address(mananger);
-    Manager.set_sudo_permit('MINT', 'MINT MANAGER');
-    assert(Manager.manager_permits('MINT') == 'MINT MANAGER', 'Manager permit set wrong');
+    let manager = contract_address_const::<'manager'>();
+    let manager2 = contract_address_const::<'manager2'>();
+    Manager.set_permit(manager, Manager.SUDO_PERMIT(), 1111);
+    set_contract_address(manager);
+    Manager.set_sudo_permit('MINT', 'SUDO_MINT');
+    assert(Manager.sudo_permits('MINT') == 'SUDO_MINT', 'Manager permit set wrong');
+}
+
+#[test]
+#[available_gas(2000000)]
+fn set_permit_as_granted_manager() {
+    let Manager = deploy_manager();
+    let manager = contract_address_const::<'manager'>();
+    let manager2 = contract_address_const::<'manager2'>();
+    let anon = contract_address_const::<'anon'>();
+    Manager.set_sudo_permit('MINT', 'SUDO_MINT');
+    Manager.set_sudo_permit('SUDO_MINT', 'SUDO_MINT_MANAGER');
+    Manager.set_permit(manager, 'SUDO_MINT_MANAGER', 1111);
+    set_contract_address(manager);
+    Manager.set_permit(manager2, 'SUDO_MINT', 1234);
+    set_contract_address(manager2);
+    Manager.set_permit(anon, 'MINT', 1234);
+    assert(Manager.has_valid_permit(anon, 'MINT'), 'Anon permit set wrong');
 }
 
