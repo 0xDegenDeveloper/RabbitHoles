@@ -1,14 +1,14 @@
-[[target.starknet-contract]]
-
 [package]
 name = "rabbitholes"
 version = "0.1.0"
-authors = ["Matt Carter <novemberfork@proton.me"]
+authors = ["Matt Carter"]
 readme = "README.md"
-homepage = "https://novemberfork.io/"
-repository = "https://github.com/0xDegenDeveloper/RabbitHoles"
+homepage = "https://rbits.space/"
+repository = "https://github.com/0xDegenDeveloper/Rabbitholes"
 description = "---"
 
 [dependencies]
 starknet = "2.0.0-rc6"
 # sierra-compile = "starknet-sierra-compile src/lib.cairo sierra/rbits.json"
+
+[[target.starknet-contract]]
