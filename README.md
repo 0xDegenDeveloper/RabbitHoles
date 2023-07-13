@@ -21,6 +21,6 @@ in the `SHOWER THOUGHTS` `Hole`, costing him some of his $RBITS
 - Finalizing frontend
 - Deploying contracts and connecting -> frontend
 
-##### Authors
+### Authors
 
 - Matt Carter (DegenDeveloper.eth)
