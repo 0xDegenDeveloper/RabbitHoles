@@ -8,9 +8,9 @@ The Manager contract controls permits for users. Other contracts can reference t
 
 #### Example usages
 
-For these examples, assume a contract requires a `MINT_PERMIT` to call its mint funciton like so:
+For these examples, assume a contract requires a `MINT_PERMIT` to call its mint function like so:
 
-> `assert(`contract.has_valid_permit(get_caller_address, `MINT_PERMIT`) == true, 'Reason: invalid permit'`)`
+> `assert(contract.has_valid_permit(get_caller_address, 'MINT_PERMIT') == true, 'Reason: invalid permit')`
 
 ##### Basic permits
 
@@ -102,13 +102,17 @@ This contract is the first implementation of Rabbitholes.
     - `['If this was a msg I wanted to l', 'eave in a hole']`
 
 - Using the `digger_bps (0 <= digger_bps <= 10,000)`, some $RBITS are transfered to the Hole's digger, and the rest are burned
-  - In the above example, if the `digger_bps` is 2,500, the msg will cost 2.000000 $RBITS; 0.500000 are sent to the Hole's digger, and 1.500000 are burned
+  - In the above example, if the `digger_bps` is 2,500 (`2500/10000 == 25%`), the msg will cost 2.000000 $RBITS; 0.500000 are sent to the Hole's digger, and 1.500000 are burned
 
-#### Stats are stored in this contract as such:
+#### Statistics are stored in this contract as such:
 
 - holes: The number of holes dug (globally or by a user)
 - rabbits: The number of rabbits left (globally or by a user)
 - depth: The total length of rabbit msgs left (globally or by a user)
+
+#### Along with lookup tables for returning:
+
+- A user's holes or rabbits based on an array of indexes (return a user's 1st & 2nd `Hole` or a user's 8th, 9th, & 10th `Rabbit`)
 
 ## Commands
 
