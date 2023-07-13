@@ -110,7 +110,7 @@ mod Registry {
     struct RabbitCold {
         burner: ContractAddress,
         m_start: u64,
-        m_len: u64,
+        depth: u64,
         timestamp: u64,
         hole_id: u64,
     }
@@ -283,7 +283,7 @@ mod Registry {
 
         fn fetch_msg(self: @ContractState, rabbit_id: u64) -> Array<felt252> {
             let m_start = self.s_rabbits.read(rabbit_id).m_start;
-            let mut m_len = self.s_rabbits.read(rabbit_id).m_len;
+            let mut m_len = self.s_rabbits.read(rabbit_id).depth;
             let mut res = ArrayTrait::<felt252>::new();
 
             let mut i = 0;
@@ -343,15 +343,15 @@ mod Registry {
             let mut hole = self.s_holes.read(hole_id);
             let mut stats = self.s_stats.read(burner);
             let id = self.s_total_rabbits.read() + 1;
-            let (m_start, m_len) = self.write_msg(msg);
+            let (m_start, depth) = self.write_msg(msg);
 
             hole.digs += 1;
-            hole.depth += m_len;
+            hole.depth += depth;
             stats.rabbits += 1;
-            stats.depth += m_len;
+            stats.depth += depth;
 
             self.s_the_rabbit_hole.write((hole_id, hole.digs), id);
-            self.s_total_depth.write(m_start + m_len);
+            self.s_total_depth.write(m_start + depth);
             self.s_total_rabbits.write(id);
             self.s_user_rabbits_table.write((burner, stats.rabbits), id);
             self.s_holes.write(hole_id, hole);
@@ -360,10 +360,10 @@ mod Registry {
                 .s_rabbits
                 .write(
                     id,
-                    RabbitCold { burner, m_start, m_len, timestamp: get_block_timestamp(), hole_id }
+                    RabbitCold { burner, m_start, depth, timestamp: get_block_timestamp(), hole_id }
                 );
 
-            self.emit(RabbitCreated { creator: get_caller_address(), burner, depth: m_len, id });
+            self.emit(RabbitCreated { creator: get_caller_address(), burner, depth, id });
         }
 
         fn has_valid_permit(ref self: ContractState, permit: felt252) {
