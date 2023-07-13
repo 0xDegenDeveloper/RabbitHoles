@@ -47,7 +47,8 @@ Manager & Owner are the users able to bind `XYZ_PERMIT` -> `SUDO_XYZ`
 ##### Going deeper
 
 > The examples above solely apply to the contract's mint function due to its set up:
-> assert(`contract.has_valid_permit(User, PERMIT) == true, 'Reason: invalid permit'`)
+>
+> - assert(`contract.has_valid_permit(User, PERMIT) == true, 'Reason: invalid permit'`)
 
 > This permit abstraction can be specifc like shown, or go deep. Imagine an NFT contract:
 >
