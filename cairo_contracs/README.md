@@ -99,3 +99,8 @@ This contract is the first implementation of Rabbitholes.
 - holes: The number of holes dug (globally or by a user)
 - rabbits: The number of rabbits left (globally or by a user)
 - depth: The total length of rabbit msgs left (globally or by a user)
+
+## Commands
+
+- `scarb build` creates the sierra.json files for the suite
+- `scarb test` runs `core` & `V1` tests
