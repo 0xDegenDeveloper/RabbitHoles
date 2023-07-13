@@ -16,7 +16,7 @@ RabbitHoles is a decentralized discussion platform built on Starknet using Cairo
 
 in the `SHOWER THOUGHTS` `Hole`, costing him some of his $RBITS
 
-##### For more technial details, look in the [cairo_contracts](./cairo_contracts/) directroy
+##### [/cairo_contracts](./cairo_contracts/) for more technical details
 
 ## Current development status
 
