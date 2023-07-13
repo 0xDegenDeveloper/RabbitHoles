@@ -26,4 +26,5 @@ Complex example: A contract wants to elect a manager to elect sudoers
 - Owner issues a SUDO_MINT_MANAGER permit to Manager
 - Manager can issue SUDO_MINT permits to Sudoer1 & Sudoer2
 - Sudoer1 & Sudoer2 can issue MINT_PERMITs to Alice, Bob, etc.
-  In this example Alice & Bob are the only users able to mint. Sudoers 1 & 2 (& Owner) are the only users that can set new minters. Manager (& Owner) are the only users that can set new mint sudoers
+
+In this example Alice & Bob are the only users able to mint. Sudoers 1 & 2 (& Owner) are the only users that can set new minters. Manager (& Owner) are the only users that can set new mint sudoers
