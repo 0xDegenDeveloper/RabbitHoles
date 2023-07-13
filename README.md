@@ -22,7 +22,3 @@ in the `SHOWER THOUGHTS` `Hole`, costing him some of his $RBITS
 
 - Finalizing [/client](./client)
 - Deploying contracts and connecting -> client
-
-### Authors
-
-- Matt Carter (DegenDeveloper.eth)
