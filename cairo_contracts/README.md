@@ -8,7 +8,9 @@ The Manager contract controls permits for users. Other contracts can reference t
 
 #### Example usages
 
-For these examples, assume a contract requires a `MINT_PERMIT` to call its mint funciton
+For these examples, assume a contract requires a `MINT_PERMIT` to call its mint funciton like so:
+
+> `assert(`contract.has_valid_permit(get_caller_address, `MINT_PERMIT`) == true, 'Reason: invalid permit'`)`
 
 ##### Basic permits
 
@@ -47,9 +49,6 @@ Manager & Owner are the users able to bind `XYZ_PERMIT` -> `SUDO_XYZ`
 ##### Going deeper
 
 > The examples above solely apply to the contract's mint function due to its set up:
->
-> - assert(`contract.has_valid_permit(User, PERMIT) == true, 'Reason: invalid permit'`)
-
 > This permit abstraction can be specifc like shown, or go deep. Imagine an NFT contract:
 >
 > - functions sharing permits: `set_royalty_percentage() & set_royalty_receiver()` functions both requiring a `ROYALTY_PERMIT`
