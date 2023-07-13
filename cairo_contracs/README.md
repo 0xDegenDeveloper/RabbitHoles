@@ -28,3 +28,24 @@ Complex example: A contract wants to elect a manager to elect sudoers
 - Sudoer1 & Sudoer2 can issue MINT_PERMITs to Alice, Bob, etc.
 
 In this example Alice & Bob are the only users able to mint. Sudoers 1 & 2 (& Owner) are the only users that can set new minters. Manager (& Owner) are the only users that can set new mint sudoers
+
+### ERC20
+
+This is a standard ERC20 contract that references the Manager contract for minting & burning permissions. To mint tokens a user must have a MINT_PERMIT, and to burn tokens, a user must have a BURN_PERMIT.
+
+### Registry
+
+This contract handles the logic for the creation and storage of Holes & Rabbits, referencing the Manager contract for these permissions. CREATE_HOLE_PERMIT & CREATE_RABBIT_PERMIT holders may create Holes/Rabbit respecively. There are no fees/rewards associated with this contract, that logic is intended to come from CREATE_HOLE_PERMIT & CREATE_RABBIT_PERMIT holding contracts. This structure allows the project to be extended with fewer restraints.
+
+Example project extension:
+
+- A Shovel NFT collection is released that allows owners to dig holes for a discount
+- RabbitholesV1_Shovel is deployed, handling the logic for this discount & ownership verification
+- With the neccessary permits, V1 & V1_Shovel are operating synchronously
+
+...
+
+- Months later a V2 is drafted, introducing public/private holes
+- A vote takes place, V1 & V1_Shovel are disabled, and V2 is deployed using the same core contracts (Manager, ERC20, Registry)
+
+### RabbitholesV1
