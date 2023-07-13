@@ -44,7 +44,7 @@ Manager & Owner are the users able to bind `XYZ_PERMIT` -> `SUDO_XYZ`
 
 ###### Note
 
-The values for these permits are represented as `felt252s` and are arbitrary. That is, a contract could require an `asdf` permit to call a function, and the owner may bind `asdf;` -> `jkl;` & `jkl;` -> `asdfjkl;` to implement the scenarios mentioned above.
+The values for these permits are represented as `felt252s` and are arbitrary (except for the `SUDO_PERMIT`). That is, a contract could require an `asdf` permit to call a function, and the owner (or `SUDO_PERMIT` holders) may bind `asdf;` -> `jkl;` & `jkl;` -> `asdfjkl;` to implement the scenarios mentioned above.
 
 ### ERC20
 
@@ -52,14 +52,12 @@ This is a standard ERC20 contract that references the Manager contract for minti
 
 ### Registry
 
-This contract handles the logic for the creation and storage of Holes & Rabbits, referencing the Manager contract for these permissions. A `CREATE_HOLE_PERMIT` & `CREATE_RABBIT_PERMIT` are required to create Holes & Rabbits respecively. There are no fees/rewards associated with this contract, that logic is intended to come from contracts with these `CREATE_HOLE/RABBIT_PERMITs`. This structure allows the project to be extended with few restraints.
+This contract handles the logic for the creation and storage of Holes & Rabbits, referencing the Manager contract for these permissions. A `CREATE_HOLE_PERMIT` & `CREATE_RABBIT_PERMIT` are required to create Holes & Rabbits respectively. There are no fees/rewards associated with this contract, that logic is intended to come from contracts with these `CREATE_HOLE/RABBIT_PERMITs`. This structure allows the project to be extended with few restraints.
 
 ##### Theoretical extensions
 
-This contract suite design allows RabbitHoles to be extended in a variety of ways, an example:
-
-- A Shovel NFT collection is released that allows owners to dig holes for a discount
-- RabbitholesV1_Shovel is deployed, handling the logic for this discount & ownership verification
+- A Shovel NFT collection is released that allow owners to dig holes at a discount and receive bigger `dig_rewards`
+- RabbitholesV1_Shovel is deployed, handling the logic for this discount, reward & ownership verification
 - With the neccessary permits, V1 & V1_Shovel are operating synchronously
 
 ...
@@ -69,11 +67,11 @@ This contract suite design allows RabbitHoles to be extended in a variety of way
 
 #### Creating a Hole
 
-A Hole is created using a `title`. This title is the topic for the Hole, and is stored in the contract as a `felt252`. This means the title must be 31 characters or less.
+A Hole is created using a `title`. This title is the topic for the Hole's discussion, and is stored in the contract as a `felt252`. This means the title must be 31 characters or less.
 
 #### Creating a Rabbit
 
-A Rabbit is created using a `hole_id` & a `msg`, this Hole must already exist, and the msg is a user's comment in the Hole's discussion. The `msg` is an array of `felt252s`, and the length of this array is referred to as the Rabbit's `depth`. Once a Rabbit is placed in a Hole, the Hole's digs are incremented by 1, and its depth is increased by the Rabbit's depth (global and for user stats are handled as well).
+A Rabbit is created using a `hole_id` & a `msg`, this Hole must already exist, and the msg is a user's comment in the Hole's discussion. The `msg` is an array of `felt252s`, and the length of this array is referred to as the Rabbit's `depth`. Once a Rabbit is placed in a Hole, the Hole's digs are incremented by 1, and its depth is increased by the Rabbit's depth (global and user stats are handled as well).
 
 ### RabbitholesV1
 
@@ -86,7 +84,7 @@ This contract is the first implementation of Rabbitholes.
 
 #### Burning a Rabbit
 
-- To burn a Rabbit, a user will spend some of theri $RBITS
+- To burn a Rabbit, a user will spend some of their $RBITS
 
   - The amount of $RBITS a Rabbit will cost is equal to its depth (the number of `felt252s` the Rabbit's msg spans)
   - i.e. "If this was a msg I wanted to leave in a hole", it would span across two felts:
@@ -96,9 +94,7 @@ This contract is the first implementation of Rabbitholes.
 - Using the `digger_bps (0 <= digger_bps <= 10,000)`, some $RBITS are transfered to the Hole's digger, and the rest are burned
   - In the above example, if the `digger_bps` is 2,500, the msg will cost 2.000000 $RBITS; 0.500000 are sent to the Hole's digger, and 1.500000 are burned
 
-#### Stats
-
-Stats are stored in this contract as such:
+#### Stats are stored in this contract as such:
 
 - holes: The number of holes dug (globally or by a user)
 - rabbits: The number of rabbits left (globally or by a user)
