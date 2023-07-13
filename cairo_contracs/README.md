@@ -24,7 +24,7 @@ Alice & Owner are the only users able to mint is this scenario.
 - Owner issues a `SUDO_MINT_PERMIT` to Sudoer
 - Sudoer issues `MINT_PERMITs` to Alice & Bob
 
-In this scenario Bob, Alice, & Owner are the only users able to mint, and Sudoer & Owner are the only ones able to issue `MINT_PERMITs`.
+In this scenario Bob, Alice, & Owner are the only users able to mint. Sudoer & Owner are the only ones able to issue `MINT_PERMITs`.
 
 ##### Sudo managers
 
@@ -32,7 +32,7 @@ In this scenario Bob, Alice, & Owner are the only users able to mint, and Sudoer
 - Owner binds `SUDO_MINT_PERMIT` -> `SUDO_MINT_MANAGER`
 - Owner issues a `SUDO_MINT_MANAGER` permit to Manager
 - Manager issues `SUDO_MINT_PERMITs` to Sudoer1 & Sudoer2
-- Sudoer1 issues Alice a `MINT_PERMIT` & Sudoer2 issues a `MINT_PERMIT` to Bob
+- Sudoer1 issues Alice a `MINT_PERMIT` & Sudoer2 issues Bob a `MINT_PERMIT`
 
 In this example, Alice, Bob & Owner are the only users able to mint. Sudoer1, Sudoer2, & Owner are the only users able to issue `MINT_PERMITs`. And Manager & Owner are the only users able to issue `SUDO_MINT_PERMITs`
 
@@ -41,6 +41,10 @@ In this example, Alice, Bob & Owner are the only users able to mint. Sudoer1, Su
 - Owner issues Manager a `SUDO_PERMIT`
 
 Manager & Owner are the users able to bind `XYZ_PERMIT` -> `SUDO_XYZ`
+
+###### Note
+
+The values for these permits are represented as `felt252s` and are arbitrary. That is, a contract could require an `asdf` permit to call a function, and the owner may bind `asdf;` -> `jkl;` & `jkl;` -> `asdfjkl;` to implement the scenarios mentioned above.
 
 ### ERC20
 
