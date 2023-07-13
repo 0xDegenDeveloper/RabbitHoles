@@ -1,6 +1,6 @@
 # RabbitHoles
 
-A Permanent & Censorship-Resistant Discussion Board.
+A Permanent & Censorship-Resistant Discussion Board on Starknet
 
 ## Overview
 
