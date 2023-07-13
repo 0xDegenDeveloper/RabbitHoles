@@ -35,7 +35,7 @@ This is a standard ERC20 contract that references the Manager contract for minti
 
 ### Registry
 
-This contract handles the logic for the creation and storage of Holes & Rabbits, referencing the Manager contract for these permissions. `CREATE_HOLE_PERMIT` & `CREATE_RABBIT_PERMIT` holders may create Holes/Rabbit respecively. There are no fees/rewards associated with this contract, that logic is intended to come from `CREATE_HOLE_PERMIT` & `CREATE_RABBIT_PERMIT` holding contracts. This structure allows the project to be extended with fewer restraints.
+This contract handles the logic for the creation and storage of Holes & Rabbits, referencing the Manager contract for these permissions. `CREATE_HOLE_PERMIT` & `CREATE_RABBIT_PERMIT` holders may create Holes/Rabbit respecively. There are no fees/rewards associated with this contract, that logic is intended to come from `CREATE_HOLE_PERMIT` & `CREATE_RABBIT_PERMIT` holding contracts. This structure allows the project to be extended with few restraints.
 
 User stats are also stored in this contract. Stats have the following fields:
 
@@ -49,7 +49,7 @@ A Hole is created using a `title`. This title is the topic for the Hole, and is 
 
 #### Creating a Rabbit
 
-A Rabbit is created using a `hole_id` & a `msg`; this Hole must already exist. The `msg` is an array of `felt252s`, and the length of this array is referred to as the Rabbit's `depth`. Once a Rabbit is placed in a Hole, the Hole's digs are incremented by 1, and its depth is increased by the Rabbit's depth.
+A Rabbit is created using a `hole_id` & a `msg`, this Hole must already exist. The `msg` is an array of `felt252s`, and the length of this array is referred to as the Rabbit's `depth`. Once a Rabbit is placed in a Hole, the Hole's digs are incremented by 1, and its depth is increased by the Rabbit's depth.
 
 #### Utilizing Contract Suite Design
 
@@ -71,15 +71,13 @@ This contract is the first implementation of Rabbitholes.
 #### Digging a Hole
 
 - To dig a Hole, a user must pay the `dig_fee` (using the `dig_token`, $ETH, $STRK, etc.)
-- Digging a hole mints the digger `dig_reward` amount of RBITS
+- Digging a hole mints the digger a `dig_reward` amount of RBITS
 
 #### Burning a Rabbit
 
-For a Rabbit to be burned, the Hole it is being placed in must already be dug.
-
 - To burn a Rabbit, a user will spend RBITS
-  - The amount of RBITS a Rabbit will cost is equal to the number of `felt252s` the Rabbit's msg spans
+  - The amount of RBITS a Rabbit will cost is equal to its depth (the number of `felt252s` the Rabbit's msg spans)
   - i.e. "If this was a msg I wanted to leave in a hole", it would span across two felts:
     - `['If this was a msg I wanted to l', 'eave in a hole']`
-- Using the `digger_bps` (0 <= `digger_bps` <= 10,000), some RBITS are transfered to the Hole's digger, and the rest are burned
+- Using the `digger_bps` (`0 <= digger_bps <= 10,000`), some RBITS are transfered to the Hole's digger, and the rest are burned
   - i.e. In the above example, if the `digger_bps` is 2,500, my msg costs me 2.000000 RBITS; 0.500000 are sent to the Hole's digger, and 1.500000 are burned
