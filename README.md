@@ -20,8 +20,8 @@ in the `SHOWER THOUGHTS` `Hole`, costing him some of his $RBITS
 
 ## Current development status
 
-- Finalizing frontend
-- Deploying contracts and connecting -> frontend
+- Finalizing [/client](./client)
+- Deploying contracts and connecting -> client
 
 ### Authors
 
