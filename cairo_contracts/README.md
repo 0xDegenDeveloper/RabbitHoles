@@ -40,7 +40,7 @@ In this example, Alice, Bob & Owner are the only users able to mint. Sudoer1, Su
 
 - Owner issues Manager a `SUDO_PERMIT`
 
-Manager & Owner are the users able to bind `XYZ_PERMIT` -> `SUDO_XYZ`
+Manager & Owner are the only users able to bind `XYZ_PERMIT` -> `SUDO_XYZ`
 
 ###### Note
 
@@ -118,3 +118,4 @@ This contract is the first implementation of Rabbitholes.
 
 - `scarb build` creates the sierra.json files for the suite
 - `scarb test` runs `core` & `V1` tests
+- `scarb fmt` cleans spacing in all .cairo files
