@@ -80,4 +80,4 @@ This contract is the first implementation of Rabbitholes.
   - i.e. "If this was a msg I wanted to leave in a hole", it would span across two felts:
     - `['If this was a msg I wanted to l', 'eave in a hole']`
 - Using the `digger_bps (0 <= digger_bps <= 10,000)`, some RBITS are transfered to the Hole's digger, and the rest are burned
-  - i.e. In the above example, if the `digger_bps` is 2,500, my msg costs me 2.000000 RBITS; 0.500000 are sent to the Hole's digger, and 1.500000 are burned
+  - In the above example, if the `digger_bps` is 2,500, my msg costs me 2.000000 RBITS; 0.500000 are sent to the Hole's digger, and 1.500000 are burned
