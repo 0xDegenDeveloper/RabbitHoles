@@ -4,11 +4,9 @@
 
 ### Manager
 
-The Manager contract controls permissions, or "permits", for users. Other contracts can reference this contract to restrict function calls to specific permit holders. These permits are controlled by the owner of the contract and can be issued to users as needed.
+The Manager contract controls permits for users. Other contracts can reference this contract to restrict function calls to specific permit holders. These permits are controlled by the owner of the contract and can be issued to users as needed. There are essentially two types of permits, regular and sudo. A regular permit allows its holder access to functions requiring it. A sudo permits allows its holder to issue regular permits. The owner and users with a `SUDO_PERMIT` have the ability to bind regular permits -> sudo permits.
 
-The contract consists primarily of two types of permits, regular and sudo. A regular permit allows its holder access to functions requiring the permit. A sudo permits allows its holders the ability to issue regular permits. The owner and users with a `SUDO_PERMIT` have the ability to bind regular permits to sudo permits.
-
-#### Example Usages
+#### Example usages
 
 For these examples, assume a contract requires a `MINT_PERMIT` to call its mint funciton
 
@@ -16,7 +14,7 @@ For these examples, assume a contract requires a `MINT_PERMIT` to call its mint 
 
 - Owner issues Alice a `MINT_PERMIT`
 
-Alice & Owner are the only users able to mint is this scenario.
+Alice & Owner are the only users able to mint in this scenario.
 
 ##### Sudo permits
 
@@ -26,7 +24,7 @@ Alice & Owner are the only users able to mint is this scenario.
 
 In this scenario Bob, Alice, & Owner are the only users able to mint. Sudoer & Owner are the only ones able to issue `MINT_PERMITs`.
 
-##### Sudo managers
+##### Sudo permit managers
 
 - Owner binds `MINT_PERMIT` -> `SUDO_MINT_PERMIT`
 - Owner binds `SUDO_MINT_PERMIT` -> `SUDO_MINT_MANAGER`
@@ -44,7 +42,18 @@ Manager & Owner are the users able to bind `XYZ_PERMIT` -> `SUDO_XYZ`
 
 ###### Note
 
-The values for these permits are represented as `felt252s` and are arbitrary (except for the `SUDO_PERMIT`). That is, a contract could require an `asdf` permit to call a function, and the owner (or `SUDO_PERMIT` holders) may bind `asdf;` -> `jkl;` & `jkl;` -> `asdfjkl;` to implement the scenarios mentioned above.
+> The values for these permits are represented as `felt252s` and are arbitrary (except for the `SUDO_PERMIT`). That is, a contract could require an `asdf` permit to call a function, and the owner (or `SUDO_PERMIT` holders) may bind `asdf;` -> `jkl;` & `jkl;` -> `asdfjkl;` to implement the scenarios mentioned above.
+
+##### Going deeper
+
+> The examples above solely apply to the contract's mint function due to its set up (assert(`contract.has_valid_permit(User, PERMIT) == true, 'Reason: invalid permit'`)
+
+> This permit abstraction can be specifc like shown, or go deep, imagine an NFT contract:
+>
+> - functions sharing permits: royalty percentage & receiver functions both requiring a `ROYALTY_PERMIT`
+> - permits sharing a sudo permit : `MINT_PERMIT` & `BURN_PERMIT` are both binded -> `SUPPLY_SUDO_PERMIT`, sudoer can issue only these two permits
+> - sudo permits sharing a manager permit: `SUDO_SUPPLY_PERMIT` & `SUDO_ROYALTY_PERMIT` are both binded -> `REGIONAL_MANAGER_1`, manager1 can only issue `SUDO_SUPPLY/SUDO_ROYALTY_PERMITs`
+>   - in this scenarios, the contract's `setURI(), withdraw(), etc.` functions are only accessible to Owner (or permit holders if setup)
 
 ### ERC20
 
