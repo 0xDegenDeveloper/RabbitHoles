@@ -46,13 +46,14 @@ Manager & Owner are the users able to bind `XYZ_PERMIT` -> `SUDO_XYZ`
 
 ##### Going deeper
 
-> The examples above solely apply to the contract's mint function due to its set up (assert(`contract.has_valid_permit(User, PERMIT) == true, 'Reason: invalid permit'`)
+> The examples above solely apply to the contract's mint function due to its set up:
+> assert(`contract.has_valid_permit(User, PERMIT) == true, 'Reason: invalid permit'`)
 
-> This permit abstraction can be specifc like shown, or go deep, imagine an NFT contract:
+> This permit abstraction can be specifc like shown, or go deep. Imagine an NFT contract:
 >
-> - functions sharing permits: royalty percentage & receiver functions both requiring a `ROYALTY_PERMIT`
+> - functions sharing permits: `set_royalty_percentage() & set_royalty_receiver()` functions both requiring a `ROYALTY_PERMIT`
 > - permits sharing a sudo permit : `MINT_PERMIT` & `BURN_PERMIT` are both binded -> `SUPPLY_SUDO_PERMIT`, sudoer can issue only these two permits
-> - sudo permits sharing a manager permit: `SUDO_SUPPLY_PERMIT` & `SUDO_ROYALTY_PERMIT` are both binded -> `REGIONAL_MANAGER_1`, manager1 can only issue `SUDO_SUPPLY/SUDO_ROYALTY_PERMITs`
+> - sudo permits sharing a manager permit: `SUDO_SUPPLY_PERMIT` & `SUDO_ROYALTY_PERMIT` are both binded -> `REGIONAL_MANAGER_1`, holders of this regional permit can only issue these two sudo permits
 >   - in this scenarios, the contract's `setURI(), withdraw(), etc.` functions are only accessible to Owner (or permit holders if setup)
 
 ### ERC20
