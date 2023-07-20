@@ -4,12 +4,15 @@ use starknet::ContractAddress;
 #[starknet::interface]
 trait IERC20<TContractState> {
     /// read
-    fn MANAGER_ADDRESS(self: @TContractState) -> ContractAddress;
     fn BURN_PERMIT(self: @TContractState) -> felt252;
+    fn MANAGER_ADDRESS(self: @TContractState) -> ContractAddress;
     fn MINT_PERMIT(self: @TContractState) -> felt252;
+    fn SUPPLY_PERMIT(self: @TContractState) -> felt252;
     fn allowance(self: @TContractState, owner: ContractAddress, spender: ContractAddress) -> u256;
     fn balance_of(self: @TContractState, account: ContractAddress) -> u256;
     fn decimals(self: @TContractState) -> u8;
+    fn is_burning(self: @TContractState) -> bool;
+    fn is_minting(self: @TContractState) -> bool;
     fn name(self: @TContractState) -> felt252;
     fn symbol(self: @TContractState) -> felt252;
     fn total_supply(self: @TContractState) -> u256;
@@ -21,6 +24,8 @@ trait IERC20<TContractState> {
     );
     fn increase_allowance(ref self: TContractState, spender: ContractAddress, added_value: u256);
     fn mint(ref self: TContractState, recipient: ContractAddress, amount: u256);
+    fn toggle_burning(ref self: TContractState);
+    fn toggle_minting(ref self: TContractState);
     fn transfer(ref self: TContractState, recipient: ContractAddress, amount: u256);
     fn transfer_from(
         ref self: TContractState, sender: ContractAddress, recipient: ContractAddress, amount: u256
@@ -36,22 +41,25 @@ mod ERC20 {
 
     #[storage]
     struct Storage {
+        s_MANAGER_ADDRESS: ContractAddress,
+        s_BURN_PERMIT: felt252,
+        s_MINT_PERMIT: felt252,
+        s_SUPPLY_PERMIT: felt252,
+        s_allowances: LegacyMap::<(ContractAddress, ContractAddress), u256>,
+        s_balances: LegacyMap::<ContractAddress, u256>,
+        s_decimals: u8,
+        s_is_burning: bool,
+        s_is_minting: bool,
         s_name: felt252,
         s_symbol: felt252,
-        s_decimals: u8,
         s_total_supply: u256,
-        s_balances: LegacyMap::<ContractAddress, u256>,
-        s_allowances: LegacyMap::<(ContractAddress, ContractAddress), u256>,
-        s_MANAGER_ADDRESS: ContractAddress,
-        s_MINT_PERMIT: felt252,
-        s_BURN_PERMIT: felt252,
     }
 
     #[event]
     #[derive(Drop, starknet::Event)]
     enum Event {
-        Transfer: Transfer,
         Approval: Approval,
+        Transfer: Transfer,
     }
 
     #[derive(Drop, starknet::Event)]
@@ -62,6 +70,7 @@ mod ERC20 {
         spender: ContractAddress,
         value: u256,
     }
+
 
     #[derive(Drop, starknet::Event)]
     struct Transfer {
@@ -83,8 +92,9 @@ mod ERC20 {
         recipient: ContractAddress,
     ) {
         self.s_MANAGER_ADDRESS.write(manager_address);
-        self.s_MINT_PERMIT.write('MINT_PERMIT');
         self.s_BURN_PERMIT.write('BURN_PERMIT');
+        self.s_MINT_PERMIT.write('MINT_PERMIT');
+        self.s_SUPPLY_PERMIT.write('SUPPLY_PERMIT');
         self.s_name.write(name_);
         self.s_symbol.write(symbol_);
         self.s_decimals.write(decimals_);
@@ -99,12 +109,16 @@ mod ERC20 {
             self.s_MANAGER_ADDRESS.read()
         }
 
+        fn BURN_PERMIT(self: @ContractState) -> felt252 {
+            self.s_BURN_PERMIT.read()
+        }
+
         fn MINT_PERMIT(self: @ContractState) -> felt252 {
             self.s_MINT_PERMIT.read()
         }
 
-        fn BURN_PERMIT(self: @ContractState) -> felt252 {
-            self.s_BURN_PERMIT.read()
+        fn SUPPLY_PERMIT(self: @ContractState) -> felt252 {
+            self.s_SUPPLY_PERMIT.read()
         }
 
         fn allowance(
@@ -119,6 +133,14 @@ mod ERC20 {
 
         fn decimals(self: @ContractState) -> u8 {
             self.s_decimals.read()
+        }
+
+        fn is_burning(self: @ContractState) -> bool {
+            self.s_is_burning.read()
+        }
+
+        fn is_minting(self: @ContractState) -> bool {
+            self.s_is_minting.read()
         }
 
         fn name(self: @ContractState) -> felt252 {
@@ -140,6 +162,7 @@ mod ERC20 {
         }
 
         fn burn(ref self: ContractState, owner: ContractAddress, amount: u256) {
+            assert(self.s_is_burning.read(), 'ERC20: burning is disabled');
             let caller = get_caller_address();
             self.has_valid_permit(self.s_BURN_PERMIT.read());
             self.spend_allowance(owner, caller, amount);
@@ -167,8 +190,19 @@ mod ERC20 {
         }
 
         fn mint(ref self: ContractState, recipient: ContractAddress, amount: u256) {
+            assert(self.s_is_minting.read(), 'ERC20: minting is disabled');
             self.has_valid_permit(self.s_MINT_PERMIT.read());
             self.update(contract_address_const::<0>(), recipient, amount);
+        }
+
+        fn toggle_burning(ref self: ContractState) {
+            self.has_valid_permit(self.s_SUPPLY_PERMIT.read());
+            self.s_is_burning.write(!self.s_is_burning.read());
+        }
+
+        fn toggle_minting(ref self: ContractState) {
+            self.has_valid_permit(self.s_SUPPLY_PERMIT.read());
+            self.s_is_minting.write(!self.s_is_minting.read());
         }
 
         fn transfer(ref self: ContractState, recipient: ContractAddress, amount: u256) {

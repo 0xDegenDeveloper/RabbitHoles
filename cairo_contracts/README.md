@@ -54,7 +54,7 @@ Manager & Owner are the only users able to bind `XYZ_PERMIT` -> `SUDO_XYZ`
 > - functions sharing permits: `set_royalty_percentage() & set_royalty_receiver()` functions both requiring a `ROYALTY_PERMIT`
 > - permits sharing a sudo permit : `MINT_PERMIT` & `BURN_PERMIT` are both binded -> `SUPPLY_SUDO_PERMIT`, sudoer can issue only these two permits
 > - sudo permits sharing a manager permit: `SUDO_SUPPLY_PERMIT` & `SUDO_ROYALTY_PERMIT` are both binded -> `REGIONAL_MANAGER_1`, holders of this regional permit can only issue these two sudo permits
->   - in this scenarios, the contract's `setURI(), withdraw(), etc.` functions are only accessible to Owner (or permit holders if setup)
+>   - in these scenarios, the contract's `setURI(), withdraw(), etc.` functions are only accessible to Owner (or permit holders if setup)
 
 ### ERC20
 

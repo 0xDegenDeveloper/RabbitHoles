@@ -51,14 +51,17 @@ fn deploy_suite() -> (IManagerDispatcher, IERC20Dispatcher, IRegistryDispatcher)
     )
         .unwrap();
 
+    let iregistry = IRegistryDispatcher { contract_address: registry_address };
+
+    iregistry.toggle_hole_creation();
+    iregistry.toggle_rabbit_creation();
+
     (
         IManagerDispatcher {
             contract_address: manager_address
             }, IERC20Dispatcher {
             contract_address: rbits_address
-            }, IRegistryDispatcher {
-            contract_address: registry_address
-        }
+        }, iregistry
     )
 }
 
@@ -137,7 +140,7 @@ fn test_hole(
 
 /// tests
 #[test]
-#[available_gas(2000000)]
+#[available_gas(4000000)]
 fn constructor() {
     let (Manager, Rbits, Registry) = deploy_suite();
     assert(Registry.MANAGER_ADDRESS() == Manager.contract_address, 'Incorrect manager address');
@@ -145,10 +148,13 @@ fn constructor() {
     assert(
         Registry.CREATE_RABBIT_PERMIT() == 'CREATE_RABBIT_PERMIT', 'Incorrect CREATE_RABBIT_PERMIT'
     );
+    assert(
+        Registry.TOGGLE_CREATE_PERMIT() == 'TOGGLE_CREATE_PERMIT', 'Incorrect TOGGLE_CREATE_PERMIT'
+    );
 }
 
 #[test]
-#[available_gas(2000000)]
+#[available_gas(4000000)]
 #[should_panic(expected: ('Registry: invalid permit', 'ENTRYPOINT_FAILED'))]
 fn create_hole_no_permit() {
     let (Manager, Rbits, Registry) = deploy_suite();
@@ -157,7 +163,7 @@ fn create_hole_no_permit() {
 }
 
 #[test]
-#[available_gas(2000000)]
+#[available_gas(4000000)]
 fn create_hole_with_permit() {
     let (Manager, Rbits, Registry) = deploy_suite();
     let anon = contract_address_const::<'anon'>();
@@ -169,7 +175,7 @@ fn create_hole_with_permit() {
 }
 
 #[test]
-#[available_gas(2000000)]
+#[available_gas(4000000)]
 #[should_panic(expected: ('Registry: invalid permit', 'ENTRYPOINT_FAILED'))]
 fn create_rabbit_no_permit() {
     let (Manager, Rbits, Registry) = deploy_suite();
@@ -180,7 +186,7 @@ fn create_rabbit_no_permit() {
 }
 
 #[test]
-#[available_gas(2000000)]
+#[available_gas(4000000)]
 #[should_panic(expected: ('Registry: invalid hole id', 'ENTRYPOINT_FAILED'))]
 fn create_rabbit_no_hole() {
     let (Manager, Rbits, Registry) = deploy_suite();
@@ -190,7 +196,7 @@ fn create_rabbit_no_hole() {
 }
 
 #[test]
-#[available_gas(2000000)]
+#[available_gas(4000000)]
 #[should_panic(expected: ('Registry: invalid hole id', 'ENTRYPOINT_FAILED'))]
 fn create_rabbit_zero_hole() {
     let (Manager, Rbits, Registry) = deploy_suite();
@@ -200,7 +206,7 @@ fn create_rabbit_zero_hole() {
 
 
 #[test]
-#[available_gas(4000000)]
+#[available_gas(8000000)]
 fn create_holes() {
     let (Manager, Rbits, Registry) = deploy_suite();
     let anon = contract_address_const::<'anon'>();
@@ -238,7 +244,7 @@ fn create_holes() {
 
 
 #[test]
-#[available_gas(80000000)]
+#[available_gas(160000000)]
 fn create_rabbits() {
     let (Manager, Rbits, Registry) = deploy_suite();
     let anon = contract_address_const::<'anon'>();
@@ -309,5 +315,58 @@ fn create_rabbits() {
     /// re-test holes
     test_hole(Registry, 1, anon, 'title', 0, 2, 2);
     test_hole(Registry, 2, anon, 'title2', 0, 2, 4);
+}
+
+#[test]
+#[available_gas(2000000)]
+fn toggle_creation() {
+    let (Manager, Rbits, Registry) = deploy_suite();
+    assert(Registry.is_hole_creation() == true, 'Incorrect is_hole_creation');
+    assert(Registry.is_rabbit_creation() == true, 'Incorrect is_rabbit_creation');
+    Registry.toggle_hole_creation();
+    Registry.toggle_rabbit_creation();
+    assert(Registry.is_hole_creation() == false, 'Incorrect is_hole_creation');
+    assert(Registry.is_rabbit_creation() == false, 'Incorrect is_rabbit_creation');
+    Registry.toggle_hole_creation();
+    Registry.toggle_rabbit_creation();
+    assert(Registry.is_hole_creation() == true, 'Incorrect is_hole_creation');
+    assert(Registry.is_rabbit_creation() == true, 'Incorrect is_rabbit_creation');
+}
+
+#[test]
+#[available_gas(2000000)]
+#[should_panic(expected: ('Registry: invalid permit', 'ENTRYPOINT_FAILED'))]
+fn toggle_hole_creation_anon() {
+    let (Manager, Rbits, Registry) = deploy_suite();
+    set_contract_address(contract_address_const::<'anon'>());
+    Registry.toggle_hole_creation();
+}
+
+#[test]
+#[available_gas(2000000)]
+#[should_panic(expected: ('Registry: invalid permit', 'ENTRYPOINT_FAILED'))]
+fn toggle_rabbit_creation_anon() {
+    let (Manager, Rbits, Registry) = deploy_suite();
+    set_contract_address(contract_address_const::<'anon'>());
+    Registry.toggle_rabbit_creation();
+}
+
+#[test]
+#[available_gas(4000000)]
+fn toggle_creation_with_permit() {
+    let (Manager, Rbits, Registry) = deploy_suite();
+    let manager = contract_address_const::<'manager'>();
+    Manager.set_permit(manager, Registry.TOGGLE_CREATE_PERMIT(), 1000000);
+    set_contract_address(manager);
+    assert(Registry.is_hole_creation() == true, 'Incorrect is_hole_creation');
+    assert(Registry.is_rabbit_creation() == true, 'Incorrect is_rabbit_creation');
+    Registry.toggle_hole_creation();
+    Registry.toggle_rabbit_creation();
+    assert(Registry.is_hole_creation() == false, 'Incorrect is_hole_creation');
+    assert(Registry.is_rabbit_creation() == false, 'Incorrect is_rabbit_creation');
+    Registry.toggle_hole_creation();
+    Registry.toggle_rabbit_creation();
+    assert(Registry.is_hole_creation() == true, 'Incorrect is_hole_creation');
+    assert(Registry.is_rabbit_creation() == true, 'Incorrect is_rabbit_creation');
 }
 

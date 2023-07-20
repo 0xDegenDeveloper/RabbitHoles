@@ -40,13 +40,12 @@ fn deploy_suite() -> (IManagerDispatcher, IERC20Dispatcher) {
     )
         .unwrap();
 
-    (
-        IManagerDispatcher {
-            contract_address: manager_address
-            }, IERC20Dispatcher {
-            contract_address: rbits_address
-        }
-    )
+    let ierc20 = IERC20Dispatcher { contract_address: rbits_address };
+
+    ierc20.toggle_burning();
+    ierc20.toggle_minting();
+
+    (IManagerDispatcher { contract_address: manager_address }, ierc20)
 }
 
 /// tests
@@ -60,8 +59,11 @@ fn constructor() {
     assert(Rbits.balance_of(Manager.owner()) == 123_u256, 'Incorrect balance');
     assert(Rbits.total_supply() == 123_u256, 'Incorrect supply');
     assert(Rbits.MANAGER_ADDRESS() == Manager.contract_address, 'Incorrect manager address');
+    assert(Rbits.SUPPLY_PERMIT() == 'SUPPLY_PERMIT', 'Incorrect SUPPLY_PERMIT');
     assert(Rbits.MINT_PERMIT() == 'MINT_PERMIT', 'Incorrect MINT_PERMIT');
     assert(Rbits.BURN_PERMIT() == 'BURN_PERMIT', 'Incorrect BURN_PERMIT');
+    assert(Rbits.is_burning() == true, 'Incorrect is_burning');
+    assert(Rbits.is_minting() == true, 'Incorrect is_minting');
 }
 
 #[test]
@@ -77,6 +79,72 @@ fn allowances() {
     assert(Rbits.allowance(Manager.owner(), spender) == 1_u256, 'Incorrect allowance');
     Rbits.approve(spender, 3_u256);
     assert(Rbits.allowance(Manager.owner(), spender) == 3_u256, 'Incorrect allowance');
+}
+
+#[test]
+#[available_gas(2000000)]
+fn toggle_minting() {
+    let (Manager, Rbits) = deploy_suite();
+    assert(Rbits.is_minting() == true, 'Incorrect is_minting');
+    Rbits.toggle_minting();
+    assert(Rbits.is_minting() == false, 'Incorrect is_minting');
+    Rbits.toggle_minting();
+    assert(Rbits.is_minting() == true, 'Incorrect is_minting');
+}
+
+#[test]
+#[available_gas(2000000)]
+#[should_panic(expected: ('ERC20: invalid permit', 'ENTRYPOINT_FAILED'))]
+fn toggle_minting_anon() {
+    let (Manager, Rbits) = deploy_suite();
+    set_contract_address(contract_address_const::<'anon'>());
+    Rbits.toggle_minting();
+}
+
+#[test]
+#[available_gas(2000000)]
+fn toggle_minting_with_permit() {
+    let (Manager, Rbits) = deploy_suite();
+    let manager = contract_address_const::<'manager'>();
+    Manager.set_permit(manager, Rbits.SUPPLY_PERMIT(), 1000000);
+    set_contract_address(manager);
+    Rbits.toggle_minting();
+    assert(Rbits.is_minting() == false, 'Incorrect is_minting');
+    Rbits.toggle_minting();
+    assert(Rbits.is_minting() == true, 'Incorrect is_minting');
+}
+
+#[test]
+#[available_gas(2000000)]
+fn toggle_burning() {
+    let (Manager, Rbits) = deploy_suite();
+    assert(Rbits.is_burning() == true, 'Incorrect is_burning');
+    Rbits.toggle_burning();
+    assert(Rbits.is_burning() == false, 'Incorrect is_burning');
+    Rbits.toggle_burning();
+    assert(Rbits.is_burning() == true, 'Incorrect is_burning');
+}
+
+#[test]
+#[available_gas(2000000)]
+#[should_panic(expected: ('ERC20: invalid permit', 'ENTRYPOINT_FAILED'))]
+fn toggle_burning_anon() {
+    let (Manager, Rbits) = deploy_suite();
+    set_contract_address(contract_address_const::<'anon'>());
+    Rbits.toggle_burning();
+}
+
+#[test]
+#[available_gas(2000000)]
+fn toggle_burning_with_permit() {
+    let (Manager, Rbits) = deploy_suite();
+    let manager = contract_address_const::<'manager'>();
+    Manager.set_permit(manager, Rbits.SUPPLY_PERMIT(), 1000000);
+    set_contract_address(manager);
+    Rbits.toggle_burning();
+    assert(Rbits.is_burning() == false, 'Incorrect is_burning');
+    Rbits.toggle_burning();
+    assert(Rbits.is_burning() == true, 'Incorrect is_burning');
 }
 
 #[test]
@@ -166,7 +234,7 @@ fn sudo_mint_with_permit() {
 }
 
 #[test]
-#[available_gas(2000000)]
+#[available_gas(4000000)]
 fn mint_manager() {
     let (Manager, Rbits) = deploy_suite();
     let owner = Manager.owner();

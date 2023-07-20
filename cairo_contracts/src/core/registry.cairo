@@ -3,10 +3,10 @@ use starknet::ContractAddress;
 #[starknet::interface]
 trait IRegistry<TContractState> {
     /// read
-    fn MANAGER_ADDRESS(self: @TContractState) -> ContractAddress;
     fn CREATE_HOLE_PERMIT(self: @TContractState) -> felt252;
     fn CREATE_RABBIT_PERMIT(self: @TContractState) -> felt252;
-    fn title_to_id(self: @TContractState, title: felt252) -> u64;
+    fn TOGGLE_CREATE_PERMIT(self: @TContractState) -> felt252;
+    fn MANAGER_ADDRESS(self: @TContractState) -> ContractAddress;
     fn get_holes(self: @TContractState, ids: Array<u64>) -> Array<Registry::Hole>;
     fn get_rabbits(self: @TContractState, ids: Array<u64>) -> Array<Registry::RabbitHot>;
     fn get_rabbits_in_hole(
@@ -22,11 +22,16 @@ trait IRegistry<TContractState> {
         self: @TContractState, users: Array<ContractAddress>
     ) -> Array<Registry::Stats>;
     fn get_global_stats(self: @TContractState) -> Registry::Stats;
+    fn is_hole_creation(self: @TContractState) -> bool;
+    fn is_rabbit_creation(self: @TContractState) -> bool;
+    fn title_to_id(self: @TContractState, title: felt252) -> u64;
     /// write
     fn create_hole(ref self: TContractState, title: felt252, digger: ContractAddress);
     fn create_rabbit(
         ref self: TContractState, burner: ContractAddress, msg: Array<felt252>, hole_id: u64
     );
+    fn toggle_hole_creation(ref self: TContractState);
+    fn toggle_rabbit_creation(ref self: TContractState);
 }
 
 #[starknet::contract]
@@ -46,9 +51,12 @@ mod Registry {
 
     #[storage]
     struct Storage {
-        s_MANAGER_ADDRESS: ContractAddress,
         s_CREATE_HOLE_PERMIT: felt252,
         s_CREATE_RABBIT_PERMIT: felt252,
+        s_MANAGER_ADDRESS: ContractAddress,
+        s_TOGGLE_CREATE_PERMIT: felt252,
+        s_is_hole_creation: bool,
+        s_is_rabbit_creation: bool,
         s_total_holes: u64,
         s_total_rabbits: u64,
         s_total_depth: u64,
@@ -64,9 +72,10 @@ mod Registry {
 
     #[constructor]
     fn constructor(ref self: ContractState, manager_address: ContractAddress) {
-        self.s_MANAGER_ADDRESS.write(manager_address);
         self.s_CREATE_HOLE_PERMIT.write('CREATE_HOLE_PERMIT');
         self.s_CREATE_RABBIT_PERMIT.write('CREATE_RABBIT_PERMIT');
+        self.s_MANAGER_ADDRESS.write(manager_address);
+        self.s_TOGGLE_CREATE_PERMIT.write('TOGGLE_CREATE_PERMIT');
     }
 
     #[event]
@@ -134,16 +143,20 @@ mod Registry {
     #[external(v0)]
     impl Registry of super::IRegistry<ContractState> {
         /// read
-        fn MANAGER_ADDRESS(self: @ContractState) -> ContractAddress {
-            self.s_MANAGER_ADDRESS.read()
-        }
-
         fn CREATE_HOLE_PERMIT(self: @ContractState) -> felt252 {
             self.s_CREATE_HOLE_PERMIT.read()
         }
 
         fn CREATE_RABBIT_PERMIT(self: @ContractState) -> felt252 {
             self.s_CREATE_RABBIT_PERMIT.read()
+        }
+
+        fn MANAGER_ADDRESS(self: @ContractState) -> ContractAddress {
+            self.s_MANAGER_ADDRESS.read()
+        }
+
+        fn TOGGLE_CREATE_PERMIT(self: @ContractState) -> felt252 {
+            self.s_TOGGLE_CREATE_PERMIT.read()
         }
 
         fn get_holes(self: @ContractState, ids: Array<u64>) -> Array<Hole> {
@@ -245,12 +258,21 @@ mod Registry {
             }
         }
 
+        fn is_hole_creation(self: @ContractState) -> bool {
+            self.s_is_hole_creation.read()
+        }
+
+        fn is_rabbit_creation(self: @ContractState) -> bool {
+            self.s_is_rabbit_creation.read()
+        }
+
         fn title_to_id(self: @ContractState, title: felt252) -> u64 {
             self.s_titles_to_ids.read(title)
         }
 
         /// write
         fn create_hole(ref self: ContractState, title: felt252, digger: ContractAddress) {
+            assert(self.s_is_hole_creation.read(), 'Registry: creation disabled');
             self.has_valid_permit(self.s_CREATE_HOLE_PERMIT.read());
             assert(self.s_titles_to_ids.read(title).is_zero(), 'Registry: hole already dug');
 
@@ -260,83 +282,27 @@ mod Registry {
         fn create_rabbit(
             ref self: ContractState, burner: ContractAddress, msg: Array<felt252>, hole_id: u64
         ) {
+            assert(self.s_is_rabbit_creation.read(), 'Registry: creation disabled');
             self.has_valid_permit(self.s_CREATE_RABBIT_PERMIT.read());
             assert(hole_id.is_non_zero(), 'Registry: invalid hole id');
             assert(hole_id <= self.s_total_holes.read(), 'Registry: invalid hole id');
 
             self.create_rabbit_helper(burner, msg, hole_id);
         }
+
+        fn toggle_hole_creation(ref self: ContractState) {
+            self.has_valid_permit(self.s_TOGGLE_CREATE_PERMIT.read());
+            self.s_is_hole_creation.write(!self.s_is_hole_creation.read());
+        }
+
+        fn toggle_rabbit_creation(ref self: ContractState) {
+            self.has_valid_permit(self.s_TOGGLE_CREATE_PERMIT.read());
+            self.s_is_rabbit_creation.write(!self.s_is_rabbit_creation.read());
+        }
     }
 
     #[generate_trait]
     impl InternalImpl of StorageTrait {
-        fn fetch_rabbit(self: @ContractState, id: u64) -> RabbitHot {
-            let rabbit = self.s_rabbits.read(id);
-            RabbitHot {
-                burner: rabbit.burner,
-                msg: self.fetch_msg(id),
-                timestamp: rabbit.timestamp,
-                hole_id: rabbit.hole_id,
-                index: id
-            }
-        }
-
-        fn fetch_msg(self: @ContractState, rabbit_id: u64) -> Array<felt252> {
-            let m_start = self.s_rabbits.read(rabbit_id).m_start;
-            let mut m_len = self.s_rabbits.read(rabbit_id).depth;
-            let mut res = ArrayTrait::<felt252>::new();
-
-            let mut i = 0;
-            loop {
-                if (i >= m_len) {
-                    break ();
-                }
-                res.append(self.s_msg_log.read(m_start + i));
-                i += 1;
-            };
-            res
-        }
-
-        fn write_msg(ref self: ContractState, msg: Array<felt252>) -> (u64, u64) {
-            let mut i = 0;
-            let m_len: u64 = msg.len().into();
-            let m_start = self.s_total_depth.read();
-            loop {
-                if (i.into() >= m_len) {
-                    break ();
-                }
-                let slot = m_start + i.into();
-                self.s_msg_log.write(slot, *msg.at(i));
-                i += 1;
-            };
-            (m_start, m_len)
-        }
-
-        fn create_hole_helper(ref self: ContractState, title: felt252, digger: ContractAddress, ) {
-            let mut stats = self.s_stats.read(digger);
-            let id = self.s_total_holes.read() + 1;
-            self.s_titles_to_ids.write(title, id);
-            self.s_total_holes.write(id);
-            self
-                .s_holes
-                .write(
-                    id,
-                    Hole {
-                        digger,
-                        timestamp: get_block_timestamp(),
-                        digs: 0,
-                        depth: 0,
-                        title,
-                        index: id
-                    }
-                );
-            stats.holes += 1;
-            self.s_user_holes_table.write((digger, stats.holes), id);
-            self.s_stats.write(digger, stats);
-
-            self.emit(HoleCreated { creator: get_caller_address(), digger, title, id });
-        }
-
         fn create_rabbit_helper(
             ref self: ContractState, burner: ContractAddress, msg: Array<felt252>, hole_id: u64
         ) {
@@ -366,6 +332,58 @@ mod Registry {
             self.emit(RabbitCreated { creator: get_caller_address(), burner, depth, id });
         }
 
+        fn create_hole_helper(ref self: ContractState, title: felt252, digger: ContractAddress, ) {
+            let mut stats = self.s_stats.read(digger);
+            let id = self.s_total_holes.read() + 1;
+            self.s_titles_to_ids.write(title, id);
+            self.s_total_holes.write(id);
+            self
+                .s_holes
+                .write(
+                    id,
+                    Hole {
+                        digger,
+                        timestamp: get_block_timestamp(),
+                        digs: 0,
+                        depth: 0,
+                        title,
+                        index: id
+                    }
+                );
+            stats.holes += 1;
+            self.s_user_holes_table.write((digger, stats.holes), id);
+            self.s_stats.write(digger, stats);
+
+            self.emit(HoleCreated { creator: get_caller_address(), digger, title, id });
+        }
+
+        fn fetch_rabbit(self: @ContractState, id: u64) -> RabbitHot {
+            let rabbit = self.s_rabbits.read(id);
+            RabbitHot {
+                burner: rabbit.burner,
+                msg: self.fetch_msg(id),
+                timestamp: rabbit.timestamp,
+                hole_id: rabbit.hole_id,
+                index: id
+            }
+        }
+
+        fn fetch_msg(self: @ContractState, rabbit_id: u64) -> Array<felt252> {
+            let m_start = self.s_rabbits.read(rabbit_id).m_start;
+            let mut m_len = self.s_rabbits.read(rabbit_id).depth;
+            let mut res = ArrayTrait::<felt252>::new();
+
+            let mut i = 0;
+            loop {
+                if (i >= m_len) {
+                    break ();
+                }
+                res.append(self.s_msg_log.read(m_start + i));
+                i += 1;
+            };
+            res
+        }
+
         fn has_valid_permit(ref self: ContractState, permit: felt252) {
             assert(
                 IManagerDispatcher {
@@ -373,6 +391,21 @@ mod Registry {
                 }.has_valid_permit(get_caller_address(), permit),
                 'Registry: invalid permit'
             );
+        }
+
+        fn write_msg(ref self: ContractState, msg: Array<felt252>) -> (u64, u64) {
+            let mut i = 0;
+            let m_len: u64 = msg.len().into();
+            let m_start = self.s_total_depth.read();
+            loop {
+                if (i.into() >= m_len) {
+                    break ();
+                }
+                let slot = m_start + i.into();
+                self.s_msg_log.write(slot, *msg.at(i));
+                i += 1;
+            };
+            (m_start, m_len)
         }
     }
 }
