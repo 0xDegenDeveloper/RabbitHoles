@@ -2,7 +2,7 @@
 
 ## Overview
 
-RabbitHoles is a decentralized discussion platform built on Starknet, offering a permanent and censorship-resistant space for open conversations. Each discussion topic, `Hole`, stores messages, `Rabbits` within them. $RBITS are ERC-20 tokens facilitating interactions within the platform. A demo can be found at https://rbits.space.
+RabbitHoles is a decentralized discussion platform built on Starknet, offering a permanent and censorship-resistant space for open conversations. Each discussion topic, called a Hole, stores messages, called Rabbits, within them. $RBITS are ERC-20 tokens essential to mechanics of the platform. A demo can be found at https://rbits.space.
 
 ## Basic Flow
 
