@@ -1,7 +1,5 @@
 # RabbitHoles
 
-A Permanent & Censorship-Resistant Discussion Board on Starknet
-
 ## Overview
 
 RabbitHoles is a decentralized discussion platform built on Starknet, offering a permanent and censorship-resistant space for open conversations. Each discussion topic, `Hole`, stores messages, `Rabbits` within them. $RBITS are ERC-20 tokens facilitating interactions within the platform. A demo can be found at https://rbits.space.
