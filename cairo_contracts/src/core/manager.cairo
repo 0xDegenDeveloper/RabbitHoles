@@ -31,6 +31,12 @@ mod Manager {
         s_sudo_permits: LegacyMap<felt252, felt252>,
     }
 
+    #[constructor]
+    fn constructor(ref self: ContractState, _owner: ContractAddress) {
+        self.write_owner(_owner);
+        self.s_SUDO_PERMIT.write('SUDO_PERMIT');
+    }
+
     #[event]
     #[derive(Drop, starknet::Event)]
     enum Event {
@@ -68,11 +74,6 @@ mod Manager {
         sudo_permit: felt252
     }
 
-    #[constructor]
-    fn constructor(ref self: ContractState, _owner: ContractAddress) {
-        self.write_owner(_owner);
-        self.s_SUDO_PERMIT.write('SUDO');
-    }
 
     #[external(v0)]
     impl Manager of super::IManager<ContractState> {

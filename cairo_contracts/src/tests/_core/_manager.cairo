@@ -37,7 +37,7 @@ fn _transfer_ownership_from_to(
 fn constructor() {
     let Manager = deploy_manager();
     assert(Manager.owner().into() == 'owner', 'Owner fail');
-    assert(Manager.SUDO_PERMIT() == 'SUDO', 'SUDO fail')
+    assert(Manager.SUDO_PERMIT() == 'SUDO_PERMIT', 'SUDO_PERMIT fail')
 }
 
 #[test]
