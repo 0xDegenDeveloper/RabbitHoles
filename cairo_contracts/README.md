@@ -4,7 +4,7 @@
 
 ### Manager Contract
 
-This contract serves as a permit control system for users and contracts. It allows other contracts to limit function calls to specific permit holders. The contract owner manages these permits and can issue them to users as required. The permits fall into two categories: regular and sudo.
+This contract serves as a permit control system for users and contracts. It allows other contracts to limit function calls to specific permit holders using a deployed instance of this contract. The contract owner manages these permits and can issue them to users as required. The permits fall into two categories: regular and sudo.
 
 A regular permit grants a user access to functions that require it. On the other hand, a sudo permit gives a user the authority to issue regular permits. The contract owner and any user with a `SUDO_PERMIT` can bind regular permits to sudo permits.
 
@@ -54,4 +54,4 @@ Here, only the Manager and contract owner are capable of binding `XYZ_PERMIT` ->
 >
 > - Sharing permits: Multiple functions might require the same permit. For example, both `set_royalty_bps()` & `set_royalty_receiver()` functions might require `ROYALTY_PERMITs`. Any user holding this permit may call both functions.
 > - Multi-access sudoers: More than one permit could be bound to the same sudo permit, such as `SET_TOKEN_URI_PERMIT` & `SET_CONTRACT_URI_PERMIT` -> `SUDO_URI_PERMIT`. Users with this sudo permit can issue both `SET_TOKEN/CONTRACT_URI_PERMITs`.
-> - Multi-access managers: Several sudo permits could be bound to the same manager permit. For instance, `SUDO_ROYALTY_PERMIT` & `SUDO_URI_PERMIT` could both be bound to `ARTIST_PERMIT`. With this, artists can issue `SUDO_ROYALTY/URI_PERMITs`, allowing recipients to then issue royalty and URI permits.
+> - Multi-access managers: Several sudo permits could be bound to the same manager permit. For instance, `SUDO_ROYALTY_PERMIT` & `SUDO_URI_PERMIT` could both be bound to `ARTIST_PERMIT`. With this, artists can issue `SUDO_ROYALTY/URI_PERMITs`, allowing recipients to then issue both `SET_ROYALTY_BPS/RECEIVER_PERMITs` and `SET_TOKEN/CONTRACT_URI_PERMITs`.
