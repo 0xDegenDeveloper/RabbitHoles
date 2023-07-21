@@ -46,7 +46,7 @@ fn deploy_suite() -> (
     calldata.append('RabbitHoles');
     calldata.append('RBITS');
     calldata.append(6_u8.into());
-    calldata.append(1000_u128.into());
+    calldata.append(1000000000_u128.into());
     calldata.append(0_u128.into());
     calldata.append(owner.into());
 
@@ -78,7 +78,7 @@ fn deploy_suite() -> (
     calldata.append('Test');
     calldata.append('TST');
     calldata.append(6_u8.into());
-    calldata.append(2000_u128.into());
+    calldata.append(2000000000_u128.into());
     calldata.append(0_u128.into());
     calldata.append(owner.into());
 
@@ -92,11 +92,11 @@ fn deploy_suite() -> (
     calldata.append(rbits_address.into());
     calldata.append(registry_address.into());
     calldata.append(dig_token_address.into());
-    calldata.append(10_u128.into());
-    calldata.append(0_u128.into());
-    calldata.append(20_u128.into());
-    calldata.append(0_u128.into());
     calldata.append(5000_u16.into());
+    calldata.append(10000000_u128.into());
+    calldata.append(0_u128.into());
+    calldata.append(20000000_u128.into());
+    calldata.append(0_u128.into());
 
     let (v1_address, _) = deploy_syscall(
         RabbitholesV1::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
@@ -129,8 +129,8 @@ fn constructor() {
     assert(V1.RBITS_ADDRESS() == Rbits.contract_address, 'Wrong RBITS_ADDRESS');
     assert(V1.REGISTRY_ADDRESS() == Registry.contract_address, 'Wrong REGISTRY_ADDRESS');
     assert(V1.dig_token_address() == DigToken.contract_address, 'Wrong dig_token_address');
-    assert(V1.dig_fee() == 10, 'Wrong dig_fee');
-    assert(V1.dig_reward() == 20, 'Wrong dig_reward');
+    assert(V1.dig_fee() == 10000000, 'Wrong dig_fee');
+    assert(V1.dig_reward() == 20000000, 'Wrong dig_reward');
     assert(V1.digger_bps() == 5000, 'Wrong digger_bps');
 }
 
@@ -142,8 +142,8 @@ fn sudo_functions_as_owner() {
     let (Manager, Rbits, Registry, V1, DigToken) = deploy_suite();
     assert(V1.is_digging() == false, 'Wrong is_digging');
     assert(V1.is_burning() == false, 'Wrong is_burning');
-    assert(V1.dig_fee() == 10, 'Wrong dig_fee');
-    assert(V1.dig_reward() == 20, 'Wrong dig_reward');
+    assert(V1.dig_fee() == 10000000, 'Wrong dig_fee');
+    assert(V1.dig_reward() == 20000000, 'Wrong dig_reward');
     assert(V1.dig_token_address() == DigToken.contract_address, 'Wrong dig_token_address');
     assert(V1.digger_bps() == 5000, 'Wrong digger_bps');
     V1.toggle_digging();
@@ -173,8 +173,8 @@ fn sudo_functions_with_permit() {
     let (Manager, Rbits, Registry, V1, DigToken) = deploy_suite();
     assert(V1.is_digging() == false, 'Wrong is_digging');
     assert(V1.is_burning() == false, 'Wrong is_burning');
-    assert(V1.dig_fee() == 10, 'Wrong dig_fee');
-    assert(V1.dig_reward() == 20, 'Wrong dig_reward');
+    assert(V1.dig_fee() == 10000000, 'Wrong dig_fee');
+    assert(V1.dig_reward() == 20000000, 'Wrong dig_reward');
     assert(V1.dig_token_address() == DigToken.contract_address, 'Wrong dig_token_address');
     assert(V1.digger_bps() == 5000, 'Wrong digger_bps');
     Manager.set_permit(manager, V1.TOGGLE_DIGGING_PERMIT(), 123);
@@ -280,16 +280,16 @@ fn dig_hole() {
     let (Manager, Rbits, Registry, V1, DigToken) = deploy_suite();
     Manager.set_permit(V1.contract_address, Registry.CREATE_HOLE_PERMIT(), 123);
     Manager.set_permit(V1.contract_address, Rbits.MINT_PERMIT(), 123);
-    DigToken.transfer(anon, 100);
+    DigToken.transfer(anon, 20000000);
     V1.toggle_digging();
     set_contract_address(anon);
-    DigToken.approve(V1.contract_address, 100);
-    assert(DigToken.balance_of(anon) == 100, 'Wrong DigToken balance0');
+    DigToken.approve(V1.contract_address, 20000000);
+    assert(DigToken.balance_of(anon) == 20000000, 'Wrong DigToken balance0');
     assert(Rbits.balance_of(anon) == 0, 'Wrong Rbits balance0');
     V1.dig_hole('title');
-    assert(DigToken.balance_of(anon) == 90, 'Wrong DigToken balance');
-    assert(Rbits.balance_of(anon) == 20, 'Wrong Rbits balance');
-    assert(DigToken.balance_of(V1.contract_address) == 10, 'Wrong V1 balance');
+    assert(DigToken.balance_of(anon) == 10000000, 'Wrong DigToken balance');
+    assert(Rbits.balance_of(anon) == 20000000, 'Wrong Rbits balance');
+    assert(DigToken.balance_of(V1.contract_address) == 10000000, 'Wrong V1 balance');
     let mut ids = ArrayTrait::<ContractAddress>::new();
     ids.append(anon);
     assert(*Registry.get_user_stats(ids).at(0).holes == 1, 'Wrong hole id');
@@ -305,16 +305,17 @@ fn burn_rabbit() {
     Manager.set_permit(V1.contract_address, Rbits.BURN_PERMIT(), 123);
     Registry.create_hole('title', digger);
     V1.toggle_burning();
-    Rbits.transfer(anon, 100);
+    Rbits.mint(anon, 20000000);
     set_contract_address(anon);
-    Rbits.approve(V1.contract_address, 100);
-    assert(Rbits.balance_of(anon) == 100, 'Wrong Rbits balance0');
+    Rbits.approve(V1.contract_address, 20000000);
+    assert(Rbits.balance_of(anon) == 20000000, 'Wrong Rbits balance0');
     let mut msg = ArrayTrait::<felt252>::new();
     msg.append('hello');
     msg.append('world');
     V1.burn_rabbit(msg, 1);
-    assert(Rbits.balance_of(anon) == 98, 'Wrong Rbits anon balance');
-    assert(Rbits.balance_of(digger) == 1, 'Wrong digger balance');
+    assert(Rbits.balance_of(anon) == 18000000, 'Wrong Rbits anon balance');
+    assert(Rbits.balance_of(digger) == 1000000, 'Wrong digger balance');
+    assert(Rbits.total_supply() == 1019000000, 'Wrong total_supply');
     let mut ids = ArrayTrait::<ContractAddress>::new();
     ids.append(anon);
     ids.append(digger);
@@ -325,7 +326,6 @@ fn burn_rabbit() {
     assert(stats_anon.rabbits == 1, 'Wrong rabbit id');
     assert(stats_anon.depth == 2, 'Wrong depth');
 }
-
 #[test]
 #[available_gas(32000000)]
 fn burn_rabbit_intense() {
@@ -337,10 +337,10 @@ fn burn_rabbit_intense() {
     Registry.create_hole('title', digger);
     V1.toggle_burning();
     V1.set_digger_bps(3333);
-    Rbits.transfer(anon, 100);
+    Rbits.mint(anon, 100000000);
     set_contract_address(anon);
-    Rbits.approve(V1.contract_address, 100);
-    assert(Rbits.balance_of(anon) == 100, 'Wrong Rbits balance0');
+    Rbits.approve(V1.contract_address, 100000000);
+    assert(Rbits.balance_of(anon) == 100000000, 'Wrong Rbits balance0');
     let mut msg = ArrayTrait::<felt252>::new();
     /// 20x
     {
@@ -366,8 +366,8 @@ fn burn_rabbit_intense() {
         msg.append('hi');
     };
     V1.burn_rabbit(msg, 1);
-    assert(Rbits.balance_of(anon) == 80, 'Wrong Rbits anon balance');
-    assert(Rbits.balance_of(digger) == 6, 'Wrong digger balance');
+    assert(Rbits.balance_of(anon) == 80000000, 'Wrong Rbits anon balance');
+    assert(Rbits.balance_of(digger) == 6666000, 'Wrong digger balance');
     let mut ids = ArrayTrait::<ContractAddress>::new();
     ids.append(anon);
     ids.append(digger);

@@ -79,8 +79,8 @@ mod RabbitholesV1 {
         manager_address: ContractAddress,
         rbits_address: ContractAddress,
         registry_address: ContractAddress,
-        digger_bps: u16,
         dig_token_address: ContractAddress,
+        digger_bps: u16,
         dig_fee: u256,
         dig_reward: u256,
     ) {
@@ -304,7 +304,8 @@ mod RabbitholesV1 {
 
     #[generate_trait]
     impl InternalImpl of StorageTrait {
-        fn burn_and_send_rbits(ref self: ContractState, hole_id: u64, cost: u256) {
+        fn burn_and_send_rbits(ref self: ContractState, hole_id: u64, mut cost: u256) {
+            cost = cost * 1000000; /// 1e6
             let to_digger = (cost * self.s_digger_bps.read().into()) / 10000;
             let to_burn = cost - to_digger;
             /// transfer rbits from burner to digger
