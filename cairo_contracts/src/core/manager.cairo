@@ -33,8 +33,8 @@ mod Manager {
 
     #[constructor]
     fn constructor(ref self: ContractState, _owner: ContractAddress) {
-        self.write_owner(_owner);
         self.s_SUDO_PERMIT.write('SUDO_PERMIT');
+        self.s_owner.write(_owner);
     }
 
     #[event]
@@ -106,7 +106,7 @@ mod Manager {
         fn renounce_ownership(ref self: ContractState) {
             self.only_owner();
             let zero_address = contract_address_const::<0>();
-            self.write_owner(zero_address);
+            self.s_owner.write(zero_address);
             self
                 .emit(
                     OwnershipTransferred {
@@ -134,18 +134,19 @@ mod Manager {
         }
 
         fn set_sudo_permit(ref self: ContractState, permit: felt252, sudo_permit: felt252) {
+            let caller = get_caller_address();
             assert(
-                self.has_valid_permit_helper(get_caller_address(), self.s_SUDO_PERMIT.read()),
+                self.has_valid_permit_helper(caller, self.s_SUDO_PERMIT.read()),
                 'Manager: Caller non manager'
             );
             self.s_sudo_permits.write(permit, sudo_permit);
-            self.emit(SudoPermitIssued { manager: get_caller_address(), permit, sudo_permit });
+            self.emit(SudoPermitIssued { manager: caller, permit, sudo_permit });
         }
 
         fn transfer_ownership(ref self: ContractState, new_owner: ContractAddress) {
             self.only_owner();
             assert(new_owner != contract_address_const::<0>(), 'Manager: false renouncement');
-            self.write_owner(new_owner);
+            self.s_owner.write(new_owner);
             self.emit(OwnershipTransferred { prev_owner: get_caller_address(), new_owner });
         }
     }
@@ -166,10 +167,6 @@ mod Manager {
 
         fn only_owner(ref self: ContractState) {
             assert(get_caller_address() == self.s_owner.read(), 'Manager: caller not owner');
-        }
-
-        fn write_owner(ref self: ContractState, new_owner: ContractAddress) {
-            self.s_owner.write(new_owner);
         }
     }
 }
