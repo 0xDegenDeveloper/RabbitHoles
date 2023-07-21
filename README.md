@@ -4,7 +4,7 @@
 
 RabbitHoles is a decentralized discussion platform built on Starknet, offering a permanent and censorship-resistant space for open conversations. Each discussion topic, called a Hole, stores messages, called Rabbits, within them. $RBITS are ERC-20 tokens essential to mechanics of the platform. A demo can be found at https://rbits.space.
 
-## Basic Flow
+# Basic Flow
 
 - Alice pays a fee to dig a `Hole` with the title: 'SHOWER THOUGHTS', she is minted $RBITS in return
 - Alice sends a few $RBITS to Bob
@@ -15,6 +15,10 @@ RabbitHoles is a decentralized discussion platform built on Starknet, offering a
 in the 'SHOWER THOUGHTS' Hole, costing him some of his $RBITS
 
 ##### [/cairo_contracts](./cairo_contracts/) for technical details
+
+## Frontend
+
+The React-based, hardcoded demo app can be viewed in [/client](./client/). The design/layout are still being finalized, and will be connected to Starknet and the contract suite soon :)
 
 ## Current development status
 
