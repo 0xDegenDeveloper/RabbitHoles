@@ -4,19 +4,19 @@
 
 ### Manager
 
-The Manager contract controls permits for users. Other contracts can reference this contract to restrict function calls to specific permit holders. These permits are controlled by the owner of the contract and can be issued to users as needed. There are essentially two types of permits, regular and sudo. A regular permit allows its holder access to functions requiring it. A sudo permits allows its holder to issue regular permits. The owner and users with a `SUDO_PERMIT` have the ability to bind regular permits -> sudo permits.
+The Manager contract controls permits for users. Other contracts may reference this contract (or an instance of this contract) to restrict function calls to specific permit holders. These permits are controlled by the owner of the contract and can be issued to users as needed. There are essentially two types of permits, regular and sudo. A regular permit allows a caller access to functions requiring it. While a sudo permit allows a caller access to issue regular permits. The owner and users with a `SUDO_PERMIT` have the ability to bind regular permits -> sudo permits.
 
 #### Example usages
 
 For these examples, assume a contract requires a `MINT_PERMIT` to call its mint function like so:
 
-> `assert(contract.has_valid_permit(get_caller_address, 'MINT_PERMIT') == true, 'Reason: invalid permit')`
+> `assert(ManagerContract.has_valid_permit(get_caller_address, 'MINT_PERMIT') == true, 'Reason: invalid permit')`
 
 ##### Basic permits
 
 - Owner issues Alice a `MINT_PERMIT`
 
-Alice & Owner are the only users able to mint in this scenario.
+Alice & Owner are the only users able to mint.
 
 ##### Sudo permits
 
@@ -48,25 +48,29 @@ Manager & Owner are the only users able to bind `XYZ_PERMIT` -> `SUDO_XYZ`
 
 ##### Going deeper
 
-> The examples above solely apply to the contract's mint function due to its set up:
-> This permit abstraction can be specifc like shown, or go deep. Imagine an NFT contract:
+> The examples above solely apply to the contract's mint function due to its set up, this permit abstraction can be specifc like shown, or get more complex:
 >
-> - functions sharing permits: `set_royalty_percentage() & set_royalty_receiver()` functions both requiring a `ROYALTY_PERMIT`
-> - permits sharing a sudo permit : `MINT_PERMIT` & `BURN_PERMIT` are both binded -> `SUPPLY_SUDO_PERMIT`, sudoer can issue only these two permits
-> - sudo permits sharing a manager permit: `SUDO_SUPPLY_PERMIT` & `SUDO_ROYALTY_PERMIT` are both binded -> `REGIONAL_MANAGER_1`, holders of this regional permit can only issue these two sudo permits
->   - in these scenarios, the contract's `setURI(), withdraw(), etc.` functions are only accessible to Owner (or permit holders if setup)
+> - sharing permits: 2+ functions requiring the same permit:
+>   - `set_royalty_bps()` & `set_royalty_receiver()` both requiring `ROYALTY_PERMITs`
+>   - Holders of this permit may call both functions
+> - multi-access sudoers: 2+ permits binded to the same sudo permit
+>   - `SET_TOKEN_URI_PERMIT` & `SET_CONTRACT_URI_PERMIT` -> `SUDO_URI_PERMIT`
+>   - Sudoers with this permit may issue `SET_TOKEN/CONTRACT_URI_PERMITs`
+> - multi-access managers: 2+ sudo permits binded to the same manager permit:
+>   - `SUDO_ROYALTY_PERMIT` & `SUDO_URI_PERMIT` both binded to -> `ARTIST_PERMIT`
+>   - artists may issue `SUDO_ROYALTY/URI_PERMITs` (receivers may then issue royalty & uri permits)
 
 ### ERC20
 
-This is a standard ERC20 contract that references the Manager contract for minting & burning permissions. To mint tokens, a user or contract must have a `MINT_PERMIT`, and to burn tokens, they must have a `BURN_PERMIT`.
+This is a standard ERC20 contract that references an instance of the Manager contract for minting & burning permissions. To mint tokens, a user or contract must have a `MINT_PERMIT`, and to burn tokens, they must have a `BURN_PERMIT`.
 
 ### Registry
 
-This contract handles the logic for the creation and storage of Holes & Rabbits, referencing the Manager contract for these permissions. A `CREATE_HOLE_PERMIT` & `CREATE_RABBIT_PERMIT` are required to create Holes & Rabbits respectively. There are no fees/rewards associated with this contract, that logic is intended to come from contracts with these `CREATE_HOLE/RABBIT_PERMITs`. This structure allows the project to be extended with few restraints.
+This contract handles the logic for the creation and storage of Holes & Rabbits, also referencing the Manager contract instance for these permissions. A `CREATE_HOLE_PERMIT` & `CREATE_RABBIT_PERMIT` are required to create Holes & Rabbits respectively. There are no fees/rewards associated with this contract, that logic is intended to come from contracts with `CREATE_HOLE/RABBIT_PERMITs`. This structure allows the project to be extended with fewer restrictions.
 
 ##### Theoretical extensions
 
-- A Shovel NFT collection is released that allow owners to dig holes at a discount and receive bigger `dig_rewards`
+- A Shovel NFT collection is released that allows owners to dig holes at a discount and receive bigger `dig_rewards`
 - RabbitholesV1_Shovel is deployed, handling the logic for this discount, reward & ownership verification
 - With the neccessary permits, V1 & V1_Shovel are operating synchronously
 
