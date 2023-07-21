@@ -112,7 +112,8 @@ This contract is the first implementation of Rabbitholes.
 
 #### Along with lookup tables for returning:
 
-- A user's holes or rabbits based on an array of indexes (return a user's 1st & 2nd `Hole` or a user's 8th, 9th, & 10th `Rabbit`)
+- The holes or rabbits created by a user based on an array of indexes (return a user's 1st & 2nd `Hole` or their 8th, 9th, & 10th `Rabbit`)
+- The rabbits in a hole based on an array of indexes (return a hole's 1st, 2nd, & 10th `Rabbit`)
 
 ## Commands
 
