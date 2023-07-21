@@ -12,7 +12,7 @@ RabbitHoles is a decentralized discussion platform built on Starknet, offering a
 
 > Who would have thought that the first shower thought to be immortalized on a blockchain would be about the very concept of storing shower thoughts on a blockchain?"
 
-in the 'SHOWER THOUGHTS' `Hole`, costing him some of his $RBITS
+in the 'SHOWER THOUGHTS' Hole, costing him some of his $RBITS
 
 ##### [/cairo_contracts](./cairo_contracts/) for technical details
 
