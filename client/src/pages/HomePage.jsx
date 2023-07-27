@@ -11,6 +11,10 @@ export default function HomePage() {
   function passInput() {
     let url = "";
 
+    if (input.length > 31) return;
+
+    /// fetch hole it from title
+
     if (input.toLocaleUpperCase() == "JEFFERY EPSTEIN") url = "/archive/4";
     else if (input.toLocaleUpperCase() == "BREATHWORK") url = "/archive/2";
     else if (input.toLocaleUpperCase() == "SHOWER THOUGHTS") url = "/archive/1";
@@ -28,25 +32,6 @@ export default function HomePage() {
   return (
     <>
       <div className="container">
-        {/* <SearchBox>
-          <SearchBar
-            placeholder="Enter the RabbitHole..."
-            onChange={(event) => setTheInput(event.target.value)}
-            onKeyDown={(event) => {
-              if (event.key == "Enter") {
-                passInput();
-              }
-            }}
-          ></SearchBar>
-          <SearchBtn className={input == "" ? "one" : "two"}>
-            <FontAwesomeIcon
-              icon={faMagnifyingGlass}
-              onClick={() => {
-                passInput();
-              }}
-            ></FontAwesomeIcon>
-          </SearchBtn>
-        </SearchBox> */}
         <div className="dark-search-bar">
           <input
             className="dark-search-bar-input"
@@ -57,6 +42,7 @@ export default function HomePage() {
                 passInput();
               }
             }}
+            maxLength={31}
           ></input>
           <div
             className={`dark-search-bar-button ${input == "" ? "one" : "two"}`}
