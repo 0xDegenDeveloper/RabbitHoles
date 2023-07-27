@@ -1,8 +1,8 @@
 # RabbitHoles - Cairo Contracts
 
-## Core
+## Contracts
 
-### Manager Contract
+### Manager
 
 This contract serves as a permit control system for users and contracts. It allows other contracts to limit function calls to specific permit holders using a deployed instance of this contract. The contract owner manages these permits and can issue them to users as needed. The permits fall into two categories: regular and sudo.
 
