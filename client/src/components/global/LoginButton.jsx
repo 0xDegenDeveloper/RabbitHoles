@@ -1,18 +1,57 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useAccount, useConnectors } from "@starknet-react/core";
 import styled from "styled-components";
+import LoginModal from "./LoginModal";
+import Modal from "./Modal";
 
 export default function LoginButton() {
   const [loggedIn, setLoggedIn] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  return (
-    <LoginBtn
-      onClick={() => {
-        setLoggedIn(!loggedIn);
-      }}
-    >
-      Verify Keys
-    </LoginBtn>
-  );
+  const { address } = useAccount();
+
+  return <>{address ? <ConnectedBtn /> : <DisconnectedBtn />}</>;
+
+  function ConnectedBtn() {
+    const { address } = useAccount();
+    const { disconnect } = useConnectors();
+
+    const shortenedAddress = useMemo(() => {
+      if (!address) return "";
+      return `${address.slice(0, 6)}...${address.slice(-4)}`;
+    }, [address]);
+
+    return (
+      <LoginBtn
+        onClick={() => {
+          setLoggedIn(!loggedIn);
+          setIsModalOpen(false);
+          disconnect();
+        }}
+      >
+        <span>Connected: {shortenedAddress}</span>
+        {/* <button onClick={disconnect}>Disconnect</button> */}
+      </LoginBtn>
+    );
+  }
+
+  function DisconnectedBtn() {
+    const { connectors, connect } = useConnectors();
+
+    return (
+      <>
+        <LoginBtn
+          onClick={() => {
+            setIsModalOpen(true);
+          }}
+        >
+          {/* <span>Choose a wallet:</span> */}
+          <span>Verify Keys</span>
+        </LoginBtn>
+        <Modal modal={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      </>
+    );
+  }
 }
 
 const LoginBtn = styled.div`
