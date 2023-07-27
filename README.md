@@ -2,7 +2,7 @@
 
 ## Overview
 
-RabbitHoles is a decentralized discussion platform built on Starknet, offering a space for permanent and censorship-resistant conversations. Each discussion topic is called a Hole and stores messages, called Rabbits, within them. A demo can be found at https://rbits.space.
+RabbitHoles is a decentralized discussion platform built on Starknet, offering a space for permanent and censorship-resistant conversations. Each discussion topic is called a Hole and stores messages, called Rabbits, within them. A demo can be found at https://demo.rbits.space.
 
 ## Basic Flow
 
