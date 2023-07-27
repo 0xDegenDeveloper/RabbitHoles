@@ -6,52 +6,62 @@ import Modal from "./Modal";
 
 export default function LoginButton() {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { address } = useAccount();
+  // const { address } = useAccount();
 
-  return <>{address ? <ConnectedBtn /> : <DisconnectedBtn />}</>;
+  // return <>{address ? <ConnectedBtn /> : <DisconnectedBtn />}</>;
 
-  function ConnectedBtn() {
-    const { address } = useAccount();
-    const { disconnect } = useConnectors();
+  return (
+    <LoginBtn
+      onClick={() => {
+        setLoggedIn(!loggedIn);
+      }}
+    >
+      Verify Keys
+    </LoginBtn>
+  );
 
-    const shortenedAddress = useMemo(() => {
-      if (!address) return "";
-      return `${address.slice(0, 6)}...${address.slice(-4)}`;
-    }, [address]);
+  // function ConnectedBtn() {
+  //   const { address } = useAccount();
+  //   const { disconnect } = useConnectors();
 
-    return (
-      <LoginBtn
-        onClick={() => {
-          setLoggedIn(!loggedIn);
-          setIsModalOpen(false);
-          disconnect();
-        }}
-      >
-        <span>Connected: {shortenedAddress}</span>
-        {/* <button onClick={disconnect}>Disconnect</button> */}
-      </LoginBtn>
-    );
-  }
+  //   const shortenedAddress = useMemo(() => {
+  //     if (!address) return "";
+  //     return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  //   }, [address]);
 
-  function DisconnectedBtn() {
-    const { connectors, connect } = useConnectors();
+  //   return (
+  //     <LoginBtn
+  //       onClick={() => {
+  //         setLoggedIn(!loggedIn);
+  //         setIsModalOpen(false);
+  //         disconnect();
+  //       }}
+  //     >
+  //       <span>Connected: {shortenedAddress}</span>
+  //       {/* <button onClick={disconnect}>Disconnect</button> */}
+  //     </LoginBtn>
+  //   );
+  // }
 
-    return (
-      <>
-        <LoginBtn
-          onClick={() => {
-            setIsModalOpen(true);
-          }}
-        >
-          {/* <span>Choose a wallet:</span> */}
-          <span>Verify Keys</span>
-        </LoginBtn>
-        <Modal modal={isModalOpen} onClose={() => setIsModalOpen(false)} />
-      </>
-    );
-  }
+  // function DisconnectedBtn() {
+  //   const { connectors, connect } = useConnectors();
+
+  //   return (
+  //     <>
+  //       <LoginBtn
+  //         onClick={() => {
+  //           setIsModalOpen(true);
+  //         }}
+  //       >
+  //         {/* <span>Choose a wallet:</span> */}
+  //         <span>Verify Keys</span>
+  //       </LoginBtn>
+  //       <Modal modal={isModalOpen} onClose={() => setIsModalOpen(false)} />
+  //     </>
+  //   );
+  // }
 }
 
 const LoginBtn = styled.div`

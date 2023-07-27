@@ -35,7 +35,7 @@ function App() {
 
   return (
     <>
-      <Graphics />
+      {/* <Graphics /> */}
       <GlobalStyles mobile={mobile} />
       <BrowserRouter>
         <TopComponents totalDigs={totalDigs} mobile={mobile} />

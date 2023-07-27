@@ -43,7 +43,6 @@ function LoginModal(props) {
   return (
     <div style={LOGIN_STYLES}>
       {connectors.map((connector) => {
-        console.log("hi", connector);
         return (
           <div>
             <span>{connector.id}</span>
