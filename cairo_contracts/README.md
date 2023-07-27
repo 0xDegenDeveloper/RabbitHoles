@@ -58,11 +58,11 @@ Here, only the Manager and contract owner are capable of binding `XYZ_PERMIT` ->
 > - Multi-access sudoers: More than one permit could be bound to the same sudo permit, such as `SET_TOKEN_URI_PERMIT` & `SET_CONTRACT_URI_PERMIT` -> `SUDO_URI_PERMIT`. Users with this sudo permit can issue both `SET_TOKEN/CONTRACT_URI_PERMITs`.
 > - Multi-access managers: Several sudo permits could be bound to the same manager permit. For instance, `SUDO_ROYALTY_PERMIT` & `SUDO_URI_PERMIT` could both be bound to `ARTIST_PERMIT`. With this, artists can issue `SUDO_ROYALTY/URI_PERMITs`, allowing recipients to then issue both `ROYALTY_PERMITs` and `URI_PERMITs`.
 
-### ERC20
+### \* ERC20
 
 This is a standard ERC20 contract that references an instance of the Manager contract for minting & burning permissions. To mint tokens, a user or contract must have a `MINT_PERMIT`, and to burn tokens, they must have a `BURN_PERMIT`.
 
-### Registry
+### \* Registry
 
 This contract handles the logic for the creation and storage of Holes & Rabbits, also referencing the Manager contract instance for these permissions. A `CREATE_HOLE_PERMIT` & `CREATE_RABBIT_PERMIT` are required to create Holes & Rabbits respectively on befalf of users. There are no fees/rewards associated with this contract, that logic is intended to come from contracts with `CREATE_HOLE/RABBIT_PERMITs`. This structure allows the project to be extended with fewer restrictions.
 
@@ -96,7 +96,7 @@ A Rabbit is created using a `hole_id` & a `msg`, this Hole must already exist, a
 - The holes or rabbits created by a user based on an array of indexes (return a user's 1st & 2nd `Hole` or their 8th, 9th, & 10th `Rabbit`)
 - The rabbits in a hole based on an array of indexes (return a hole's 1st, 2nd, & 10th `Rabbit`)
 
-### RabbitHolesV1
+### \* RabbitHolesV1
 
 This contract is the first implementation of RabbitHoles.
 
