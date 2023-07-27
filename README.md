@@ -19,4 +19,4 @@ in the 'SHOWER THOUGHTS' Hole, costing him some of his $RBITS
 ## Current development status
 
 - Finalizing [/client](./client)
-- Deploying contracts and connecting -> client
+- Connecting contracts -> client
