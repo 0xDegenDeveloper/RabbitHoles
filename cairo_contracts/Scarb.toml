@@ -8,9 +8,16 @@ repository = "https://github.com/0xDegenDeveloper/Rabbitholes"
 description = "---"
 
 [dependencies]
-starknet = "2.0.0-rc6"
+starknet = "2.0.1"
 # sierra-compile = "starknet-sierra-compile src/lib.cairo sierra/rbits.json"
 
 [[target.starknet-contract]]
-allowed-libfuncs = true
-allowed-libfuncs-list.name = "experimental"
+# allowed-libfuncs = true
+# allowed-libfuncs-list.name = "experimental"
+
+# [lib]
+# casm=true
+# sierra=true
+
+# starkli declare --account $STARKNET_ACCOUNT target/dev/rabbitholes_Manager.sierra.json --rpc $STARKNET_GOERLI_RPC --keystore $STARKNET_SIGNER --compiler-version 2.0.1
+

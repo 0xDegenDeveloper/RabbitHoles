@@ -117,8 +117,63 @@ This contract is the first implementation of RabbitHoles.
 - Using the `digger_bps` (0 <= `digger_bps` <= 10,000), some $RBITS are transfered to the Hole's digger, and the rest are burned
   - In the above example, if the `digger_bps` is 2,500 (`2500/10000 == 25%`), the msg will cost 2.000000 $RBITS; 0.500000 are sent to the Hole's digger, and 1.500000 are burned
 
-## Commands
+## Dev
+
+### Commands
 
 - `scarb build` creates the sierra.json files for the suite
 - `scarb test` runs `core` & `V1` tests
 - `scarb fmt` cleans spacing in all .cairo files
+
+### Declare
+
+`starkli declare --account $STARKNET_ACCOUNT target/dev/<target.json> --rpc $STARKNET_GOERLI_RPC --keystore $STARKNET_SIGNER --compiler-version 2.0.1`
+
+### Deploy
+
+> `starkli deploy <class_hash> <args> --account $STARKNET_ACCOUNT --rpc $STARKNET_GOERLI_RPC --keystore $STARKNET_SIGNER`
+
+### Params
+
+#### Manager:
+
+> <class_hash> == `0x0209ff8a5a1dfef1fd365ca5d2f7bad09c37ff995d19917e7ebd33f6e4543165`
+
+> <args> == `284853202282316910755836087987553145089895892383786529501944231852568436737` (owner)
+
+> deployed at: `0x026a60f9b16975e44c11550c2baff45ac4c52d399cdccab5532dccc73ffa3298`
+
+#### ERC20:
+
+> <class_hash> == `0x05acbcb27c044d194cc3da98272eba78b8122456233dde5759fdd3db1449e08b`
+
+> <args> == `1092580785392713095075232812540319657223439146213786134614021612951427494552 99591801629484114175092083 353299420243 6 1000000000 0 284853202282316910755836087987553145089895892383786529501944231852568436737` (manager_address, name, symbol, decimals, initial_supply_lower, initial_supply_upper, receiver)
+
+> deployed at: `0x06a3e59fce87072a652e7d67df0782e89b337b65ff50f1d8553e990dd3c95cef`
+
+#### Registry:
+
+> <clash_hash> == `0x07aae7e07189c0a39d2c2475062bbac1ea558fdbf62a531fb8a141dad955b92f`
+
+> <args> == `1092580785392713095075232812540319657223439146213786134614021612951427494552` (manager_address)
+
+> deployed at: `0x026377bcc9b973eae8500eca7f916e42a645ffd4b15146e62b69e57e958502fc`
+
+#### V1
+
+> <clash_hash> == `0x043ffae7dd9b18e2318f6d9355596e38af133f8b949a3ed80cad8f2e88ecfba6`
+
+> <args> == `1092580785392713095075232812540319657223439146213786134614021612951427494552 3003457971353289469238991866356045131336341321679831255126448961467567398127 1080369954108895810355668535768540353512322402048349022580986615052531729148 2087021424722619777119509474943472645767659996348769578120564519014510906823 5000 10000000 0 20000000 0` (manager_address, rbits_address, registry_address, dig_token_address, digger_bps, dig_fee_lower, dig_fee_upper, dig_reward_lower, dig_reward_upper)
+
+> deployed at: `0x01c8ca977ca1c5721fb5150f63b1ae5b75e6155ef9b4e0f19acc9082d8c7fff3`
+
+### Post deployment
+
+#### Issue permits through Manager contract
+
+- V1 -> `CREATE_HOLE_PERMIT` (5864518367455677081700114700087541139065172), `CREATE_RABBIT_PERMIT` (384337075729575254014235448159253223033088592212), `MINT_PERMIT` (93433465789279960535222612), `BURN_PERMIT`, (80192023525944205966657876)
+
+#### Toggle bool values
+
+- RBITS -> `toggle_minting()`, `toggle_burning()`
+- Registry -> `toggle_hole_creation()`, `toggle_rabbit_creation()`

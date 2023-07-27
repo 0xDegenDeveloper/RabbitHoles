@@ -48,7 +48,7 @@ mod RabbitholesV1 {
         storage_read_syscall, storage_write_syscall, Felt252TryIntoContractAddress
     };
     use core::integer;
-    use option::Option;
+    use option::{Option, OptionTrait};
     use traits::{Into, TryInto};
     use zeroable::Zeroable;
 
@@ -304,18 +304,22 @@ mod RabbitholesV1 {
 
     #[generate_trait]
     impl InternalImpl of StorageTrait {
-        fn burn_and_send_rbits(ref self: ContractState, hole_id: u64, mut cost: u256) {
+        fn burn_and_send_rbits(ref self: ContractState, hole_id: u64, cost: u256) {
+            /// use u128_div for now 
+            let bps: u128 = self.s_digger_bps.read().into();
+            let mut cost: u128 = cost.try_into().unwrap();
+
             cost = cost * 1000000; /// 1e6
-            let to_digger = (cost * self.s_digger_bps.read().into()) / 10000;
+            let to_digger = (cost * bps) / 10000;
             let to_burn = cost - to_digger;
             /// transfer rbits from burner to digger
             IERC20Dispatcher {
                 contract_address: self.s_RBITS_ADDRESS.read()
-            }.transfer_from(get_caller_address(), self.fetch_digger(hole_id), to_digger);
+            }.transfer_from(get_caller_address(), self.fetch_digger(hole_id), to_digger.into());
             /// burn the rest
             IERC20Dispatcher {
                 contract_address: self.s_RBITS_ADDRESS.read()
-            }.burn(get_caller_address(), to_burn);
+            }.burn(get_caller_address(), to_burn.into());
         }
 
         fn charge_dig_fee(ref self: ContractState) {
