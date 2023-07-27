@@ -177,3 +177,4 @@ This contract is the first implementation of RabbitHoles.
 
 - RBITS -> `toggle_minting()`, `toggle_burning()`
 - Registry -> `toggle_hole_creation()`, `toggle_rabbit_creation()`
+- V1 -> `toggle_digging()`, `toggle_burning()`
