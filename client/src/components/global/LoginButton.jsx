@@ -5,80 +5,88 @@ import LoginModal from "./LoginModal";
 import Modal from "./Modal";
 
 export default function LoginButton() {
-  const [loggedIn, setLoggedIn] = useState(false);
+  // const [loggedIn, setLoggedIn] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { address } = useAccount();
 
-  return <>{address ? <ConnectedBtn /> : <DisconnectedBtn />}</>;
+  return (
+    <>
+      {address ? (
+        <ConnectedBtn />
+      ) : (
+        <DisconnectedBtn setIsModalOpen={setIsModalOpen} />
+      )}
+      <Modal modal={isModalOpen} onClose={() => setIsModalOpen(false)} />
+    </>
+  );
+}
 
-  function ConnectedBtn() {
-    const { address } = useAccount();
-    const { disconnect } = useConnectors();
-
-    const shortenedAddress = useMemo(() => {
-      if (!address) return "";
-      return `${address.slice(0, 6)}...${address.slice(-4)}`;
-    }, [address]);
-
-    return (
+function DisconnectedBtn(props) {
+  return (
+    <>
       <LoginBtn
         onClick={() => {
-          setLoggedIn(!loggedIn);
-          setIsModalOpen(false);
-          disconnect();
+          props.setIsModalOpen(true);
         }}
+        connected={false}
       >
-        <span>Connected: {shortenedAddress}</span>
-        {/* <button onClick={disconnect}>Disconnect</button> */}
+        <span>Connect Wallet</span>
       </LoginBtn>
-    );
-  }
+    </>
+  );
+}
 
-  function DisconnectedBtn() {
-    const { connectors, connect } = useConnectors();
+function ConnectedBtn() {
+  const { address } = useAccount();
+  const { disconnect } = useConnectors();
 
-    return (
-      <>
-        <LoginBtn
-          onClick={() => {
-            setIsModalOpen(true);
-          }}
-        >
-          {/* <span>Choose a wallet:</span> */}
-          <span>Verify Keys</span>
-        </LoginBtn>
-        <Modal modal={isModalOpen} onClose={() => setIsModalOpen(false)} />
-      </>
-    );
-  }
+  const shortenedAddress = useMemo(() => {
+    if (!address) return "";
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  }, [address]);
+
+  return (
+    <LoginBtn
+      onClick={() => {
+        disconnect();
+      }}
+      connected={true}
+    >
+      <span>{shortenedAddress}</span>
+      {/* <button onClick={disconnect}>Disconnect</button> */}
+    </LoginBtn>
+  );
 }
 
 const LoginBtn = styled.div`
   position: absolute;
   max-width: fit-content;
   white-space: nowrap;
-  background-color: var(--forrestGreen);
-  color: var(--forrestGreen);
+  /* background-color: var(--forrestGreen);
+  color: var(--forrestGreen); */
+  background-color: ${(props) =>
+    props.connected ? "var(--forrestGreen)" : "rgba(255, 255, 255, 0.01)"};
+  color: ${(props) =>
+    props.connected ? "var(--greyGreen)" : "var(--forrestGreen)"};
   border-color: var(--forrestGreen);
   border-style: solid;
   border-width: 2px;
   border-radius: 2rem;
-  border-top-left-radius: 0;
-  border-bottom-right-radius: 0;
-  background-color: rgba(255, 255, 255, 0.01);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-  -moz-backdrop-filter: blur(2px);
-  -o-backdrop-filter: blur(2px);
-  -ms-backdrop-filter: blur(2px);
-  box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.2);
-  border-top-left-radius: 0;
+  /* border-top-left-radius: ${(props) => (props.connected ? "2rem" : "0")};
+  border-top-right-radius: ${(props) => (props.connected ? "2rem" : "0")};
+  border-bottom-left-radius: ${(props) => (props.connected ? "2rem" : "0")}; */
+  /* border-top-left-radius: 2rem; */
+  border-radius: 0 0 2rem 0;
   border-bottom-right-radius: 2rem;
-  border-top-right-radius: 0;
-  border-bottom-left-radius: 0;
+  /* background-color: rgba(255, 255, 255, 0.01); */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  -moz-backdrop-filter: blur(10px);
+  -o-backdrop-filter: blur(10px);
+  -ms-backdrop-filter: blur(10px);
+  box-shadow: 0px 0px 5px 0px var(--forrestGreen);
   padding: 0 1rem;
-  top: 0;
   top: -2px;
   left: -2px;
   padding: 1rem 1rem;
@@ -90,16 +98,17 @@ const LoginBtn = styled.div`
 
   &:hover {
     cursor: pointer;
-    color: var(--greyGreen);
+    color: ${(props) =>
+      props.connected
+        ? "var(--forrestGreen)"
+        : "var(--greyGreen)"}; // var(--forrestGreen);
     box-shadow: 0px 0px 5px 0px var(--forrestGreen);
-    background-color: var(--forrestGreen);
-    border-top-left-radius: 2rem;
-    border-bottom-right-radius: 2rem;
-    border-bottom-left-radius: 2rem;
-    border-top-right-radius: 2rem;
+    background-color: ${(props) =>
+      props.connected ? "rgba(0,0,0,0)" : "var(--forrestGreen)"};
+    border-radius: 2rem;
     top: 1rem;
     left: 1rem;
   }
 
-  transition: all 0.1s 0.05s ease-in-out;
+  transition: all 0.05s 0s ease-in-out;
 `;

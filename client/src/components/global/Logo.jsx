@@ -1,11 +1,21 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 export default function Logo(props) {
+  const [toggled, setToggled] = useState(false);
+
+  useEffect(() => {}, [toggled]);
+
   return (
     <>
       {/* <Wrapper> */}
-      <LogoStyle>
+      <LogoStyle
+        toggled={toggled}
+        onClick={() => {
+          setToggled(!toggled);
+        }}
+      >
         <Link to={"/"} className={props.mobile ? "mobile" : "non-mobile"}>
           {props.mobile ? "RBITS" : "RabbitHoles"}
         </Link>
@@ -14,13 +24,6 @@ export default function Logo(props) {
     </>
   );
 }
-
-const Wrapper = styled.div`
-  :hover {
-    top: 1rem;
-    padding: 1rem;
-  }
-`;
 
 const LogoStyle = styled.div`
   position: absolute;
@@ -31,13 +34,11 @@ const LogoStyle = styled.div`
   -moz-backdrop-filter: blur(10px);
   -o-backdrop-filter: blur(10px);
   -ms-backdrop-filter: blur(10px);
-  border-radius: 2rem;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  border-top-left-radius: 0;
+  border-radius: 0 0 0 2rem;
   border: 2px solid;
   border-color: none;
-  color: var(--forrestGreen);
+  background-color: ${(props) =>
+    props.toggled ? "var(--forrestGreen)" : "none"};
   top: -2px;
   right: -2px;
   text-decoration: none;
@@ -53,7 +54,8 @@ const LogoStyle = styled.div`
 
   a {
     text-decoration: none;
-    color: var(--forrestGreen);
+    color: ${(props) =>
+      props.toggled ? "var(--greyGreen)" : "var(--forrestGreen)"};
   }
 
   :hover {
@@ -67,7 +69,7 @@ const LogoStyle = styled.div`
   }
 
   // Add transition property for smooth hover effect
-  transition: all 0.2s 0.05s ease-in-out;
+  transition: all 0.05s 0s ease-in-out;
 `;
 
 // const LogoStyle = styled.div`
