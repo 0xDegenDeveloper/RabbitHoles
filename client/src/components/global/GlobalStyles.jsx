@@ -79,16 +79,16 @@ const GlobalStyle = createGlobalStyle`
         text-align: left;
         background-color: var(--forrestGreen);
         color: var(--lightGreen);
-        border: 3px solid var(--forrestGreen);
+        ${"" /* border: 3px solid var(--forrestGreen); */}
         font-family: "Andale Mono", monospace;
         font-size: clamp(12px, 3vw, 15px);
         background-color: rgba(255, 255, 255, 0.01);
-        backdrop-filter: blur(2px);
-        -webkit-backdrop-filter: blur(2px);
-        -moz-backdrop-filter: blur(2px);
-        -o-backdrop-filter: blur(2px);
-        -ms-backdrop-filter: blur(2px);
-        box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        -moz-backdrop-filter: blur(10px);
+        -o-backdrop-filter: blur(10px);
+        -ms-backdrop-filter: blur(10px);
+        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
     }
 
     .outlined-boxx{
@@ -169,13 +169,21 @@ const GlobalStyle = createGlobalStyle`
         background-color: var(--forrestGreen);
         color: var(--lightGreen);
         font-family: "Andale Mono", monospace;
-        font-size: clamp(12px, 3vw, 15px);
+        font-size: clamp(12px, 3vw, 18px);
         overflow:scroll;
         box-shadow: 0px 0px 5px 0px var(--forrestGreen);
         margin: 0 auto;
 
         min-width: clamp(75px, 55vw, 600px);
         min-height: 200px;
+
+        h1{
+            margin: .5rem;
+        }
+
+        h4{
+          margin: 1rem 0;
+        }
 
         ${
           "" /* h5{

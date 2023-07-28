@@ -163,7 +163,8 @@ export default function UserPage(props) {
 const Bar = styled.div`
   width: 100%;
   margin: 1rem auto;
-  border-bottom: 1px solid var(--forrestGreen);
+  border-bottom: 1px dashed var(--forrestGreen);
+  /* border-style: solid; */
 `;
 
 const Wrapper = styled.div`

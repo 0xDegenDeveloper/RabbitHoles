@@ -39,7 +39,7 @@ export default function UserSearchBar(props) {
         ></input>
         <div id="h" className={`dark-search-bar-button ${"two"}`}>
           <FontAwesomeIcon
-            icon={faUserAstronaut}
+            icon={faMagnifyingGlass}
             onClick={() => {
               passInput();
             }}

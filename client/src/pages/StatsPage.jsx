@@ -1,24 +1,34 @@
+import fetchGlobalStats from "../components/hooks/fetchGlobalStats";
+
 export default function StatsPage() {
+  const { holes, rabbits, depth, totalSupply, digFee, digReward } =
+    fetchGlobalStats();
   return (
     <>
       <div className="container">
-        <div className="dark-box-600w">
-          <h2 style={{ color: "var(--limeGreen)" }}>Metrics</h2>
+        <div
+          className="dark-box-600w"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "0",
+          }}
+        >
+          <h1 style={{ color: "var(--limeGreen)" }}>Metrics</h1>
           <h4>
-            &gt; Supply: <em>12,345 RBITS</em>
+            Supply: <em>{totalSupply} $RBITS</em>
           </h4>
           <h4>
-            &gt; Dig Fee: <em>0.001Ξ</em>
+            Dig Fee: <em>{digFee}Ξ</em>
+            {" > "}Dig Reward: <em>{digReward} $RBITS</em>
           </h4>
+          <h1 style={{ color: "var(--limeGreen)" }}>Stats</h1>
           <h4>
-            &gt; Dig Reward: <em>25 RBITS</em>
-          </h4>
-          <h2 style={{ color: "var(--limeGreen)" }}>Stats</h2>
-          <h4>
-            &gt; Total Digs: <em>111</em>
-          </h4>
-          <h4>
-            &gt; Total Burns: <em>2356</em>
+            Holes: <em>{holes}</em>
+            {" > "}Rabbits: <em>{rabbits}</em>
+            {" > "}Depth: <em>{depth}</em>
           </h4>
         </div>
       </div>
