@@ -88,7 +88,7 @@ const NavLinksLi = styled.li`
 
   &.active,
   &.active:hover {
-    color: var(--greyGreen);
+    color: var(--limeGreen);
     border-left: 2px solid var(--limeGreen);
     padding-left: 1.5rem;
   }
@@ -102,7 +102,11 @@ const NavLinkEl = styled(Link)`
   text-decoration: none;
   color: var(--forrestGreen);
   &:hover {
-    color: var(--greyGreen);
+    color: var(--limeGreen);
+
+    &.active {
+      color: var(--lightGreen);
+    }
   }
   &.active {
     color: var(--greyGreen);

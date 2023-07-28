@@ -175,6 +175,7 @@ const GlobalStyle = createGlobalStyle`
         margin: 0 auto;
 
         min-width: clamp(75px, 55vw, 600px);
+        min-height: 200px;
 
         ${
           "" /* h5{

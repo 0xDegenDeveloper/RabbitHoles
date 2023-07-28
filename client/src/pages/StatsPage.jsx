@@ -13,7 +13,7 @@ export default function StatsPage() {
           <h4>
             &gt; Dig Reward: <em>25 RBITS</em>
           </h4>
-          <h2 style={{ color: "var(--limeGreen)" }}>Depth</h2>
+          <h2 style={{ color: "var(--limeGreen)" }}>Stats</h2>
           <h4>
             &gt; Total Digs: <em>111</em>
           </h4>

@@ -133,6 +133,6 @@ const FooterBottom = styled.div`
   svg:hover {
     cursor: pointer;
     color: ${(props) =>
-      props.darkMode ? "var(--limeGreen)" : "var(--lightGreen)"};
+      props.darkMode ? "var(--limeGreen)" : "var(--limeGreen)"};
   }
 `;

@@ -4,7 +4,12 @@ import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { stringToFelts } from "../components/utils/Utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowsToCircle, faDigging } from "@fortawesome/free-solid-svg-icons";
+
+import HoleSearching from "../components/digging/HoleSearching";
+import HoleExists from "../components/digging/HoleExists";
+import HoleDoesNotExists from "../components/digging/HoleDoesNotExist";
+import HoleErrror from "../components/digging/HoleError";
+import EmptyTitle from "../components/digging/EmptyTitle";
 
 import {
   useContractRead,
@@ -75,60 +80,31 @@ export default function MiddleMan() {
           transform: "translate(-50%, -50%)",
         }}
       >
-        {isError && (
-          <StyledBox className="dark-box-600w">
-            <h2 style={{ color: "var(--limeGreen)" }}>Error</h2>
-            <h4>{isError}</h4>
-          </StyledBox>
+        {key == undefined ? (
+          <EmptyTitle />
+        ) : (
+          <>
+            {isError && <HoleErrror isError={isError} title={key} />}
+            {isLoading && <HoleSearching />}
+            {data &&
+              (data == 0 ? (
+                <HoleDoesNotExists title={key} />
+              ) : (
+                <HoleExists title={key} data={data} />
+              ))}
+          </>
         )}
-
-        {isLoading && (
-          <StyledBox className="dark-box-600w">
-            <h2 style={{ color: "var(--limeGreen)" }}>Verifying...</h2>
-            <h4>A hole can be dug only once</h4>
-          </StyledBox>
-        )}
-
-        {data &&
-          (data == 0 ? (
-            <StyledBox className="dark-box-600w">
-              <h2>Not Dug Yet!</h2>
-              <h4>"{key}" has not been dug yet, do you want to dig it?</h4>
-              <div className="btn-container">
-                <FontAwesomeIcon
-                  icon={faDigging}
-                  onClick={() => {
-                    //   handleDigging();
-                    console.log("digging...");
-                  }}
-                ></FontAwesomeIcon>
-              </div>
-            </StyledBox>
-          ) : (
-            <StyledBox className="dark-box-600w">
-              <h2>Already Dug!</h2>
-              <h4>
-                "{key}" is hole {data} / 999999
-              </h4>
-              <div className="btn-container">
-                <FontAwesomeIcon
-                  icon={faArrowsToCircle}
-                  onClick={() => {
-                    navigate(`/archive/${data}`);
-                  }}
-                ></FontAwesomeIcon>
-              </div>
-            </StyledBox>
-          ))}
       </div>
     </div>
   );
 }
 
-const StyledBox = styled.div`
+export const StyledBox = styled.div`
   color: var(--limeGreen);
-
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
   /* .btn-container {
     display: flex;

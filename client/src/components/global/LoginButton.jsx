@@ -1,13 +1,10 @@
 import { useState, useMemo } from "react";
 import { useAccount, useConnectors } from "@starknet-react/core";
 import styled from "styled-components";
-import LoginModal from "./LoginModal";
 import Modal from "./Modal";
 
 export default function LoginButton() {
-  // const [loggedIn, setLoggedIn] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const { address } = useAccount();
 
   return (
@@ -24,16 +21,14 @@ export default function LoginButton() {
 
 function DisconnectedBtn(props) {
   return (
-    <>
-      <LoginBtn
-        onClick={() => {
-          props.setIsModalOpen(true);
-        }}
-        connected={false}
-      >
-        <span>Connect Wallet</span>
-      </LoginBtn>
-    </>
+    <LoginBtn
+      onClick={() => {
+        props.setIsModalOpen(true);
+      }}
+      connected={false}
+    >
+      <span>Connect Wallet</span>
+    </LoginBtn>
   );
 }
 
@@ -54,7 +49,6 @@ function ConnectedBtn() {
       connected={true}
     >
       <span>{shortenedAddress}</span>
-      {/* <button onClick={disconnect}>Disconnect</button> */}
     </LoginBtn>
   );
 }
@@ -63,24 +57,16 @@ const LoginBtn = styled.div`
   position: absolute;
   max-width: fit-content;
   white-space: nowrap;
-  /* background-color: var(--forrestGreen);
-  color: var(--forrestGreen); */
   background-color: ${(props) =>
     props.connected ? "var(--forrestGreen)" : "rgba(255, 255, 255, 0.01)"};
   color: ${(props) =>
     props.connected ? "var(--greyGreen)" : "var(--forrestGreen)"};
   border-color: rgba(0, 0, 0, 0);
-  /* border-color: var(--forrestGreen); */
   border-style: solid;
   border-width: 2px;
   border-radius: 2rem;
-  /* border-top-left-radius: ${(props) => (props.connected ? "2rem" : "0")};
-  border-top-right-radius: ${(props) => (props.connected ? "2rem" : "0")};
-  border-bottom-left-radius: ${(props) => (props.connected ? "2rem" : "0")}; */
-  /* border-top-left-radius: 2rem; */
   border-radius: 0 0 2rem 0;
   border-bottom-right-radius: 2rem;
-  /* background-color: rgba(255, 255, 255, 0.01); */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   -moz-backdrop-filter: blur(10px);
