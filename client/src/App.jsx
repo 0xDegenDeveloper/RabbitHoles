@@ -11,6 +11,7 @@ import DigHolePage from "./pages/DigHolePage";
 import BurnRabbitPage from "./pages/BurnRabbitPage";
 import ArchivePage from "./pages/ArchivePage";
 import Graphics from "./components/graphics/Graphics";
+import MiddleMan from "./pages/MiddleMan";
 
 function App() {
   const [mobile, setMobile] = useState(false);
@@ -40,6 +41,8 @@ function App() {
       <BrowserRouter>
         <TopComponents totalDigs={totalDigs} mobile={mobile} />
         <Routes>
+          {/* Middle route for fetching then passing to final destination */}
+          <Route path="/middle/:key" element={<MiddleMan />} />
           {/* Main routes */}
           <Route path="/" element={<HomePage />}></Route>
           <Route path="/stats" element={<StatsPage />}></Route>

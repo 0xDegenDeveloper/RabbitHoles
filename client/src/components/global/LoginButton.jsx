@@ -69,7 +69,8 @@ const LoginBtn = styled.div`
     props.connected ? "var(--forrestGreen)" : "rgba(255, 255, 255, 0.01)"};
   color: ${(props) =>
     props.connected ? "var(--greyGreen)" : "var(--forrestGreen)"};
-  border-color: var(--forrestGreen);
+  border-color: rgba(0, 0, 0, 0);
+  /* border-color: var(--forrestGreen); */
   border-style: solid;
   border-width: 2px;
   border-radius: 2rem;

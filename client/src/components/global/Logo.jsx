@@ -5,15 +5,17 @@ import { useState, useEffect } from "react";
 export default function Logo(props) {
   const [toggled, setToggled] = useState(false);
 
-  useEffect(() => {}, [toggled]);
+  // darkMode -> toggled
+
+  useEffect(() => {}, [props.darkMode]);
 
   return (
     <>
       {/* <Wrapper> */}
       <LogoStyle
-        toggled={toggled}
+        darkMode={props.darkMode}
         onClick={() => {
-          setToggled(!toggled);
+          props.setDarkMode(!props.darkMode);
         }}
       >
         <Link to={"/"} className={props.mobile ? "mobile" : "non-mobile"}>
@@ -36,9 +38,9 @@ const LogoStyle = styled.div`
   -ms-backdrop-filter: blur(10px);
   border-radius: 0 0 0 2rem;
   border: 2px solid;
-  border-color: none;
+  border-color: rgba(0, 0, 0, 0);
   background-color: ${(props) =>
-    props.toggled ? "var(--forrestGreen)" : "none"};
+    props.darkMode ? "var(--forrestGreen)" : "none"};
   top: -2px;
   right: -2px;
   text-decoration: none;
@@ -55,10 +57,10 @@ const LogoStyle = styled.div`
   a {
     text-decoration: none;
     color: ${(props) =>
-      props.toggled ? "var(--greyGreen)" : "var(--forrestGreen)"};
+      props.darkMode ? "var(--greyGreen)" : "var(--forrestGreen)"};
   }
 
-  :hover {
+  &:hover {
     /* border-top: 2px solid;
     border-right: 2px solid; */
 

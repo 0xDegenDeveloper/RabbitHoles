@@ -13,7 +13,7 @@ import {
 import styled from "styled-components";
 
 export default function ArchivePage() {
-  const totalDigs = 1111;
+  const totalDigs = 999999;
   let { key, key2 } = useParams();
   const navigate = useNavigate();
 
@@ -21,7 +21,6 @@ export default function ArchivePage() {
   if (!key2 || parseInt(key2) == 0) key2 = 1;
   if (key > totalDigs) {
     key = totalDigs;
-    // navigate(`/archive/1111/1`);
   }
 
   const [holeId, setHoleId] = useState(key);

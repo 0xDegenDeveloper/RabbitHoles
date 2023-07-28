@@ -8,7 +8,7 @@ import React, { useState } from "react";
 import { faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons";
 import styled from "styled-components";
 
-export default function Footer() {
+export default function Footer(props) {
   const [isFooterOpen, setIsFooterOpen] = useState(false);
 
   return (
@@ -16,10 +16,11 @@ export default function Footer() {
       <FooterWrapper
         onMouseEnter={() => setIsFooterOpen(true)}
         onMouseLeave={() => setIsFooterOpen(false)}
+        darkMode={props.darkMode}
       >
-        <FooterTop>
+        <FooterTop darkMode={props.darkMode}>
           <Link onClick={() => setIsFooterOpen(!isFooterOpen)}>
-            Powered By NovemberFork
+            Powered By Novemberfork
           </Link>
           <FontAwesomeIcon
             icon={faChevronDown}
@@ -28,9 +29,12 @@ export default function Footer() {
           ></FontAwesomeIcon>
         </FooterTop>
         {isFooterOpen && (
-          <FooterBottom>
+          <FooterBottom darkMode={props.darkMode}>
             <Link to="https://twitter.com/degendeveloper" target="_blank">
-              <FontAwesomeIcon icon={faTwitter}></FontAwesomeIcon>
+              <FontAwesomeIcon
+                icon={faTwitter}
+                className="footers"
+              ></FontAwesomeIcon>
             </Link>
             <Link to="https://github.com/0xDegenDeveloper" target="_blank">
               <FontAwesomeIcon icon={faGithub}></FontAwesomeIcon>
@@ -56,25 +60,28 @@ const FooterWrapper = styled.div`
   padding: 0.5rem 0.8rem 0.5rem 1rem;
   font-family: "Cairo";
   letter-spacing: 0.5px;
-  border-color: var(--forrestGreen);
+  border-color: rgba(0, 0, 0, 0);
   border-style: solid;
-  color: var(--forrestGreen);
-  border-top-right-radius: 1rem;
-  border-top-left-radius: 1rem;
+  /* color: var(--forrestGreen); */
+  color: ${(props) =>
+    props.darkMode ? "var(--greyGreen)" : "var(--forrestGreen)"};
+  border-radius: 1rem 1rem 0 0;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   -moz-backdrop-filter: blur(10px);
   -o-backdrop-filter: blur(10px);
   -ms-backdrop-filter: blur(10px);
-  box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 0px 5px 0px var(--forrestGreen);
   font-size: clamp(8px, 3vw, 20px);
   /* background-color: rgba(255, 255, 255, 0.01); */
+  background-color: ${(props) =>
+    props.darkMode ? "var(--forrestGreen)" : "none"};
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
   -moz-backdrop-filter: blur(2px);
   -o-backdrop-filter: blur(2px);
   -ms-backdrop-filter: blur(2px);
-  box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.3);
+  /* box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.3); */
   overflow: hidden;
 
   &:hover {
@@ -85,7 +92,9 @@ const FooterWrapper = styled.div`
   /* transform: rotate(180deg); */
 
   a {
-    color: var(--forrestGreen);
+    /* color: var(--forrestGreen); */
+    color: ${(props) =>
+      props.darkMode ? "var(--greyGreen)" : "var(--forrestGreen)"};
     text-decoration: none;
 
     font-family: "Lato";
@@ -99,17 +108,17 @@ const FooterWrapper = styled.div`
 `;
 
 const FooterTop = styled.div`
-  color: var(--forrestGreen);
-
-  svg:hover {
-    cursor: pointer;
-  }
+  /* color: var(--forrestGreen); */
+  color: ${(props) =>
+    props.darkMode ? "var(--greyGreen)" : "var(--forrestGreen)"};
 `;
 
 const FooterBottom = styled.div`
   display: flex;
   justify-content: space-evenly;
-  color: var(--forrestGreen);
+  color: ${(props) =>
+    props.darkMode ? "var(--greyGreen)" : "var(--forrestGreen)"};
+  margin-top: 1rem;
 
   a {
     padding: 0;
@@ -117,11 +126,13 @@ const FooterBottom = styled.div`
   }
 
   svg {
-    color: var(--forrestGreen);
+    color: ${(props) =>
+      props.darkMode ? "var(--greyGreen)" : "var(--forrestGreen)"};
   }
 
   svg:hover {
     cursor: pointer;
-    color: var(--limeGreen);
+    color: ${(props) =>
+      props.darkMode ? "var(--limeGreen)" : "var(--lightGreen)"};
   }
 `;

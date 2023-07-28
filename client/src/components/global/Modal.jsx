@@ -81,7 +81,7 @@ function LoginModal(props) {
   };
 
   return (
-    <ContainerStyled>
+    <ContainerStyled className="dark-box-600w">
       <h1>Connect Wallet:</h1>
       {connectors.map((connector) => {
         return (
@@ -121,12 +121,12 @@ const OptionStyled = styled.div`
 
   img {
     width: auto;
-    height: 30px;
+    height: clamp(10px, 6vw, 40px);
     /* text-rendering: auto; */
   }
 
   span {
-    font-size: clamp(10px, 4vw, 18px);
+    font-size: clamp(8px, 4vw, 15px);
   }
 
   /* You can add any additional styles here as needed */
@@ -140,14 +140,9 @@ const OverlayStyle = styled.div`
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.3);
   /* background: red; */
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(10px);
   z-index: 1000;
   white-space: nowrap;
-
-  h1 {
-    /* text-align: center; */
-    font-size: clamp(15px, 5vw, 30px);
-  }
 `;
 
 const ContainerStyled = styled.div`
@@ -158,12 +153,17 @@ const ContainerStyled = styled.div`
   background-color: var(--forrestGreen);
   color: var(--limeGreen);
   box-shadow: 0px 0px 25px 0px var(--forrestGreen);
-  padding: 1rem 3rem 3rem;
+  padding: 1rem 2rem 2rem;
   z-index: 2000;
   display: grid;
-  border-radius: 0.5rem;
+  border-radius: 1.5rem;
   max-width: 500px;
   width: clamp(100px, 40vw, 500px);
+
+  h1 {
+    text-align: center;
+    font-size: clamp(15px, 5vw, 30px);
+  }
 `;
 
 // export default Modal;
