@@ -74,13 +74,14 @@ const LogoStyle = styled.div`
   align-items: center;
   font-size: clamp(20px, 6vw, 40px);
   margin-left: auto;
-  /* padding: 0.5rem 1rem;  */
   padding: 0;
   font-weight: 700;
   box-shadow: 0px 0px 5px 0px var(--forrestGreen);
-  /* border-top: none;
-  border-right: none; */
+  justify-self: center;
   aspect-ratio: 1/1;
+
+  width: clamp(60px, 8vw, 300px);
+  height: clamp(60px, 8vw, 300px);
   img {
     width: clamp(60px, 8vw, 300px);
     height: clamp(60px, 8vw, 300px);

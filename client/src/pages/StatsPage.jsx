@@ -24,6 +24,7 @@ export default function StatsPage() {
             alignItems: "center",
             gap: "0",
             position: "relative",
+            textAlign: "center",
           }}
         >
           <h1 style={{ color: "var(--limeGreen)" }}>Metrics</h1>
@@ -63,7 +64,7 @@ const StyledBox = styled.div`
   position: absolute;
   top: 1rem;
   right: 1rem;
-  font-size: clamp(15px, 4vw, 25px);
+  font-size: clamp(10px, 4vw, 25px);
   cursor: pointer;
 
   &:hover {

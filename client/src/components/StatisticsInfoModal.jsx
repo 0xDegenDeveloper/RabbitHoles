@@ -62,8 +62,6 @@ const ContainerStyled = styled.div`
   max-width: 500px;
   width: clamp(100px, 40vw, 500px);
   text-align: center;
-  /* white-space: pre-wrap; */
-
   white-space: pre-wrap;
 
   p {
