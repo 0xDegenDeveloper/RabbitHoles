@@ -36,11 +36,11 @@ export default function Logo(props) {
             src={
               props.darkMode
                 ? isHovered
-                  ? "./public/logo-full-light.png"
-                  : "./public/logo-light.png"
+                  ? "/logo-full-light.png"
+                  : "/logo-light.png"
                 : isHovered
-                ? "./public/logo-full-dark.png"
-                : "./public/logo-dark.png"
+                ? "/logo-full-dark.png"
+                : "/logo-dark.png"
             }
             alt="logo"
             className="logo"
