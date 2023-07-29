@@ -64,7 +64,7 @@ const ContainerStyled = styled.div`
   text-wrap: wrap;
 
   p {
-    color: var(--greyGreen);
+    color: var(--lightGreen);
   }
 
   span {

@@ -28,6 +28,7 @@ export default function Logo(props) {
         }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
+        // ./src/assets/
       >
         <Link to={"/"} className={props.mobile ? "mobile" : "non-mobile"}>
           {/* {props.mobile ? "RBITS" : "RabbitHoles"} */}
@@ -35,11 +36,11 @@ export default function Logo(props) {
             src={
               props.darkMode
                 ? isHovered
-                  ? "logo-full-light.png"
-                  : "logo7.png"
+                  ? "./public/logo-full-light.png"
+                  : "./public/logo7.png"
                 : isHovered
-                ? "logo-full-dark.png"
-                : "logo6.png"
+                ? "./public/logo-full-dark.png"
+                : "./public/logo6.png"
             }
             alt="logo"
             className="logo"
@@ -73,14 +74,16 @@ const LogoStyle = styled.div`
   align-items: center;
   font-size: clamp(20px, 6vw, 40px);
   margin-left: auto;
-  padding: 0.5rem 1rem;
+  /* padding: 0.5rem 1rem;  */
+  padding: 0 0.5rem;
   font-weight: 700;
   box-shadow: 0px 0px 5px 0px var(--forrestGreen);
   /* border-top: none;
   border-right: none; */
 
   img {
-    width: clamp(20px, 6vw, 150px);
+    width: clamp(60px, 6vw, 150px);
+    height: clamp(60px, 6vw, 150px);
   }
 
   a {
