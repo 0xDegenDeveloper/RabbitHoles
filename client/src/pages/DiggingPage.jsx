@@ -68,8 +68,6 @@ export default function MiddleMan() {
   const { data, isLoading, isError } = fetchID(key);
   const navigate = useNavigate();
 
-  console.log("data fetched", data);
-
   return (
     <div className="container">
       <div
@@ -87,7 +85,7 @@ export default function MiddleMan() {
             {isError && <HoleErrror isError={isError} title={key} />}
             {isLoading && <HoleSearching />}
             {data &&
-              (data != 0 ? (
+              (data == 0 ? (
                 <HoleDoesNotExists title={key} />
               ) : (
                 <HoleExists title={key} data={data} />
@@ -105,12 +103,6 @@ export const StyledBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-
-  /* .btn-container {
-    display: flex;
-    justify-content: right;
-    align-items: center;
-  } */
 
   h4 {
     color: var(--lightGreen);

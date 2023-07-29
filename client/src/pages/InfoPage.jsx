@@ -61,7 +61,7 @@ export default function InfoPage() {
           </div>
           <ImgWrapper>
             <div className="token-logo">
-              <img src="/logo.png" />
+              <img src="/logo-main.png" />
             </div>
           </ImgWrapper>
         </Wrapper>
