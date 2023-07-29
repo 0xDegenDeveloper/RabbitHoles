@@ -64,7 +64,7 @@ const ContainerStyled = styled.div`
   text-align: center;
   /* white-space: pre-wrap; */
 
-  text-wrap: wrap;
+  white-space: pre-wrap;
 
   p {
     color: var(--lightGreen);
