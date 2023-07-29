@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { useAccount, useConnectors } from "@starknet-react/core";
 import styled from "styled-components";
 import Modal from "./Modal";
+import WalletModal from "./WalletModal";
 
 export default function LoginButton() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,7 +15,7 @@ export default function LoginButton() {
       ) : (
         <DisconnectedBtn setIsModalOpen={setIsModalOpen} />
       )}
-      <Modal modal={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <WalletModal modal={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </>
   );
 }

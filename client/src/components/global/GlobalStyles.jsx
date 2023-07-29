@@ -120,14 +120,14 @@ const GlobalStyle = createGlobalStyle`
 
     .dark-search-bar-input {
         border-radius: 2rem;
-        padding: 0.5rem;
+        padding: 1rem;
         border: none;
         background-color: rgba(0, 0, 0, 0);
         color: var(--lightGreen);
         text-transform: uppercase;
         width: clamp(100px, 45vw, 500px);
         font-family: "Andale Mono", monospace;
-        font-size: clamp(6px, 2vw, 10px);
+        font-size: clamp(6px, 4vw, 14px);
 
         ::placeholder {
             color: var(--limeGreen);

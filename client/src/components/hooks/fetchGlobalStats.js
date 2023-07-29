@@ -8,6 +8,7 @@ export default function fetchGlobalStats() {
     totalSupply: 0,
     digFee: 0,
     digReward: 0,
+    diggerBps: 0,
   });
 
   useEffect(() => {
@@ -18,6 +19,7 @@ export default function fetchGlobalStats() {
       totalSupply: "12,3456.7",
       digFee: 0.001,
       digReward: "25.0",
+      diggerBps: 5000,
     });
   }, []);
 

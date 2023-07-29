@@ -18,7 +18,10 @@ export default function Footer(props) {
         onMouseLeave={() => setIsFooterOpen(false)}
         darkMode={props.darkMode}
       >
-        <FooterTop darkMode={props.darkMode}>
+        <FooterTop
+          darkMode={props.darkMode}
+          onClick={() => props.setDarkMode(!props.darkMode)}
+        >
           <Link onClick={() => setIsFooterOpen(!isFooterOpen)}>
             Powered By Novemberfork
           </Link>
@@ -111,6 +114,10 @@ const FooterTop = styled.div`
   /* color: var(--forrestGreen); */
   color: ${(props) =>
     props.darkMode ? "var(--greyGreen)" : "var(--forrestGreen)"};
+
+  svg {
+    cursor: pointer;
+  }
 `;
 
 const FooterBottom = styled.div`

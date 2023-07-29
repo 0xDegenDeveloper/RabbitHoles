@@ -4,6 +4,15 @@ import { useState, useEffect } from "react";
 
 export default function Logo(props) {
   const [toggled, setToggled] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
 
   // darkMode -> toggled
 
@@ -17,11 +26,27 @@ export default function Logo(props) {
         onClick={() => {
           props.setDarkMode(!props.darkMode);
         }}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
         <Link to={"/"} className={props.mobile ? "mobile" : "non-mobile"}>
-          {props.mobile ? "RBITS" : "RabbitHoles"}
+          {/* {props.mobile ? "RBITS" : "RabbitHoles"} */}
+          <img
+            src={
+              props.darkMode
+                ? isHovered
+                  ? "logo-full-light.png"
+                  : "logo7.png"
+                : isHovered
+                ? "logo-full-dark.png"
+                : "logo6.png"
+            }
+            alt="logo"
+            className="logo"
+          />
         </Link>
       </LogoStyle>
+
       {/* </Wrapper> */}
     </>
   );
@@ -36,7 +61,7 @@ const LogoStyle = styled.div`
   -moz-backdrop-filter: blur(10px);
   -o-backdrop-filter: blur(10px);
   -ms-backdrop-filter: blur(10px);
-  border-radius: 0 0 0 2rem;
+  border-radius: 0 0 0 50%;
   border: 2px solid;
   border-color: rgba(0, 0, 0, 0);
   background-color: ${(props) =>
@@ -54,6 +79,10 @@ const LogoStyle = styled.div`
   /* border-top: none;
   border-right: none; */
 
+  img {
+    width: clamp(20px, 6vw, 150px);
+  }
+
   a {
     text-decoration: none;
     color: ${(props) =>
@@ -64,8 +93,11 @@ const LogoStyle = styled.div`
     /* border-top: 2px solid;
     border-right: 2px solid; */
 
-    border-radius: 2rem;
-
+    border-radius: 50%;
+    /* border: ${(props) =>
+      props.darkMode
+        ? "5px solid var(--greyGreen)"
+        : "5px solid var(--forrestGreen)"}; */
     top: 1rem;
     right: 1rem;
   }

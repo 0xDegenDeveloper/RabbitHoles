@@ -19,7 +19,7 @@ function App() {
   const totalDigs = 1111;
 
   useEffect(() => {
-    const faviconPath = `/logo.png`;
+    const faviconPath = `/logo-main.png`;
     const faviconLink = document.querySelector("#favicon-link"); // Use the id attribute
     faviconLink.setAttribute("href", faviconPath);
 

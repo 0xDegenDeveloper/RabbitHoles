@@ -1,8 +1,15 @@
+import { faInfo, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import fetchGlobalStats from "../components/hooks/fetchGlobalStats";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
+import StatisticsInfoModal from "../components/StatisticsInfoModal";
 
 export default function StatsPage() {
-  const { holes, rabbits, depth, totalSupply, digFee, digReward } =
+  const { holes, rabbits, depth, totalSupply, digFee, digReward, diggerBps } =
     fetchGlobalStats();
+
+  const [modal, setModal] = useState(false);
+
   return (
     <>
       <div className="container">
@@ -14,6 +21,7 @@ export default function StatsPage() {
             justifyContent: "center",
             alignItems: "center",
             gap: "0",
+            position: "relative",
           }}
         >
           <h1 style={{ color: "var(--limeGreen)" }}>Metrics</h1>
@@ -21,8 +29,11 @@ export default function StatsPage() {
             Supply: <em>{totalSupply} $RBITS</em>
           </h4>
           <h4>
-            Dig Fee: <em>{digFee}Ξ</em>
-            {" > "}Dig Reward: <em>{digReward} $RBITS</em>
+            Fee: <em>{digFee}Ξ</em>
+            {" > "}Reward: <em>{digReward} $RBITS</em>
+          </h4>
+          <h4>
+            BPS: <em>{(parseFloat(diggerBps) / 100.0).toFixed(3)}%</em>
           </h4>
           <h1 style={{ color: "var(--limeGreen)" }}>Stats</h1>
           <h4>
@@ -30,8 +41,26 @@ export default function StatsPage() {
             {" > "}Rabbits: <em>{rabbits}</em>
             {" > "}Depth: <em>{depth}</em>
           </h4>
+          <div
+            style={{
+              position: "absolute",
+              top: "1rem",
+              right: "1rem",
+              fontSize: "clamp(15px, 4vw, 25px)",
+              cursor: "pointer",
+            }}
+          >
+            <FontAwesomeIcon
+              icon={faInfoCircle}
+              onClick={() => setModal(true)}
+            />
+          </div>
         </div>
       </div>
+
+      {modal && (
+        <StatisticsInfoModal modal={modal} onClose={() => setModal(false)} />
+      )}
     </>
   );
 }
