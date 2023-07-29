@@ -127,7 +127,7 @@ const GlobalStyle = createGlobalStyle`
         text-transform: uppercase;
         width: clamp(100px, 45vw, 500px);
         font-family: "Andale Mono", monospace;
-        font-size: clamp(6px, 4vw, 14px);
+        font-size: clamp(6px, 3vw, 14px);
 
         ::placeholder {
             color: var(--limeGreen);

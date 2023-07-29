@@ -1,6 +1,8 @@
 import React from "react";
 import Modal from "./global/Modal";
 import styled from "styled-components";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faX, faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
 
 export default function StatisticsInfoModal(props) {
   return (
@@ -36,6 +38,7 @@ export default function StatisticsInfoModal(props) {
           The <span>digger bps</span> determines how many of these $RBITS are
           sent to the hole's digger, the rest are burned.
         </p>
+        <FontAwesomeIcon icon={faXmarkCircle} onClick={props.onClose} />
       </ContainerStyled>
     </Modal>
   );
@@ -49,7 +52,7 @@ const ContainerStyled = styled.div`
   background-color: var(--forrestGreen);
   color: var(--limeGreen);
   box-shadow: 0px 0px 25px 0px var(--forrestGreen);
-  padding: 1rem 2rem 2rem;
+  padding: 2rem;
   z-index: 2000;
   /* display: grid;
   grid-template-columns: 1fr; */
@@ -69,6 +72,20 @@ const ContainerStyled = styled.div`
 
   span {
     color: var(--limeGreen);
+  }
+
+  svg {
+    color: var(--lightGreen);
+    cursor: pointer;
+    top: 1rem;
+    right: 1rem;
+    position: absolute;
+    font-size: 1.5rem;
+
+    &:hover {
+      color: var(--limeGreen);
+      transform: scale(1.05); /* Example of scaling on hover */
+    }
   }
 
   /* .blue {

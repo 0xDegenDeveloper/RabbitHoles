@@ -37,10 +37,10 @@ export default function Logo(props) {
               props.darkMode
                 ? isHovered
                   ? "./public/logo-full-light.png"
-                  : "./public/logo7.png"
+                  : "./public/logo-light.png"
                 : isHovered
                 ? "./public/logo-full-dark.png"
-                : "./public/logo6.png"
+                : "./public/logo-dark.png"
             }
             alt="logo"
             className="logo"
@@ -62,28 +62,28 @@ const LogoStyle = styled.div`
   -moz-backdrop-filter: blur(10px);
   -o-backdrop-filter: blur(10px);
   -ms-backdrop-filter: blur(10px);
-  border-radius: 0 0 0 50%;
+  border-radius: 0 0 50% 0;
   border: 2px solid;
   border-color: rgba(0, 0, 0, 0);
   background-color: ${(props) =>
     props.darkMode ? "var(--forrestGreen)" : "none"};
   top: -2px;
-  right: -2px;
+  left: -2px;
   text-decoration: none;
   font-weight: bold;
   align-items: center;
   font-size: clamp(20px, 6vw, 40px);
   margin-left: auto;
   /* padding: 0.5rem 1rem;  */
-  padding: 0 0.5rem;
+  padding: 0;
   font-weight: 700;
   box-shadow: 0px 0px 5px 0px var(--forrestGreen);
   /* border-top: none;
   border-right: none; */
-
+  aspect-ratio: 1/1;
   img {
-    width: clamp(60px, 6vw, 150px);
-    height: clamp(60px, 6vw, 150px);
+    width: clamp(60px, 8vw, 300px);
+    height: clamp(60px, 8vw, 300px);
   }
 
   a {
@@ -102,7 +102,7 @@ const LogoStyle = styled.div`
         ? "5px solid var(--greyGreen)"
         : "5px solid var(--forrestGreen)"}; */
     top: 1rem;
-    right: 1rem;
+    left: 1rem;
   }
 
   // Add transition property for smooth hover effect

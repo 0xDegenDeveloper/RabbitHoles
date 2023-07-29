@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import StatisticsInfoModal from "../components/StatisticsInfoModal";
 
+import styled from "styled-components";
+
 export default function StatsPage() {
   const { holes, rabbits, depth, totalSupply, digFee, digReward, diggerBps } =
     fetchGlobalStats();
@@ -41,20 +43,12 @@ export default function StatsPage() {
             {" > "}Rabbits: <em>{rabbits}</em>
             {" > "}Depth: <em>{depth}</em>
           </h4>
-          <div
-            style={{
-              position: "absolute",
-              top: "1rem",
-              right: "1rem",
-              fontSize: "clamp(15px, 4vw, 25px)",
-              cursor: "pointer",
-            }}
-          >
+          <StyledBox>
             <FontAwesomeIcon
               icon={faInfoCircle}
               onClick={() => setModal(true)}
             />
-          </div>
+          </StyledBox>
         </div>
       </div>
 
@@ -64,3 +58,15 @@ export default function StatsPage() {
     </>
   );
 }
+
+const StyledBox = styled.div`
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: clamp(15px, 4vw, 25px);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--limeGreen);
+  }
+`;

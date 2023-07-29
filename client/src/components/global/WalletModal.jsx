@@ -2,6 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import { useConnectors } from "@starknet-react/core";
 import Modal from "./Modal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
 
 export default function WalletModal(props) {
   const { connectors, connect } = useConnectors();
@@ -46,6 +48,7 @@ export default function WalletModal(props) {
             </React.Fragment>
           );
         })}
+        <FontAwesomeIcon icon={faXmarkCircle} onClick={props.onClose} />
       </ContainerStyled>
     </Modal>
   );
@@ -98,6 +101,20 @@ const ContainerStyled = styled.div`
   border-radius: 1.5rem;
   max-width: 400px;
   width: clamp(100px, 40vw, 400px);
+
+  svg {
+    color: var(--lightGreen);
+    cursor: pointer;
+    top: 1rem;
+    right: 1rem;
+    position: absolute;
+    font-size: 1.5rem;
+
+    &:hover {
+      color: var(--limeGreen);
+      transform: scale(1.05); /* Example of scaling on hover */
+    }
+  }
 
   h1 {
     text-align: center;

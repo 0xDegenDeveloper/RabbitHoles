@@ -65,9 +65,9 @@ const LoginBtn = styled.div`
   border-color: rgba(0, 0, 0, 0);
   border-style: solid;
   border-width: 2px;
-  border-radius: 2rem;
-  border-radius: 0 0 2rem 0;
-  border-bottom-right-radius: 2rem;
+  /* border-radius: 2rem; */
+  border-radius: 0 0 0 2rem;
+  /* border-bottom-right-radius: 2rem; */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   -moz-backdrop-filter: blur(10px);
@@ -76,7 +76,7 @@ const LoginBtn = styled.div`
   box-shadow: 0px 0px 5px 0px var(--forrestGreen);
   padding: 0 1rem;
   top: -2px;
-  left: -2px;
+  right: -2px;
   padding: 1rem 1rem;
   z-index: 1000;
   overflow: hidden;
@@ -95,7 +95,7 @@ const LoginBtn = styled.div`
       props.connected ? "rgba(0,0,0,0)" : "var(--forrestGreen)"};
     border-radius: 2rem;
     top: 1rem;
-    left: 1rem;
+    right: 1rem;
   }
 
   transition: all 0.05s 0s ease-in-out;

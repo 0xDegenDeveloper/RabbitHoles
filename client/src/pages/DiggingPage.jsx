@@ -87,7 +87,7 @@ export default function MiddleMan() {
             {isError && <HoleErrror isError={isError} title={key} />}
             {isLoading && <HoleSearching />}
             {data &&
-              (data == 0 ? (
+              (data != 0 ? (
                 <HoleDoesNotExists title={key} />
               ) : (
                 <HoleExists title={key} data={data} />
@@ -117,7 +117,7 @@ export const StyledBox = styled.div`
   }
 
   svg {
-    color: var(--lightGreen);
+    color: var(--limeGreen);
     padding: 0.5rem;
     font-size: clamp(10px, 5vw, 25px);
     text-align: center;
@@ -128,5 +128,19 @@ export const StyledBox = styled.div`
     cursor: pointer;
     box-shadow: 0 0 5px var(--limeGreen);
     border-radius: 33%;
+  }
+
+  .top-right {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+
+    svg {
+      color: var(--lightGreen);
+
+      &:hover {
+        color: var(--limeGreen);
+      }
+    }
   }
 `;

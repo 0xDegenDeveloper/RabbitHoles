@@ -1,9 +1,11 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDigging } from "@fortawesome/free-solid-svg-icons";
+import { faDigging, faRotateBack } from "@fortawesome/free-solid-svg-icons";
 import { StyledBox } from "../../pages/DiggingPage";
+import { useNavigate } from "react-router-dom";
 
 export default function HoleDoesNotExist(props) {
+  const navigate = useNavigate();
   return (
     <StyledBox className="dark-box-600w">
       <h2>Not Dug Yet!</h2>
@@ -14,6 +16,14 @@ export default function HoleDoesNotExist(props) {
           onClick={() => {
             //   handleDigging();
             console.log("digging...");
+          }}
+        ></FontAwesomeIcon>
+      </div>
+      <div className="btn-container top-right">
+        <FontAwesomeIcon
+          icon={faRotateBack}
+          onClick={() => {
+            navigate(`/`);
           }}
         ></FontAwesomeIcon>
       </div>

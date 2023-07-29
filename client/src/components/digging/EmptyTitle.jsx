@@ -11,7 +11,7 @@ export default function EmptyTitle() {
     <StyledBox className="dark-box-600w">
       <h2 style={{ color: "var(--limeGreen)" }}>Oops!</h2>
       <h4>Are you sure you entered a title?</h4>
-      <div className="btn-container">
+      <div className="btn-container top-right">
         <FontAwesomeIcon
           icon={faRotateBack}
           onClick={() => {
