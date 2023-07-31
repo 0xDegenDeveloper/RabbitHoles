@@ -174,11 +174,12 @@ const GlobalStyle = createGlobalStyle`
         box-shadow: 0px 0px 5px 0px var(--forrestGreen);
         margin: 0 auto;
 
-        min-width: clamp(75px, 55vw, 600px);
+        min-width: clamp(75px, 40vw, 600px);
         min-height: 200px;
 
         h1{
             margin: .5rem;
+            font-size: clamp(20px, 3vw, 40px);
         }
 
         h4{

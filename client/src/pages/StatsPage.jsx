@@ -2,15 +2,13 @@ import { faInfo, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import fetchGlobalStats from "../components/hooks/fetchGlobalStats";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import StatisticsInfoModal from "../components/StatisticsInfoModal";
+import FlowModal from "../components/FlowModal";
 
 import styled from "styled-components";
 
-export default function StatsPage() {
+export default function StatsPage(props) {
   const { holes, rabbits, depth, totalSupply, digFee, digReward, diggerBps } =
     fetchGlobalStats();
-
-  const [modal, setModal] = useState(false);
 
   return (
     <>
@@ -32,11 +30,11 @@ export default function StatsPage() {
             Supply: <em>{totalSupply} $RBITS</em>
           </h4>
           <h4>
-            Fee: <em>{digFee}Ξ</em>
-            {" > "}Reward: <em>{digReward} $RBITS</em>
+            Dig Fee: <em>{digFee}Ξ</em>
+            {" > "}Dig Reward: <em>{digReward} $RBITS</em>
           </h4>
           <h4>
-            BPS: <em>{(parseFloat(diggerBps) / 100.0).toFixed(3)}%</em>
+            Digger BPS: <em>{(parseFloat(diggerBps) / 100.0).toFixed(3)}%</em>
           </h4>
           <h1 style={{ color: "var(--limeGreen)" }}>Stats</h1>
           <h4>
@@ -47,20 +45,20 @@ export default function StatsPage() {
           <StyledBox>
             <FontAwesomeIcon
               icon={faInfoCircle}
-              onClick={() => setModal(true)}
+              onClick={() => props.onClose(true)}
             />
           </StyledBox>
         </div>
       </div>
 
-      {modal && (
-        <StatisticsInfoModal modal={modal} onClose={() => setModal(false)} />
+      {props.modal && (
+        <FlowModal modal={props.modal} onClose={() => props.onClose(false)} />
       )}
     </>
   );
 }
 
-const StyledBox = styled.div`
+export const StyledBox = styled.div`
   position: absolute;
   top: 1rem;
   right: 1rem;

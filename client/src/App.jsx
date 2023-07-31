@@ -16,6 +16,7 @@ import DiggingPage from "./pages/DiggingPage";
 
 function App() {
   const [mobile, setMobile] = useState(false);
+  const [infoModalOpen, setInfoModalOpen] = useState(false);
   const totalDigs = 1111;
 
   useEffect(() => {
@@ -47,8 +48,18 @@ function App() {
           <Route path="/digging/:key" element={<DiggingPage />} />
           {/* Main routes */}
           <Route path="/" element={<HomePage />}></Route>
-          <Route path="/stats" element={<StatsPage />}></Route>
-          <Route path="/info" element={<InfoPage />}></Route>
+          <Route
+            path="/stats"
+            element={
+              <StatsPage modal={infoModalOpen} onClose={setInfoModalOpen} />
+            }
+          ></Route>
+          <Route
+            path="/info"
+            element={
+              <InfoPage modal={infoModalOpen} onClose={setInfoModalOpen} />
+            }
+          ></Route>
           <Route path="/user" element={<UserPage mobile={mobile} />} />
           <Route path="/archive" element={<ArchivePage mobile={mobile} />} />
           <Route path="/dig-hole" element={<DigHolePage mobile={mobile} />} />

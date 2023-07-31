@@ -1,15 +1,30 @@
-import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowUpRightFromSquare,
+  faInfoCircle,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
+import { StyledBox } from "./StatsPage";
+import FlowModal from "../components/FlowModal";
+import {
+  faGit,
+  faGithub,
+  faTwitch,
+  faTwitter,
+} from "@fortawesome/free-brands-svg-icons";
 
-export default function InfoPage() {
+const W = styled(StyledBox)`
+  svg {
+  }
+`;
+
+export default function InfoPage(props) {
   return (
     <>
-      <div className="container">
+      {/* <div className="container">
         <Wrapper className="">
           <div className="dark-box-600w box">
             <div className="section-one">
-              {/* <h1> > sign in html What is this ?</h1> */}
               <h1>&gt; RabbitHoles</h1>
               <h4>
                 - $RBITS are ERC-20 tokens abstracted to create a permanent and
@@ -23,10 +38,7 @@ export default function InfoPage() {
               <h1>&gt; Technicals</h1>
               <h3 style={{ color: "var(--limeGreen)" }}>::Holes</h3>
               <h4>- Each dig will cost approximately 0.001Ξ.</h4>
-              <h4>- Each dig will mint around 25.0 RBITS to the digger.</h4>
-              {/* <h5>
-              * These values are estimates, the real numbers will be near these
-            </h5> */}
+              <h4>- Each dig will mint around 25.0 RBITS to the digger.</h4>           
               <h4>
                 - A hole's title must fit into a single <em>felt252</em> (31
                 characters or less).
@@ -59,13 +71,74 @@ export default function InfoPage() {
               </h4>
             </div>
           </div>
-          <ImgWrapper>
-            <div className="token-logo">
-              <img src="/logo-main.png" />
-            </div>
-          </ImgWrapper>
+         
         </Wrapper>
-      </div>
+      </div> */}
+      <Wrapper className="container">
+        <div
+          className="dark-box-600w"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "0",
+            position: "relative",
+            textAlign: "center",
+            maxWidth: "600px",
+            width: "clamp(100px, 55vw, 500px)",
+            overflow: "hidden",
+
+            padding: "2rem",
+          }}
+        >
+          <h1 style={{ color: "var(--limeGreen)" }}>RabbitHoles</h1>
+          <h4>
+            A discussion platform built on Starknet, offering a space for
+            permanent and censorship-resistant conversations
+          </h4>
+          <h4>
+            We are currently under development and will be launching soon. An
+            off-chain demo can be found at{" "}
+            <a
+              target="_blank"
+              href="https://demo.rbits.space"
+              style={{ color: "var(--limeGreen)" }}
+            >
+              demo.rbits.space
+            </a>
+          </h4>
+          <p>
+            <FontAwesomeIcon
+              icon={faInfoCircle}
+              onClick={() => props.onClose(true)}
+            />{" "}
+            <a target="_blank" href="https://twitter.com/degendeveloper">
+              <FontAwesomeIcon
+                icon={faTwitter}
+                style={{
+                  cursor: "pointer",
+                }}
+              />
+            </a>{" "}
+            <a
+              target="_blank"
+              href="https://www.github.com/0xDegenDeveloper/RabbitHoles"
+            >
+              <FontAwesomeIcon
+                icon={faGithub}
+                style={{
+                  cursor: "pointer",
+                }}
+              />
+            </a>
+          </p>
+        </div>
+        <img src="/logo-main.png" />
+      </Wrapper>
+      {props.modal && (
+        <FlowModal modal={props.modal} onClose={() => props.onClose(false)} />
+      )}
     </>
   );
 }
@@ -101,11 +174,34 @@ const ImgWrapper = styled.div`
 `;
 
 const Wrapper = styled.div`
-  width: clamp(60vw, 40vw, 400px);
   display: grid;
-  gap: 0.5rem;
-  height: 60%;
-  user-select: none;
+  place-items: center;
+  align-content: center;
+
+  svg {
+    color: var(--limeGreen);
+    font-size: clamp(15px, 5vw, 25px);
+    margin: 0 1rem;
+
+    :hover {
+      cursor: pointer;
+      animation: rotate360 3s infinite ease-in-out;
+    }
+  }
+
+  img {
+    margin-top: 3rem;
+    width: clamp(50px, 30vw, 100px);
+
+    :hover {
+      cursor: pointer;
+      animation: rotate360 3s infinite ease-in-out;
+    }
+  }
+
+  .dark-box-600w {
+    margin: 0;
+  }
 
   .token-logo {
     margin-top: 1rem;
@@ -135,37 +231,5 @@ const Wrapper = styled.div`
         transform: rotate(0deg);
       }
     }
-  }
-
-  h1 {
-    font-size: clamp(14px, 2vw, 24px);
-    padding: 0.5rem 0 1rem;
-  }
-
-  h3 {
-    padding: 0;
-    margin: 1rem 0;
-  }
-
-  h4 {
-    margin: 0.5rem 0;
-  }
-  a {
-    color: var(--lightGreen);
-    text-decoration: none;
-  }
-
-  h4,
-  h2 {
-    color: var(--limeGreen);
-  }
-
-  em {
-    color: var(--lightGreen);
-  }
-
-  .box {
-    /* overflow: scroll;
-    border: none; */
   }
 `;

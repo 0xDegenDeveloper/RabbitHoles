@@ -1,10 +1,12 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 export default function Logo(props) {
   const [toggled, setToggled] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+
+  const location = useLocation();
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -30,7 +32,10 @@ export default function Logo(props) {
         onMouseLeave={handleMouseLeave}
         // ./src/assets/
       >
-        <Link to={"/"} className={props.mobile ? "mobile" : "non-mobile"}>
+        <Link
+          to={location.pathname == "/" ? "/info" : "/"}
+          className={props.mobile ? "mobile" : "non-mobile"}
+        >
           {/* {props.mobile ? "RBITS" : "RabbitHoles"} */}
           <img
             src={
@@ -80,11 +85,11 @@ const LogoStyle = styled.div`
   justify-self: center;
   aspect-ratio: 1/1;
 
-  width: clamp(60px, 8vw, 300px);
-  height: clamp(60px, 8vw, 300px);
+  width: clamp(90px, 8vw, 250px);
+  height: clamp(90px, 8vw, 250px);
   img {
-    width: clamp(60px, 8vw, 300px);
-    height: clamp(60px, 8vw, 300px);
+    width: clamp(90px, 8vw, 250px);
+    height: clamp(90px, 8vw, 250px);
   }
 
   a {
