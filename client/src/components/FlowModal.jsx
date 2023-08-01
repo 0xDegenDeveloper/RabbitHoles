@@ -64,7 +64,6 @@ export default function FlowModal(props) {
             </p>
           </>
         )}
-
         {index === 3 && (
           <>
             <h1>...</h1>

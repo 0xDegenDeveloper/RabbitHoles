@@ -11,26 +11,96 @@ import {
   faFireFlameCurved,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import RabbitModal from "../components/global/RabbitModal";
+import HoleModal from "../components/global/HoleModal";
 
 export default function ArchivePageNew() {
+  const [isHovered, setIsHovered] = useState(false);
+  const [rabbitModal, setRabbitModal] = useState(false);
+  const [holeModal, setHoleModal] = useState(false);
+  const [index, setIndex] = useState(1);
+
   const title = "SHOWER THOUGHTS";
   const digger = "0x1234...5678";
   const depth = 123;
-  const rabbits = 55;
+  const rabbits = 555;
+  const digs = 62;
+  const holes = 420;
   const timestamp = "1/1/23";
+  const msg =
+    "This is an example of a rabbit burned inside of a hole using example content that takes up a bunch of space. I could have just used the Lorem plugin thing but this will do for now lol.";
+
+  const r_array = Array.from({ length: digs }, (_, index) => ({
+    burner: digger,
+    r_index: index,
+    h_index: 1,
+    timestamp: "4/20/23",
+    depth: 3,
+    digger,
+    title,
+    rabbits,
+    msg,
+  }));
+
+  const hole = {
+    h_index: index,
+    timestamp: "4/20/23",
+    // random # 1-30
+    depth,
+
+    digs,
+    digger,
+    title,
+    holes,
+  };
+  const chunkSize = 10;
+  const twoDArray = [];
+
+  for (let i = 0; i < r_array.length; i += chunkSize) {
+    const chunk = r_array.slice(i, i + chunkSize);
+    twoDArray.push(chunk);
+  }
+
+  console.log(twoDArray);
+
+  const thisChunkArray = twoDArray[index - 1];
+
+  const [rabbit, setRabbit] = useState({
+    burner: "0x1234...5678",
+    r_index: 33,
+    h_index: 1,
+    timestamp: "4/20/23",
+    depth: 3,
+    title,
+    rabbits,
+  });
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
+  let start = (index - 1) * 10 + 1;
+  let end = start + 9;
+  end = end >= rabbits ? digs : end;
+  start = start < 10 ? "0" + start : start;
 
   return (
     <>
       <ArchivePageStyled className="container">
-        <div className="hole-head">
+        <div
+          className="hole-head"
+          onClick={() => {
+            setHoleModal(true);
+          }}
+        >
           <div className="top">
-            <h2>1/999999</h2>
             <h1>{title}</h1>
-          </div>
-          <div className="meta">
-            <p>{digger}</p>
             <div className="stats">
-              <p>{rabbits}</p> <FontAwesomeIcon icon={faFireFlameCurved} />
+              <p>{digs}</p> <FontAwesomeIcon icon={faFireFlameCurved} />
               <p>{depth}</p>
               <div className="w">
                 <img src={"/logo-full-dark.png"} alt="logo" className="logo" />
@@ -39,108 +109,76 @@ export default function ArchivePageNew() {
           </div>
         </div>
         <div className="dark-box rabbits">
-          <div className="rabbit">
-            <p>
-              This is an example of a rabbit burned inside of a hole using
-              example content that takes up a bunch of space. I could have just
-              used the Lorem plugin thing but this will do for now lol.
-            </p>
-            <div className="r-stats">
-              <p>{digger}</p>
-              <div className="ww">
-                <p>{3}</p>
-                <div className="w">
-                  <img
-                    src={"/logo-full-blue.png"}
-                    alt="logo"
-                    className="logo"
-                  />
+          {thisChunkArray.map(({ r_index, digger, depth }) => (
+            <div key={r_index}>
+              <div
+                className="rabbit"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                onClick={() => {
+                  setRabbit(r_array[r_index]);
+                  setRabbitModal(true);
+                }}
+              >
+                <p>
+                  {" > "}
+                  {msg}
+                </p>
+                <div className="r-stats">
+                  <p>- {digger}</p>
+                  <div className="ww">
+                    <p>{depth}</p>
+                    <div className="w">
+                      <img
+                        src={`/logo-full-${isHovered ? "blue" : "blue"}.png`}
+                        // src={`/logo-full-${isHovered ? "dark" : "blue"}.png`}
+                        alt="logo"
+                        className="logo"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
+              <div className="bar"></div>
             </div>
-            <div className="bar"></div>
-          </div>
-          <div className="rabbit">
-            <p>
-              This is an example of a rabbit burned inside of a hole using
-              example content that takes up a bunch of space. I could have just
-              used the Lorem plugin thing but this will do for now lol.
-            </p>
-            <div className="r-stats">
-              <p>{digger}</p>
-              <div className="ww">
-                <p>{3}</p>
-                <div className="w">
-                  <img
-                    src={"/logo-full-blue.png"}
-                    alt="logo"
-                    className="logo"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="bar"></div>
-          </div>{" "}
-          <div className="rabbit">
-            <p>
-              This is an example of a rabbit burned inside of a hole using
-              example content that takes up a bunch of space. I could have just
-              used the Lorem plugin thing but this will do for now lol.
-            </p>
-            <div className="r-stats">
-              <p>{digger}</p>
-              <div className="ww">
-                <p>{3}</p>
-                <div className="w">
-                  <img
-                    src={"/logo-full-blue.png"}
-                    alt="logo"
-                    className="logo"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="bar"></div>
-          </div>{" "}
-          <div className="rabbit">
-            <p>
-              This is an example of a rabbit burned inside of a hole using
-              example content that takes up a bunch of space. I could have just
-              used the Lorem plugin thing but this will do for now lol.
-            </p>
-            <div className="r-stats">
-              <p>{digger}</p>
-              <div className="ww">
-                <p>{3}</p>
-                <div className="w">
-                  <img
-                    src={"/logo-full-blue.png"}
-                    alt="logo"
-                    className="logo"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="bar"></div>
-          </div>
-          <div className="sels">
-            <FontAwesomeIcon
-              icon={faArrowCircleLeft}
-              // onClick={() => setIndex(index == 1 ? index : index - 1)}
-              className={`bottom left'`}
-            />
-            <div id="bottom" className="bottom">
-              <p>1-10/123</p>
-            </div>
-            <FontAwesomeIcon
-              icon={faArrowCircleRight}
-              // onClick={() => setIndex(index == maxIndex ? index : index + 1)}
-              className={`bottom right`}
-            />
-          </div>
+          ))}
         </div>
+        <div className="sels">
+          <FontAwesomeIcon
+            icon={faArrowCircleLeft}
+            onClick={() => {
+              setIndex(index == 1 ? index : index - 1);
+              console.log(index);
+            }}
+            className={`bottom left ${index == 1 ? "fill" : ``}`}
+          />
+          <div id="bottom" className="bottom">
+            <p>
+              {start}-{end} / {digs}
+              {/* -{(index - 1) * 10 + 9} / {rabbits} */}
+            </p>
+          </div>
+          <FontAwesomeIcon
+            icon={faArrowCircleRight}
+            onClick={() =>
+              setIndex((index - 1) * 10 + 9 >= digs ? index : index + 1)
+            }
+            className={`bottom right ${
+              (index - 1) * 10 + 9 >= digs ? "fill" : ``
+            }`}
+          />
+        </div>
+        {rabbitModal && (
+          <RabbitModal
+            onClose={setRabbitModal}
+            modal={rabbitModal}
+            rabbit={rabbit}
+          />
+        )}
+        {holeModal && (
+          <HoleModal onClose={setHoleModal} modal={holeModal} hole={hole} />
+        )}
       </ArchivePageStyled>
-      <div>hdifdhfdi</div>
     </>
   );
 }
@@ -155,6 +193,8 @@ const ArchivePageStyled = styled.div`
   justify-content: center;
   width: clamp(75px, 55vw, 600px);
   margin: 0;
+  gap: 1rem;
+
   /* margin-right: auto; */
 
   .sels {
@@ -163,7 +203,30 @@ const ArchivePageStyled = styled.div`
     align-items: center;
     justify-content: center;
     gap: 1rem;
+    color: var(--forrestGreen);
+
+    .left,
+    .right {
+      :hover {
+        color: var(--limeGreen);
+        cursor: pointer;
+      }
+    }
+
+    .fill {
+      color: rgba(0, 0, 0, 0);
+      :hover {
+        color: rgba(0, 0, 0, 0);
+        cursor: default;
+      }
+    }
   }
+
+  /* .left {
+    :hover {
+      color: var(--limeGreen);
+    }
+  } */
 
   .dark-box {
     background-color: var(--forrestGreen);
@@ -185,30 +248,12 @@ const ArchivePageStyled = styled.div`
     gap: 1rem;
     overflow: scroll;
     max-height: 400px;
-
-    .sels {
-      color: var(--lightGreen);
-    }
-
-    .bottom {
-      &:hover {
-        color: var(--limeGreen);
-      }
-    }
-  }
-
-  .rabbit {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
   }
 
   .bar {
     width: 100%;
     margin: 1rem auto;
-    border-bottom: 1px dashed var(--limeGreen);
+    border-bottom: 1px dashed var(--lightGreen);
   }
 
   h1,
@@ -246,9 +291,26 @@ const ArchivePageStyled = styled.div`
       padding: 0 0.5rem;
     }
 
+    padding: 1rem;
+
+    :hover {
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      border-radius: 1rem;
+      /* padding: 1rem; */
+      box-shadow: 0px 0px 5px 0px var(--forrestGreen);
+    }
+
     .top {
       display: flex;
-      justify-content: left;
+      justify-content: space-between;
+      /* align-items: bottom; */
+
+      /* margin-bottom: 0; */
+
+      /* :hover {
+        margin-bottom: 1rem;
+      } */
     }
 
     .meta {
@@ -309,6 +371,37 @@ const ArchivePageStyled = styled.div`
 
     p {
       color: var(--lightGreen);
+    }
+
+    /* p:hover,
+    &:hover {
+      color: var(--forrestGreen);
+    } */
+  }
+  .bottom svg:hover {
+    color: var(--limeGreen);
+  }
+
+  .rabbit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 1rem;
+
+    border: 0.5px solid var(--forrestGreen);
+
+    &:hover {
+      cursor: pointer;
+      /* color: var(--forrestGreen); */
+      /* background-color: var(--greyGreen); */
+      border: 0.5px solid var(--lightGreen);
+
+      p {
+        /* color: var(--forrestGreen); */
+      }
     }
   }
 `;

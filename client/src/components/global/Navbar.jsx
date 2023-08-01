@@ -62,7 +62,10 @@ const Nav = styled.nav`
   position: fixed;
   left: 0;
   bottom: 0;
-  border-radius: 1rem;
+  border-radius: 0 1rem 0 0;
+  /* background-color: var(--forrestGreen); */
+  /* backdrop-filter: blur(10px); */
+  /* box-shadow: 0px 0px 10px 0px var(--forrestGreen); */
 `;
 
 const NavLinks = styled.ul`
