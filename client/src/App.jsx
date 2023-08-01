@@ -13,6 +13,7 @@ import ArchivePage from "./pages/ArchivePage";
 import Graphics from "./components/graphics/Graphics";
 // import MiddleMan from "./pages/MiddleMan";
 import DiggingPage from "./pages/DiggingPage";
+import ArchivePageNew from "./pages/ArchivePageNew";
 
 function App() {
   const [mobile, setMobile] = useState(false);
@@ -61,7 +62,7 @@ function App() {
             }
           ></Route>
           <Route path="/user" element={<UserPage mobile={mobile} />} />
-          <Route path="/archive" element={<ArchivePage mobile={mobile} />} />
+          <Route path="/archive" element={<ArchivePageNew mobile={mobile} />} />
           <Route path="/dig-hole" element={<DigHolePage mobile={mobile} />} />
           <Route
             path="/burn-rabbit"
@@ -70,11 +71,11 @@ function App() {
           {/* Param routes */}
           <Route
             path="/archive/:key"
-            element={<ArchivePage mobile={mobile} />}
+            element={<ArchivePageNew mobile={mobile} />}
           />
           <Route
             path="/archive/:key/:key2"
-            element={<ArchivePage mobile={mobile} />}
+            element={<ArchivePageNew mobile={mobile} />}
           />
           <Route
             path="/dig-hole/:key"
@@ -89,6 +90,7 @@ function App() {
             path="/user/:key/:key2"
             element={<UserPage mobile={mobile} />}
           />
+          <Route path="/new/" element={<ArchivePageNew />} />
         </Routes>
       </BrowserRouter>
     </>

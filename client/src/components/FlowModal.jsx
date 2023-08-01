@@ -26,8 +26,7 @@ export default function FlowModal(props) {
           <>
             <h1>Digging a Hole</h1>
             <p>
-              A <span>Hole</span> is created using a title. This title is the
-              topic for the <span>Hole</span>'s discussion, and is stored in the
+              A <span>Hole</span> is a topic of discussion, stored in the
               contract as a felt.
             </p>
             <p>
@@ -68,10 +67,10 @@ export default function FlowModal(props) {
 
         {index === 3 && (
           <>
-            <h1>Rabbit Costs</h1>
+            <h1>...</h1>
             <p>
-              When a user burns a <span>Rabbit</span> in a <span>Hole</span>,
-              the digger receives a percentage of the spent $RBITS, the rest are
+              When a user burns a <span>Rabbit</span>, the <span>Hole</span>'s
+              digger receives a percentage of the spent $RBITS, the rest are
               burned.
             </p>
             <p>
@@ -81,12 +80,7 @@ export default function FlowModal(props) {
             <p>
               <span className="blue">
                 {" > "}"the following message that is 43 characters" would span
-                2 felts
-              </span>
-            </p>
-            <p>
-              <span className="blue">
-                {" > "}This will cost the burner 2.000000 $RBITS
+                2 felts, costing 2.000000 $RBITS
               </span>
             </p>
             <p>

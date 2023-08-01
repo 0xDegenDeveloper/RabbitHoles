@@ -169,10 +169,11 @@ const GlobalStyle = createGlobalStyle`
         background-color: var(--forrestGreen);
         color: var(--lightGreen);
         font-family: "Andale Mono", monospace;
+          box-shadow: 0px 0px 5px 0px var(--forrestGreen);
+        margin: 0 auto;
         font-size: clamp(12px, 3vw, 18px);
         overflow:scroll;
-        box-shadow: 0px 0px 5px 0px var(--forrestGreen);
-        margin: 0 auto;
+      
 
         min-width: clamp(75px, 40vw, 600px);
         min-height: 200px;
