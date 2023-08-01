@@ -13,12 +13,12 @@ export default function fetchGlobalStats() {
 
   useEffect(() => {
     setGlobalStats({
-      holes: 420,
+      holes: 111,
       rabbits: 555,
       depth: 1234,
-      totalSupply: "12,3456.7",
+      totalSupply: "12,3456",
       digFee: 0.001,
-      digReward: "25.0",
+      digReward: "25",
       diggerBps: 5000,
     });
   }, []);

@@ -13,7 +13,7 @@ export default function StatsPage(props) {
   return (
     <>
       <div className="container">
-        <div
+        <Wrap
           className="dark-box-600w"
           style={{
             display: "flex",
@@ -24,18 +24,24 @@ export default function StatsPage(props) {
             position: "relative",
             textAlign: "center",
             cursor: "default",
+            // minWidth: "clamp(75px, 55vw, 500px)",
+            // minWidth: "clamp(75px, 55vw, 500px)",
           }}
         >
           <h1 style={{ color: "var(--limeGreen)" }}>Metrics</h1>
           <h4>
-            Supply: <em>{totalSupply} $RBITS</em>
+            Supply: <em> {totalSupply}</em>
+            <img src={`/logo-full-lime.png`} />
           </h4>
           <h4>
-            Dig Fee: <em>{digFee}Ξ</em>
-            {" > "}Dig Reward: <em>{digReward} $RBITS</em>
+            Fee/Reward:
+            <em>
+              {digFee}Ξ/{digReward}
+            </em>
+            <img src={`/logo-full-lime.png`} />
           </h4>
           <h4>
-            Digger BPS: <em>{(parseFloat(diggerBps) / 100.0).toFixed(3)}%</em>
+            Digger BPS: <em>{(parseFloat(diggerBps) / 100.0).toFixed(0)}%</em>
           </h4>
           <h1 style={{ color: "var(--limeGreen)" }}>Stats</h1>
           <h4>
@@ -49,15 +55,36 @@ export default function StatsPage(props) {
               onClick={() => props.onClose(true)}
             />
           </StyledBox>
-        </div>
+        </Wrap>
       </div>
 
       {props.modal && (
-        <FlowModal modal={props.modal} onClose={() => props.onClose(false)} />
+        <FlowModal
+          modal={props.modal}
+          onClose={() => props.onClose(false)}
+          mobile={props.mobile}
+        />
       )}
     </>
   );
 }
+
+const Wrap = styled.div`
+  /* width: clamp(100px, 55vw, 500px); */
+
+  img {
+    height: clamp(22px, 3vw, 32px);
+  }
+
+  h4 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    /// center vertically
+  }
+`;
 
 export const StyledBox = styled.div`
   position: absolute;
@@ -68,5 +95,9 @@ export const StyledBox = styled.div`
 
   &:hover {
     color: var(--limeGreen);
+  }
+
+  img {
+    height: clamp(27px, 3vw, 32px);
   }
 `;

@@ -171,11 +171,11 @@ const GlobalStyle = createGlobalStyle`
         font-family: "Andale Mono", monospace;
         box-shadow: 0px 0px 5px 0px var(--forrestGreen);
         margin: 0 auto;
-        font-size: clamp(12px, 3vw, 18px);
+        font-size: clamp(8px, 3vw, 18px);
         overflow:scroll;
       
+        width: clamp(75px, 60vw, 500px);
 
-        min-width: clamp(75px, 40vw, 600px);
         min-height: 200px;
 
         h1{

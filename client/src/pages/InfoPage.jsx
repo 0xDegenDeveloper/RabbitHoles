@@ -21,20 +21,22 @@ const W = styled(StyledBox)`
 export default function InfoPage(props) {
   return (
     <>
-      <Wrapper className="container">
+      <Wrapper className="container" mobile={props.mobile}>
         <div
           className="dark-box-600w"
+          id="special"
           style={{
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center",
+            // justifyContent: "",
             alignItems: "center",
             gap: "0",
+
             position: "relative",
             textAlign: "center",
-            maxWidth: "600px",
-            width: "clamp(100px, 55vw, 500px)",
-            overflow: "hidden",
+            maxWidth: "500px",
+            width: "clamp(75px, 55vw, 500px)",
+            overflow: "scroll",
 
             padding: "2rem",
           }}
@@ -124,6 +126,7 @@ const Wrapper = styled.div`
   display: grid;
   place-items: center;
   align-content: center;
+  overflow: scroll;
 
   svg {
     color: var(--limeGreen);
@@ -149,6 +152,14 @@ const Wrapper = styled.div`
 
   .dark-box-600w {
     margin: 0;
+
+    /* justify-content: top; */
+  }
+
+  #special {
+    min-height: 200px;
+    height: ${(props) => (props.mobile ? "200px" : "fit-content")};
+    overflow: scroll;
   }
 
   .token-logo {

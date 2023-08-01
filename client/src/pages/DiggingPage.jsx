@@ -10,6 +10,8 @@ import HoleExists from "../components/digging/HoleExists";
 import HoleDoesNotExists from "../components/digging/HoleDoesNotExist";
 import HoleErrror from "../components/digging/HoleError";
 import EmptyTitle from "../components/digging/EmptyTitle";
+import fetchIdFromTitle from "../components/hooks/fetchIdFromTitle";
+import sample from "../assets/sample-data.json";
 
 import {
   useContractRead,
@@ -44,28 +46,31 @@ function fetchID(title) {
     refetchInterval: false,
   });
 
-  //   useMemo(() => {
-  //     if (isLoading) return;
-  //     if (isError) return;
-
-  //     /// delay 2 seconds
-  //     setTimeout(() => {
-  //       console.log("waiting...");
-
-  //       setTheData(data);
-  //     }, 2000);
-  //   }, [data, isError]);
-
-  //   useEffect(() => {
-  //     setTheData(data);
-  //   }, [theData]);
+  // If no match is found, return 0
+  // return 0;
 
   return { data, isLoading, isError };
 }
 
+function fetchIDSudo(title) {
+  const [id, setID] = useState(0);
+  for (let key in sample) {
+    // If the title matches the input title, return the key
+    if (sample[key].title === title) {
+      // data = key;
+      setID(key);
+    }
+  }
+
+  return { id };
+}
+
 export default function MiddleMan() {
   const { key } = useParams();
-  const { data, isLoading, isError } = fetchID(key);
+  // const { data, isLoading, isError } = fetchID(key);
+  // const { id } = fetchIDSudo(key);
+  const { id } = fetchIdFromTitle(key);
+
   const navigate = useNavigate();
 
   return (
@@ -82,14 +87,23 @@ export default function MiddleMan() {
           <EmptyTitle />
         ) : (
           <>
-            {isError && <HoleErrror isError={isError} title={key} />}
+            {/* {isError && <HoleErrror isError={isError} title={key} />}
             {isLoading && <HoleSearching />}
             {data &&
-              (data == 0 ? (
+              (key == 0 ? (
                 <HoleDoesNotExists title={key} />
               ) : (
-                <HoleExists title={key} data={data} />
-              ))}
+                <HoleExists title={key} data={data} id={id} />
+              ))} */}
+            {id == 0 ? (
+              <>
+                <HoleDoesNotExists title={key} />
+              </>
+            ) : (
+              <>
+                <HoleExists title={key} id={id} />
+              </>
+            )}
           </>
         )}
       </div>
@@ -104,6 +118,10 @@ export const StyledBox = styled.div`
   flex-direction: column;
   justify-content: center;
   cursor: default;
+
+  min-width: clamp(75px, 55vw, 500px);
+  min-height: 200px;
+  padding: 1rem 2rem;
 
   h4 {
     color: var(--lightGreen);

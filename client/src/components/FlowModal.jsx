@@ -21,7 +21,7 @@ export default function FlowModal(props) {
 
   return (
     <Modal modal={props.modal} onClose={props.onClose}>
-      <ContainerStyled className="dark-box-600w">
+      <ContainerStyled className="dark-box-600w" mobile={props.mobile}>
         {index === 1 && (
           <>
             <h1>Digging a Hole</h1>
@@ -39,7 +39,7 @@ export default function FlowModal(props) {
               <span>dig fee</span> ($ETH, $STRK, etc.)
             </p>
             <p>
-              In return the digger is minted the <span>dig reward</span>{" "}
+              In return the digger is minted the <span>dig reward </span>
               ($RBITS)
             </p>
           </>
@@ -48,44 +48,47 @@ export default function FlowModal(props) {
           <>
             <h1>Burning a Rabbit</h1>
             <p>
-              A <span>Rabbit</span> is a user's comment in a <span>Hole</span>.
-              This comment is an array of felts. The length of this array is
-              referred to as the <span>Rabbit</span>'s <span>depth</span>.
+              A <span>Rabbit</span> is a user's msg in a <span>Hole</span>. This
+              msg is an array of felts. The length of this array is referred to
+              as the <span>Rabbit</span>'s <span>depth</span>.
             </p>
             <p>
               To burn a <span>Rabbit</span>, a user will spend some of their
               $RBITS
             </p>
-            <p>
+            <p className="token">
               <span className="blue">
-                {" > "}The cost to leave a Rabbit is 1.000000 $RBITS for each
-                felt stored
+                {" > "}1.000000
+                <img src={`/logo-full-lime.png`} />/ felt
               </span>
             </p>
           </>
         )}
         {index === 3 && (
           <>
-            <h1>...</h1>
+            <h1>Cont.</h1>
             <p>
-              When a user burns a <span>Rabbit</span>, the <span>Hole</span>'s
-              digger receives a percentage of the spent $RBITS, the rest are
-              burned.
+              For every <span>Rabbit</span> burned, its <span>Hole</span>'s
+              digger receives a % of the spent $RBITS, the rest are burned.
             </p>
             <p>
-              The <span>digger BPS</span> determines how many of these $RBITS
-              are sent to the digger.
+              The <span>digger BPS</span> determines this %.
             </p>
             <p>
               <span className="blue">
-                {" > "}"the following message that is 43 characters" would span
-                2 felts, costing 2.000000 $RBITS
+                {" > "}If msg is 32 characters, it fills 2 felts
+              </span>
+            </p>
+            <p className="token">
+              <span className="blue">
+                {" > "}cost = 2.000000
+                <img src={`/logo-full-lime.png`} />
               </span>
             </p>
             <p>
               <span className="blue">
-                {" > "}With a digger BPS of 25%, 0.500000 are sent to the
-                digger, 1.500000 are burned
+                {" > "}If BPS == 25%, 0.500000 are sent to the digger & 1.500000
+                are burned
               </span>
             </p>
           </>
@@ -136,8 +139,8 @@ const ContainerStyled = styled.div`
   width: clamp(100px, 55vw, 500px);
   text-align: center;
   white-space: pre-wrap;
-  min-height: 300px;
-  height: fit-content;
+  min-height: clamp(200px, 50vh, 400px);
+  /* height: fit-content; */
   cursor: default;
 
   p {
@@ -202,6 +205,17 @@ const ContainerStyled = styled.div`
     width: 100%;
     /* transform: translate(-50%, -50%); */
     /* margin: 0 auto; */
+  }
+
+  img {
+    height: clamp(27px, 3vw, 32px);
+  }
+
+  .token span {
+    display: ${(props) => (!props.mobile ? "flex" : "block")};
+    align-items: ${(props) => (!props.mobile ? "center" : "block")};
+    justify-content: ${(props) => (!props.mobile ? "center" : "block")};
+    text-align: ${(props) => (!props.mobile ? "center" : "block")};
   }
 
   /* .blue {

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function HoleDoesNotExist(props) {
   const navigate = useNavigate();
+
   return (
     <StyledBox className="dark-box-600w">
       <h2>Not Dug Yet!</h2>
@@ -14,7 +15,9 @@ export default function HoleDoesNotExist(props) {
         <FontAwesomeIcon
           icon={faDigging}
           onClick={() => {
-            //   handleDigging();
+            alert(
+              "Thank you for your support, but our contracts are still under development!"
+            );
             console.log("digging...");
           }}
         ></FontAwesomeIcon>

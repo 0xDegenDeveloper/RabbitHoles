@@ -14,13 +14,13 @@ export default function HoleExists(props) {
     <StyledBox className="dark-box-600w">
       <h2>Already Dug!</h2>
       <h4>
-        "{props.title}" is hole {props.data} / 999999
+        "{props.title}" is hole {props.id} / 111
       </h4>
       <div className="btn-container">
         <FontAwesomeIcon
           icon={faArrowsToCircle}
           onClick={() => {
-            navigate(`/archive/${props.data}`);
+            navigate(`/archive/${props.id}`);
           }}
         ></FontAwesomeIcon>
         <div className="btn-container top-right">

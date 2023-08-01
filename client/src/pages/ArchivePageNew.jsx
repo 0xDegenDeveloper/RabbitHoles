@@ -40,68 +40,21 @@ for (let i = 0; i < holes; i++) {
   });
 }
 
-const msg =
-  "This is an example of a rabbit burned inside of a hole using example content that takes up a bunch of space. I could have just used the Lorem plugin thing but this will do for now lol.";
-
-const r_array = [];
-let rabbits = 0;
-for (let i = 0; i < holes; i++) {
-  let holeDepth = Math.floor(Math.random() * 33);
-  h_array[i].digs = holeDepth;
-  h_array[i].depth = holeDepth * 3;
-  for (let j = 0; j < holeDepth; j++) {
-    rabbits += 1;
-    r_array.push({
-      burner,
-      r_index: rabbits,
-      h_index: i + 1,
-      timestamp: "4/20/23",
-      depth: 3,
-      digger,
-      title,
-      rabbits,
-      msg,
-    });
-  }
-}
-
-for (let i = 0; i < r_array.length; i++) {
-  r_array[i].rabbits = rabbits;
-}
-
-function rabbitsInHole(holeId) {
-  let rabbits = [];
-  for (let i = 0; i < r_array.length; i++) {
-    if (r_array[i].h_index === holeId) {
-      rabbits.push(r_array[i]);
-    }
-  }
-  return rabbits;
-}
-
 export default function ArchivePageNew(props) {
+  const { key, key2 } = useParams();
   // const navigate = useNavigate();
   const [burnModal, setBurnModal] = useState(false);
   const [rabbitModal, setRabbitModal] = useState(false);
   const [holeModal, setHoleModal] = useState(false);
-  const [id, setId] = useState(
-    !props.holeId || parseInt(props.holeId) == 0 ? 1 : props.holeId
-  );
-  const [index, setIndex] = useState(
-    !props.rabbitIndex || parseInt(props.rabbitIndex) == 0
-      ? 1
-      : props.rabbitIndex
-  );
+  const [id, setId] = useState(!key || parseInt(key) == 0 ? 1 : key);
+  // const [index, setIndex] = useState(!key2 || parseInt(key2) == 0 ? 1 : key2);
+  const [index, setIndex] = useState(1);
 
   const holeData = useMemo(() => {
     const array = Array.from({ length: 111 }, (_, i) => i + 1);
     return fetchHolesData(array);
   }, [id]);
 
-  const { title, digs, depth, digger, timestamp, rabbits } =
-    holeData[index - 1]; //h_array[id - 1];
-
-  // const [rabbit, setRabbit] = useState(rabbits[0]);
   const hole = holeData[id - 1];
 
   const [rabbit, setRabbit] = useState(hole.rabbits[0]);
@@ -123,11 +76,13 @@ export default function ArchivePageNew(props) {
 
   console.log(index, id);
 
-  console.log("this chunk", thisChunkArray, twoDArray);
-
   return (
     <>
-      <ArchivePageStyled className="container" props={props}>
+      <ArchivePageStyled
+        className="container"
+        props={props}
+        mobile={props.mobile}
+      >
         <div
           className="hole-head"
           onClick={() => {
@@ -228,20 +183,20 @@ export default function ArchivePageNew(props) {
           <FontAwesomeIcon
             icon={faChevronCircleDown}
             onClick={() => {
-              setId(id + 1 > holes ? id : id + 1);
+              setId(id + 1 > holeData.length ? id : id + 1);
               // setRabbit(thisChunkArray[0]);
               setIndex(1);
             }}
-            className={`bottom right ${id + 1 > holes ? "fill" : ``}`}
+            className={`bottom right ${id + 1 > holeData.length ? "fill" : ``}`}
           />
           <FontAwesomeIcon
             icon={faArrowCircleDown}
             onClick={() => {
-              setId(id + 10 > holes ? id : id + 10);
+              setId(id + 10 > holeData.length ? holeData.length : id + 10);
               // setRabbit(thisChunkArray[0]);
               setIndex(1);
             }}
-            className={`bottom right ${id + 1 > holes ? "fill" : ``}`}
+            className={`bottom right ${id + 1 > holeData.length ? "fill" : ``}`}
           />
         </div>
         <div className="sels3">
@@ -299,6 +254,9 @@ const ArchivePageStyled = styled.div`
   width: clamp(75px, 55vw, 600px);
   margin: 0;
   gap: 1rem;
+
+  /* max-height: 100px; */
+
   /// depends on props:
   /* gap: ${(props) => (props.mobile ? "0rem" : "1rem")}; */
 
@@ -390,7 +348,7 @@ const ArchivePageStyled = styled.div`
     font-family: "Andale Mono", monospace;
     box-shadow: 0px 0px 5px 0px var(--forrestGreen);
     width: 100%;
-    min-height: 400px;
+    min-height: ${(props) => (props.mobile ? "200px" : "400px")};
     border-radius: 1rem;
     padding: 2rem 1rem;
   }
@@ -403,7 +361,6 @@ const ArchivePageStyled = styled.div`
     justify-content: top;
     gap: 1rem;
     overflow: scroll;
-    max-height: 400px;
   }
 
   .bar {
@@ -487,7 +444,7 @@ const ArchivePageStyled = styled.div`
       gap: clamp(2px, 1vw, 10px);
 
       .w {
-        height: clamp(27px, 3vw, 32px);
+        height: clamp(18px, 3vw, 32px);
       }
 
       img {

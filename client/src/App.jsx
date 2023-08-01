@@ -72,7 +72,18 @@ function App() {
             element={<BurnRabbitPage mobile={mobile} />}
           />
           {/* Param routes */}
-
+          <Route
+            path="/archive/:key"
+            element={<ArchivePageNew mobile={mobile} />}
+          />
+          {/* <Route
+            path="/archive/:key/:key2"
+            element={<ArchivePageNew mobile={mobile} />}
+          /> */}
+          <Route
+            path="/dig-hole/:key"
+            element={<DigHolePage mobile={mobile} />}
+          />
           <Route
             path="/burn-rabbit/:key"
             element={<BurnRabbitPage mobile={mobile} />}

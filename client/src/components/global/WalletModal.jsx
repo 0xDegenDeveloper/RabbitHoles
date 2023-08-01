@@ -34,8 +34,8 @@ export default function WalletModal(props) {
 
   return (
     <Modal onClose={props.onClose} modal={props.modal}>
-      <ContainerStyled className="dark-box">
-        <h1>Connect Wallet:</h1>
+      <ContainerStyled className="dark-box-600w">
+        <h3>Connect Wallet:</h3>
         {connectors.map((connector) => {
           return (
             <React.Fragment key={connector?.id}>
@@ -101,6 +101,10 @@ const ContainerStyled = styled.div`
   border-radius: 1.5rem;
   max-width: 400px;
   width: clamp(100px, 40vw, 400px);
+
+  h3 {
+    /* margin-bottom: 0.5rem; */
+  }
 
   svg {
     color: var(--lightGreen);

@@ -40,7 +40,7 @@ export default function BurnModal(props) {
         ></textarea>
         <p>
           <span>depth: </span>
-          {stringToFelts(msg).length}.0
+          {stringToFelts(msg).length}
           <img src={"/logo-full-lime.png"} alt="logo" className="logo" />
           <FontAwesomeIcon
             className="burn"
