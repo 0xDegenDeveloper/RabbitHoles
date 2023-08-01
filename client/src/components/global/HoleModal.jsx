@@ -6,30 +6,33 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
 
 export default function HoleModal(props) {
-  const { digger, h_index, digs, depth, timestamp, title, holes } = props.hole;
+  const { digger, id, digs, depth, timestamp, title } = props.hole;
+  const holes = props.holes;
   return (
     <Modal modal={props.modal} onClose={props.onClose}>
       <ContainerStyled className="dark-box-600w">
         <h1>
-          <span>Hole</span> #{h_index + 1}/{holes}
+          <span>Hole</span> #{id}/{holes}
         </h1>
         <p>
-          <span>Title{" > "}</span>
+          <span>title </span>
           {title}
         </p>
         <p>
-          <span>Digs{" > "}</span> {digs}
-        </p>
-        <p>
-          <span>Depth{" > "}</span>
-          {depth}
-        </p>
-        <p>
-          <span>Digger{" > "}</span>
+          <span>digger </span>
           {digger}
         </p>
         <p>
-          <span>Timestamp{" > "}</span>
+          <span>digs </span>
+          {digs}
+        </p>
+        <p>
+          <span>depth </span>
+          {depth}
+        </p>
+
+        <p>
+          <span>timestamp </span>
           {timestamp}
         </p>
 
@@ -61,7 +64,7 @@ const ContainerStyled = styled.div`
   /* max-width: 500px; */
   white-space: pre-wrap;
   max-width: 600px;
-
+  cursor: default;
   h1 {
     margin: 0.5rem 0;
   }

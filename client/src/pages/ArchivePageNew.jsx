@@ -1,96 +1,133 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { useState } from "react";
 import styled from "styled-components";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faArrowCircleDown,
   faArrowCircleLeft,
   faArrowCircleRight,
-  faDigging,
+  faArrowCircleUp,
+  faChevronCircleDown,
+  faChevronCircleUp,
   faFireFlameCurved,
-  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import RabbitModal from "../components/global/RabbitModal";
 import HoleModal from "../components/global/HoleModal";
+import fetchHolesData from "../components/hooks/fetchHoleData";
+import { useNavigate, useParams } from "react-router-dom";
+import BurnModal from "../components/global/BurnModal";
 
-export default function ArchivePageNew() {
-  const [isHovered, setIsHovered] = useState(false);
+const h_array = [];
+const holes = 420;
+// const rabbits = 1234;
+const digger = "0x1234...5678";
+const burner = "0xabcd...beef";
+const title = "SHOWER THOUGHTS";
+const timestamp = "4/20/21";
+for (let i = 0; i < holes; i++) {
+  const digs = Math.floor(Math.random() * 100) + (i + 1);
+  const depth = 3 * digs;
+  h_array.push({
+    digger,
+    timestamp,
+    digs,
+    depth,
+    holes,
+    h_index: i + 1,
+    title,
+  });
+}
+
+const msg =
+  "This is an example of a rabbit burned inside of a hole using example content that takes up a bunch of space. I could have just used the Lorem plugin thing but this will do for now lol.";
+
+const r_array = [];
+let rabbits = 0;
+for (let i = 0; i < holes; i++) {
+  let holeDepth = Math.floor(Math.random() * 33);
+  h_array[i].digs = holeDepth;
+  h_array[i].depth = holeDepth * 3;
+  for (let j = 0; j < holeDepth; j++) {
+    rabbits += 1;
+    r_array.push({
+      burner,
+      r_index: rabbits,
+      h_index: i + 1,
+      timestamp: "4/20/23",
+      depth: 3,
+      digger,
+      title,
+      rabbits,
+      msg,
+    });
+  }
+}
+
+for (let i = 0; i < r_array.length; i++) {
+  r_array[i].rabbits = rabbits;
+}
+
+function rabbitsInHole(holeId) {
+  let rabbits = [];
+  for (let i = 0; i < r_array.length; i++) {
+    if (r_array[i].h_index === holeId) {
+      rabbits.push(r_array[i]);
+    }
+  }
+  return rabbits;
+}
+
+export default function ArchivePageNew(props) {
+  // const navigate = useNavigate();
+  const [burnModal, setBurnModal] = useState(false);
   const [rabbitModal, setRabbitModal] = useState(false);
   const [holeModal, setHoleModal] = useState(false);
-  const [index, setIndex] = useState(1);
+  const [id, setId] = useState(
+    !props.holeId || parseInt(props.holeId) == 0 ? 1 : props.holeId
+  );
+  const [index, setIndex] = useState(
+    !props.rabbitIndex || parseInt(props.rabbitIndex) == 0
+      ? 1
+      : props.rabbitIndex
+  );
 
-  const title = "SHOWER THOUGHTS";
-  const digger = "0x1234...5678";
-  const depth = 123;
-  const rabbits = 555;
-  const digs = 62;
-  const holes = 420;
-  const timestamp = "1/1/23";
-  const msg =
-    "This is an example of a rabbit burned inside of a hole using example content that takes up a bunch of space. I could have just used the Lorem plugin thing but this will do for now lol.";
+  const holeData = useMemo(() => {
+    const array = Array.from({ length: 111 }, (_, i) => i + 1);
+    return fetchHolesData(array);
+  }, [id]);
 
-  const r_array = Array.from({ length: digs }, (_, index) => ({
-    burner: digger,
-    r_index: index,
-    h_index: 1,
-    timestamp: "4/20/23",
-    depth: 3,
-    digger,
-    title,
-    rabbits,
-    msg,
-  }));
+  const { title, digs, depth, digger, timestamp, rabbits } =
+    holeData[index - 1]; //h_array[id - 1];
 
-  const hole = {
-    h_index: index,
-    timestamp: "4/20/23",
-    // random # 1-30
-    depth,
+  // const [rabbit, setRabbit] = useState(rabbits[0]);
+  const hole = holeData[id - 1];
 
-    digs,
-    digger,
-    title,
-    holes,
-  };
-  const chunkSize = 10;
-  const twoDArray = [];
-
-  for (let i = 0; i < r_array.length; i += chunkSize) {
-    const chunk = r_array.slice(i, i + chunkSize);
-    twoDArray.push(chunk);
-  }
-
-  console.log(twoDArray);
-
-  const thisChunkArray = twoDArray[index - 1];
-
-  const [rabbit, setRabbit] = useState({
-    burner: "0x1234...5678",
-    r_index: 33,
-    h_index: 1,
-    timestamp: "4/20/23",
-    depth: 3,
-    title,
-    rabbits,
-  });
-
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-  };
+  const [rabbit, setRabbit] = useState(hole.rabbits[0]);
 
   let start = (index - 1) * 10 + 1;
   let end = start + 9;
-  end = end >= rabbits ? digs : end;
+  end = end >= hole.digs ? hole.digs : end;
   start = start < 10 ? "0" + start : start;
+
+  // const hole =
+
+  const chunkSize = 10;
+  const twoDArray = [];
+  for (let i = 0; i < hole.rabbits.length; i += chunkSize) {
+    const chunk = hole.rabbits.slice(i, i + chunkSize);
+    twoDArray.push(chunk);
+  }
+  const thisChunkArray = twoDArray.length == 0 ? [] : twoDArray[index - 1];
+
+  console.log(index, id);
+
+  console.log("this chunk", thisChunkArray, twoDArray);
 
   return (
     <>
-      <ArchivePageStyled className="container">
+      <ArchivePageStyled className="container" props={props}>
         <div
           className="hole-head"
           onClick={() => {
@@ -98,10 +135,10 @@ export default function ArchivePageNew() {
           }}
         >
           <div className="top">
-            <h1>{title}</h1>
+            <h1>{hole.title}</h1>
             <div className="stats">
-              <p>{digs}</p> <FontAwesomeIcon icon={faFireFlameCurved} />
-              <p>{depth}</p>
+              <p>{hole.digs}</p> <FontAwesomeIcon icon={faFireFlameCurved} />
+              <p>{hole.depth}</p>
               <div className="w">
                 <img src={"/logo-full-dark.png"} alt="logo" className="logo" />
               </div>
@@ -109,28 +146,26 @@ export default function ArchivePageNew() {
           </div>
         </div>
         <div className="dark-box rabbits">
-          {thisChunkArray.map(({ r_index, digger, depth }) => (
-            <div key={r_index}>
+          {thisChunkArray.map((rabbit, id) => (
+            <div key={rabbit.msg} className="rw">
               <div
                 className="rabbit"
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
                 onClick={() => {
-                  setRabbit(r_array[r_index]);
+                  console.log(id, "id");
+                  console.log("rabbit clicked:", rabbit);
+                  // setIndex(id + 1);
+                  setRabbit(rabbit);
                   setRabbitModal(true);
                 }}
               >
-                <p>
-                  {" > "}
-                  {msg}
-                </p>
+                <p>{rabbit.msg}</p>
                 <div className="r-stats">
-                  <p>- {digger}</p>
+                  <p>- {rabbit.burner}</p>
                   <div className="ww">
-                    <p>{depth}</p>
+                    <p>{rabbit.depth}</p>
                     <div className="w">
                       <img
-                        src={`/logo-full-${isHovered ? "blue" : "blue"}.png`}
+                        src={`/logo-full-blue.png`}
                         // src={`/logo-full-${isHovered ? "dark" : "blue"}.png`}
                         alt="logo"
                         className="logo"
@@ -148,24 +183,74 @@ export default function ArchivePageNew() {
             icon={faArrowCircleLeft}
             onClick={() => {
               setIndex(index == 1 ? index : index - 1);
-              console.log(index);
             }}
             className={`bottom left ${index == 1 ? "fill" : ``}`}
           />
           <div id="bottom" className="bottom">
             <p>
-              {start}-{end} / {digs}
-              {/* -{(index - 1) * 10 + 9} / {rabbits} */}
+              {start}-{end} / {hole.digs}
             </p>
           </div>
           <FontAwesomeIcon
             icon={faArrowCircleRight}
             onClick={() =>
-              setIndex((index - 1) * 10 + 9 >= digs ? index : index + 1)
+              setIndex((index - 1) * 10 + 9 >= hole.digs ? index : index + 1)
             }
             className={`bottom right ${
-              (index - 1) * 10 + 9 >= digs ? "fill" : ``
+              (index - 1) * 10 + 9 >= hole.digs ? "fill" : ``
             }`}
+          />
+        </div>
+        <div className="sels2">
+          <FontAwesomeIcon
+            icon={faArrowCircleUp}
+            onClick={() => {
+              setIndex(1);
+              // setRabbit(thisChunkArray[0]);
+              setId(id <= 10 ? 1 : id - 10);
+              // setHole(holes[id <= 10 ? 1 : id - 10]);
+            }}
+            className={`bottom left ${id == 1 ? "fill" : ``}`}
+          />
+          <FontAwesomeIcon
+            icon={faChevronCircleUp}
+            onClick={() => {
+              setIndex(1);
+              // setRabbit(thisChunkArray[0]);
+              setId(id == 1 ? id : id - 1);
+              // setHole(holes[id == 1 ? id : id - 1]);
+            }}
+            className={`bottom left ${id == 1 ? "fill" : ``}`}
+          />
+          <div id="bottom" className="bottom">
+            <p>{id < 100 ? (id < 10 ? "00" + id : "0" + id) : id}</p>
+          </div>
+          <FontAwesomeIcon
+            icon={faChevronCircleDown}
+            onClick={() => {
+              setId(id + 1 > holes ? id : id + 1);
+              // setRabbit(thisChunkArray[0]);
+              setIndex(1);
+            }}
+            className={`bottom right ${id + 1 > holes ? "fill" : ``}`}
+          />
+          <FontAwesomeIcon
+            icon={faArrowCircleDown}
+            onClick={() => {
+              setId(id + 10 > holes ? id : id + 10);
+              // setRabbit(thisChunkArray[0]);
+              setIndex(1);
+            }}
+            className={`bottom right ${id + 1 > holes ? "fill" : ``}`}
+          />
+        </div>
+        <div className="sels3">
+          <FontAwesomeIcon
+            icon={faFireFlameCurved}
+            onClick={() => {
+              setBurnModal(true);
+            }}
+            className={`bottom`}
           />
         </div>
         {rabbitModal && (
@@ -173,14 +258,34 @@ export default function ArchivePageNew() {
             onClose={setRabbitModal}
             modal={rabbitModal}
             rabbit={rabbit}
+            rabbits={1234}
+            hole={holeData[id - 1]}
+            holes={holeData.length}
           />
         )}
         {holeModal && (
-          <HoleModal onClose={setHoleModal} modal={holeModal} hole={hole} />
+          <HoleModal
+            onClose={setHoleModal}
+            modal={holeModal}
+            hole={holeData[id - 1]}
+            holes={holeData.length}
+          />
+        )}
+        {burnModal && (
+          <BurnModal
+            onClose={setBurnModal}
+            modal={burnModal}
+            hole={holeData[id - 1]}
+          />
         )}
       </ArchivePageStyled>
     </>
   );
+
+  function openRabbit(rabbit) {
+    // setRabbit(rabbit);
+    setRabbitModal(true);
+  }
 }
 
 const ArchivePageStyled = styled.div`
@@ -194,6 +299,8 @@ const ArchivePageStyled = styled.div`
   width: clamp(75px, 55vw, 600px);
   margin: 0;
   gap: 1rem;
+  /// depends on props:
+  /* gap: ${(props) => (props.mobile ? "0rem" : "1rem")}; */
 
   /* margin-right: auto; */
 
@@ -222,6 +329,53 @@ const ArchivePageStyled = styled.div`
     }
   }
 
+  .sels2 {
+    position: absolute;
+    right: -3rem;
+    top: 50%;
+    transform: translateY(-50%);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    color: var(--forrestGreen);
+    /* writing-mode: vertical-lr; */
+    text-align: right;
+
+    .left,
+    .right {
+      :hover {
+        color: var(--limeGreen);
+        cursor: pointer;
+      }
+    }
+
+    .fill {
+      color: rgba(0, 0, 0, 0);
+      :hover {
+        color: rgba(0, 0, 0, 0);
+        cursor: default;
+      }
+    }
+  }
+
+  .sels3 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    color: var(--lightGreen);
+    font-size: 1.5rem;
+
+    :hover {
+      color: var(--limeGreen);
+      cursor: pointer;
+    }
+  }
+
   /* .left {
     :hover {
       color: var(--limeGreen);
@@ -231,10 +385,12 @@ const ArchivePageStyled = styled.div`
   .dark-box {
     background-color: var(--forrestGreen);
     color: var(--lightGreen);
+    font-size: clamp(12px, 3vw, 18px);
+
     font-family: "Andale Mono", monospace;
     box-shadow: 0px 0px 5px 0px var(--forrestGreen);
     width: 100%;
-    min-height: 200px;
+    min-height: 400px;
     border-radius: 1rem;
     padding: 2rem 1rem;
   }
@@ -268,7 +424,7 @@ const ArchivePageStyled = styled.div`
     display: flex;
     width: 100%;
     flex-direction: column;
-    justify-content: left;
+    justify-content: center;
     align-items: left;
     gap: 0;
     /* text-align */
@@ -276,6 +432,7 @@ const ArchivePageStyled = styled.div`
     color: var(--forrestGreen);
     h1 {
       color: var(--lightGreen);
+      font-size: clamp(15px, 3vw, 40px);
     }
 
     h2 {
@@ -291,7 +448,7 @@ const ArchivePageStyled = styled.div`
       padding: 0 0.5rem;
     }
 
-    padding: 1rem;
+    padding: ${(props) => (props.props.mobile ? "0" : "1rem")};
 
     :hover {
       cursor: pointer;
@@ -304,6 +461,8 @@ const ArchivePageStyled = styled.div`
     .top {
       display: flex;
       justify-content: space-between;
+      align-items: center;
+
       /* align-items: bottom; */
 
       /* margin-bottom: 0; */
@@ -382,10 +541,15 @@ const ArchivePageStyled = styled.div`
     color: var(--limeGreen);
   }
 
+  .rw {
+    width: 100%;
+    text-align: left;
+  }
+
   .rabbit {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: left;
     justify-content: center;
     gap: 1rem;
     padding: 1rem;

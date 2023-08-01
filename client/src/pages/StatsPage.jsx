@@ -23,6 +23,7 @@ export default function StatsPage(props) {
             gap: "0",
             position: "relative",
             textAlign: "center",
+            cursor: "default",
           }}
         >
           <h1 style={{ color: "var(--limeGreen)" }}>Metrics</h1>

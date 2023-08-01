@@ -138,6 +138,7 @@ const ContainerStyled = styled.div`
   white-space: pre-wrap;
   min-height: 300px;
   height: fit-content;
+  cursor: default;
 
   p {
     color: var(--lightGreen);

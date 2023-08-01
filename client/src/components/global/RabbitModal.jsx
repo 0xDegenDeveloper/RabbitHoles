@@ -6,31 +6,34 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
 
 export default function RabbitModal(props) {
-  const { burner, h_index, r_index, depth, timestamp, title, rabbits, msg } =
-    props.rabbit;
+  console.log(props);
+  const { burner, id, depth, timestamp, msg, holeId } = props.rabbit;
+  const rabbits = props.rabbits;
+  const hole = props.hole;
+  const holes = props.holes;
   return (
     <Modal modal={props.modal} onClose={props.onClose}>
       <ContainerStyled className="dark-box-600w">
         <h1>
-          <span>Rabbit</span> #{r_index + 1}/{rabbits}
+          <span>Rabbit</span> #{id}/{rabbits}
         </h1>
         <p>
-          <span>Hole</span> #{h_index} {title}
+          <span>hole</span> #{hole.id} {hole.title}
         </p>
         <p>
-          <span>Burner{" > "}</span>
+          <span>burner </span>
           {burner}
         </p>
         <p>
-          <span>Depth{" > "}</span>
+          <span>depth </span>
           {depth}
         </p>
         <p>
-          <span>Timestamp{" > "}</span>
+          <span>timestamp </span>
           {timestamp}
         </p>
         <p>
-          <span>Msg{" > "}</span>
+          <span>msg </span>
           {msg}
         </p>
         <FontAwesomeIcon
@@ -61,7 +64,7 @@ const ContainerStyled = styled.div`
   /* max-width: 500px; */
   white-space: pre-wrap;
   max-width: 600px;
-
+  cursor: default;
   h1 {
     margin: 0.5rem 0;
   }

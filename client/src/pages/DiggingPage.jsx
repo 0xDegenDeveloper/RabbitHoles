@@ -103,6 +103,7 @@ export const StyledBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  cursor: default;
 
   h4 {
     color: var(--lightGreen);

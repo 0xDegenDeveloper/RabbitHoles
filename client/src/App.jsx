@@ -62,25 +62,17 @@ function App() {
             }
           ></Route>
           <Route path="/user" element={<UserPage mobile={mobile} />} />
-          <Route path="/archive" element={<ArchivePageNew mobile={mobile} />} />
+          <Route
+            path="/archive"
+            element={<ArchivePageNew mobile={mobile} holeId={2} />}
+          />
           <Route path="/dig-hole" element={<DigHolePage mobile={mobile} />} />
           <Route
             path="/burn-rabbit"
             element={<BurnRabbitPage mobile={mobile} />}
           />
           {/* Param routes */}
-          <Route
-            path="/archive/:key"
-            element={<ArchivePageNew mobile={mobile} />}
-          />
-          <Route
-            path="/archive/:key/:key2"
-            element={<ArchivePageNew mobile={mobile} />}
-          />
-          <Route
-            path="/dig-hole/:key"
-            element={<DigHolePage mobile={mobile} />}
-          />
+
           <Route
             path="/burn-rabbit/:key"
             element={<BurnRabbitPage mobile={mobile} />}
