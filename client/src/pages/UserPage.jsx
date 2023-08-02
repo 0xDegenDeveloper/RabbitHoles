@@ -55,20 +55,28 @@ export default function UserPage(props) {
           <div className="top">
             <h1>{user}</h1>
             <div className="stats">
-              <p>{userData.holes.length}</p>{" "}
+              {!props.mobile && <p>{userData.holes.length}</p>}
               <FontAwesomeIcon
                 icon={faDigging}
                 className={`${isHoles ? "active" : ""}`}
               />
-              <p>{userData.rabbits.length}</p>{" "}
+              {!props.mobile && <p>{userData.rabbits.length}</p>}
               <FontAwesomeIcon
                 icon={faFireFlameCurved}
                 className={`${!isHoles ? "active" : ""}`}
               />
-              <p>{depth}</p>
-              <div className="w">
-                <img src={"/logo-full-dark.png"} alt="logo" className="logo" />
-              </div>
+              {!props.mobile && (
+                <>
+                  <p>{depth}</p>
+                  <div className="w">
+                    <img
+                      src={"/logo-full-dark.png"}
+                      alt="logo"
+                      className="logo"
+                    />
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>

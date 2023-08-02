@@ -34,7 +34,7 @@ export default function StatsPage(props) {
             <img src={`/logo-full-lime.png`} />
           </h4>
           <h4>
-            Dig Fee/Reward::
+            Fee/Reward::
             <em>
               {digFee}Ξ/{digReward}
             </em>
@@ -98,6 +98,6 @@ export const StyledBox = styled.div`
   }
 
   img {
-    height: clamp(27px, 3vw, 32px);
+    /* height: clamp(27px, 3vw, 32px); */
   }
 `;

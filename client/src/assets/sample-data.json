@@ -56,7 +56,7 @@
     "timestamp": "1/1/23",
     "rabbits": [
       {
-        "msg": "I started doing breathwork everyday and life started getting trippy",
+        "msg": "When I started doing breathwork everyday, life got trippy",
         "id": "4",
         "burner": "0x1234...abcd",
         "timestamp": "1/1/23"
@@ -69,9 +69,15 @@
       },
       {
         "msg": "Day 123: Breathwork make body go brrrr",
-        "id": "130",
+        "id": "75",
         "burner": "0x1234...abcd",
         "timestamp": "5/4/23"
+      },
+      {
+        "msg": "Day 201: Life is suffering",
+        "id": "110",
+        "burner": "0x1234...abcd",
+        "timestamp": "7/28/23"
       }
     ]
   },
