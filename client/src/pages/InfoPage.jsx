@@ -92,36 +92,6 @@ export default function InfoPage(props) {
   );
 }
 
-const ImgWrapper = styled.div`
-  margin-top: 1rem;
-  display: grid;
-  place-items: center;
-
-  img {
-    width: clamp(50px, 30vw, 100px);
-
-    :hover {
-      cursor: pointer;
-      animation: rotate360 3s infinite ease-in-out;
-    }
-  }
-
-  @keyframes rotate360 {
-    0% {
-      transform: rotate(0deg);
-    }
-    50%,
-    52% {
-      transform: rotate(720deg);
-    }
-
-    75%,
-    100% {
-      transform: rotate(0deg);
-    }
-  }
-`;
-
 const Wrapper = styled.div`
   display: grid;
   place-items: center;
@@ -141,8 +111,8 @@ const Wrapper = styled.div`
   }
 
   img {
-    margin-top: 3rem;
-    width: clamp(50px, 30vw, 100px);
+    margin-top: 1rem;
+    width: clamp(70px, 10vw, 100px);
 
     :hover {
       cursor: pointer;

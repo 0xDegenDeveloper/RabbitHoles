@@ -30,24 +30,24 @@ export default function StatsPage(props) {
         >
           <h1 style={{ color: "var(--limeGreen)" }}>Metrics</h1>
           <h4>
-            Supply: <em> {totalSupply}</em>
+            Supply::<em> {totalSupply}</em>
             <img src={`/logo-full-lime.png`} />
           </h4>
           <h4>
-            Fee/Reward:
+            Dig Fee/Reward::
             <em>
               {digFee}Ξ/{digReward}
             </em>
             <img src={`/logo-full-lime.png`} />
           </h4>
           <h4>
-            Digger BPS: <em>{(parseFloat(diggerBps) / 100.0).toFixed(0)}%</em>
+            Digger BPS::<em>{(parseFloat(diggerBps) / 100.0).toFixed(0)}%</em>
           </h4>
           <h1 style={{ color: "var(--limeGreen)" }}>Stats</h1>
           <h4>
-            Holes: <em>{holes}</em>
-            {" > "}Rabbits: <em>{rabbits}</em>
-            {" > "}Depth: <em>{depth}</em>
+            Holes::<em>{holes}</em>
+            {"::"}Rabbits::<em>{rabbits}</em>
+            {"::"}Depth::<em>{depth}</em>
           </h4>
           <StyledBox>
             <FontAwesomeIcon

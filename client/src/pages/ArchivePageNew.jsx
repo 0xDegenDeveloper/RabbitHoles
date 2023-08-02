@@ -62,7 +62,8 @@ export default function ArchivePageNew(props) {
   let start = (index - 1) * 10 + 1;
   let end = start + 9;
   end = end >= hole.digs ? hole.digs : end;
-  start = start < 10 ? "0" + start : start;
+  if (start < 10) start = "0" + start;
+  if (end < 10) end = "0" + end;
 
   // const hole =
 
@@ -143,7 +144,7 @@ export default function ArchivePageNew(props) {
           />
           <div id="bottom" className="bottom">
             <p>
-              {start}-{end} / {hole.digs}
+              {start}-{end} / {hole.digs < 10 ? "0" + hole.digs : hole.digs}
             </p>
           </div>
           <FontAwesomeIcon
@@ -251,17 +252,12 @@ const ArchivePageStyled = styled.div`
   flex-direction: column;
   align-items: left;
   justify-content: center;
-  width: clamp(75px, 55vw, 600px);
+  width: clamp(75px, 60vw, 600px);
   margin: 0;
-  gap: 1rem;
-
-  /* max-height: 100px; */
-
-  /// depends on props:
+  gap: ${(props) => (props.mobile ? "0" : "1rem")};
+  /* overflow: scroll; */
   /* gap: ${(props) => (props.mobile ? "0rem" : "1rem")}; */
-
   /* margin-right: auto; */
-
   .sels {
     display: flex;
     flex-direction: row;
@@ -269,6 +265,7 @@ const ArchivePageStyled = styled.div`
     justify-content: center;
     gap: 1rem;
     color: var(--forrestGreen);
+    margin-top: 1rem;
 
     .left,
     .right {
@@ -289,7 +286,7 @@ const ArchivePageStyled = styled.div`
 
   .sels2 {
     position: absolute;
-    right: -3rem;
+    right: -3.5rem;
     top: 50%;
     transform: translateY(-50%);
 
@@ -327,6 +324,7 @@ const ArchivePageStyled = styled.div`
     gap: 1rem;
     color: var(--lightGreen);
     font-size: 1.5rem;
+    margin-top: ${(props) => (props.mobile ? "1rem" : "0rem")};
 
     :hover {
       color: var(--limeGreen);
@@ -351,6 +349,7 @@ const ArchivePageStyled = styled.div`
     min-height: ${(props) => (props.mobile ? "200px" : "400px")};
     border-radius: 1rem;
     padding: 2rem 1rem;
+    /* overflow: scroll; */
   }
 
   .rabbits {
@@ -361,6 +360,7 @@ const ArchivePageStyled = styled.div`
     justify-content: top;
     gap: 1rem;
     overflow: scroll;
+    /* overflow: auto; */
   }
 
   .bar {
@@ -404,8 +404,8 @@ const ArchivePageStyled = styled.div`
       font-size: clamp(8px, 3vw, 18px);
       padding: 0 0.5rem;
     }
-
-    padding: ${(props) => (props.props.mobile ? "0" : "1rem")};
+    padding: 1rem;
+    margin: ${(props) => (props.props.mobile ? "0" : "1rem")};
 
     :hover {
       cursor: pointer;
