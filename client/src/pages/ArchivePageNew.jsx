@@ -21,11 +21,9 @@ import BurnModal from "../components/global/BurnModal";
 
 export default function ArchivePageNew(props) {
   const { key } = useParams();
-  const [burnModal, setBurnModal] = useState(false);
-  const [rabbitModal, setRabbitModal] = useState(false);
-  const [holeModal, setHoleModal] = useState(false);
   const [id, setId] = useState(!key || parseInt(key) == 0 ? 1 : parseInt(key));
   const [index, setIndex] = useState(1);
+  const [burnModal, setBurnModal] = useState(false);
 
   const holeData = useMemo(() => {
     const array = Array.from({ length: 111 }, (_, i) => i + 1);
@@ -33,13 +31,12 @@ export default function ArchivePageNew(props) {
   }, [id]);
 
   const hole = holeData[id - 1];
-  const [rabbit, setRabbit] = useState(hole.rabbits[0]);
 
-  let start = (index - 1) * 10 + 1;
-  let end = start + 9;
+  let start = (index - 1) * 10 + 1,
+    end = start + 9;
   if (start < 10) start = "0" + start;
-  if (end > hole.digs) end = hole.digs;
   if (end < 10) end = "0" + end;
+  if (end > hole.digs) end = hole.digs;
 
   const chunkSize = 10;
   const twoDArray = [];
@@ -59,7 +56,9 @@ export default function ArchivePageNew(props) {
         <div
           className="hole-head"
           onClick={() => {
-            setHoleModal(true);
+            props.setUseJump(false);
+            props.setHole(hole);
+            props.setHoleModal(true);
           }}
         >
           <div className="top">
@@ -75,12 +74,13 @@ export default function ArchivePageNew(props) {
         </div>
         <div className="dark-box rabbits">
           {thisChunkArray.map((rabbit, id) => (
-            <div key={rabbit.msg} className="rw">
+            <div key={rabbit.msg + id} className="rw">
               <div
                 className="rabbit"
                 onClick={() => {
-                  setRabbit(rabbit);
-                  setRabbitModal(true);
+                  props.setUseJump(false);
+                  props.setRabbit(rabbit);
+                  props.setRabbitModal(true);
                 }}
               >
                 <p>{rabbit.msg}</p>
@@ -179,24 +179,24 @@ export default function ArchivePageNew(props) {
             className={`bottom`}
           />
         </div>
-        {rabbitModal && (
+        {/* {props.rabbitModal && (
           <RabbitModal
-            onClose={setRabbitModal}
-            modal={rabbitModal}
-            rabbit={rabbit}
-            rabbits={1234}
-            hole={holeData[id - 1]}
-            holes={holeData.length}
+            onClose={props.setRabbitModal}
+            modal={props.rabbitModal}
+            rabbit={props.rabbit}
+            rabbits={props.rabbits}
+            hole={props.hole}
+            holes={props.holes}
           />
         )}
-        {holeModal && (
+        {props.holeModal && (
           <HoleModal
-            onClose={setHoleModal}
-            modal={holeModal}
-            hole={holeData[id - 1]}
-            holes={holeData.length}
+            onClose={props.setHoleModal}
+            modal={props.holeModal}
+            hole={props.hole}
+            holes={props.holes}
           />
-        )}
+        )} */}
         {burnModal && (
           <BurnModal
             onClose={setBurnModal}
@@ -207,11 +207,6 @@ export default function ArchivePageNew(props) {
       </ArchivePageStyled>
     </>
   );
-
-  function openRabbit(rabbit) {
-    // setRabbit(rabbit);
-    setRabbitModal(true);
-  }
 }
 
 export const ArchivePageStyled = styled.div`
@@ -246,7 +241,7 @@ export const ArchivePageStyled = styled.div`
     .left,
     .right {
       :hover {
-        color: var(--limeGreen);
+        color: var(--greyGreen);
         cursor: pointer;
       }
     }
@@ -278,7 +273,7 @@ export const ArchivePageStyled = styled.div`
     .left,
     .right {
       :hover {
-        color: var(--limeGreen);
+        color: var(--greyGreen);
         cursor: pointer;
       }
     }
@@ -298,7 +293,7 @@ export const ArchivePageStyled = styled.div`
     align-items: center;
     justify-content: center;
     gap: 1rem;
-    color: var(--lightGreen);
+    color: var(--greyGreen);
     font-size: 1.5rem;
     margin-top: ${(props) => (props.mobile ? "1rem" : "0rem")};
 
@@ -396,6 +391,9 @@ export const ArchivePageStyled = styled.div`
       display: flex;
       justify-content: space-between;
       align-items: center;
+      h1 {
+        color: var(--greyGreen);
+      }
     }
 
     .meta {

@@ -87,12 +87,10 @@ export default function UserPage(props) {
                 <div
                   className="rabbit"
                   onClick={() => {
-                    // console.log(id, "id");
-                    // console.log("rabbit clicked:", rabbit);
-                    // setIndex(id + 1);
-                    // setRabbit(rabbit);
-                    // setRabbitModal(true);
-                    navigate(`/archive/${rabbit.holeId}`);
+                    props.setUseJump(true);
+                    props.setRabbit(rabbit);
+                    props.setRabbitModal(true);
+                    // navigate(`/archive/${rabbit.holeId}`);
                   }}
                 >
                   <p>{rabbit.msg}</p>
@@ -131,12 +129,9 @@ export default function UserPage(props) {
                 <div
                   className="hole"
                   onClick={() => {
-                    // console.log(id, "id");
-                    // console.log("rabbit clicked:", rabbit);
-                    // setIndex(id + 1);
-                    // setHole(hole);
-                    // setHoleModal(true);
-                    navigate(`/archive/${hole.id}`);
+                    props.setUseJump(true);
+                    props.setHole(hole);
+                    props.setHoleModal(true);
                   }}
                 >
                   <p>{hole.title}</p>

@@ -139,7 +139,9 @@ const ContainerStyled = styled.div`
   width: clamp(100px, 55vw, 500px);
   text-align: center;
   white-space: pre-wrap;
-  min-height: clamp(200px, 50vh, 400px);
+  height: fit-content;
+  /* min-height: clamp(150px, 50vh, 400px); */
+  min-height: 220px;
   /* height: fit-content; */
   cursor: default;
 

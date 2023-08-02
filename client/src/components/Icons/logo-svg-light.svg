@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1592.188" height="1590.605" viewBox="0 0 1592.188 1590.605">
+  <defs>
+    <clipPath id="clip-path">
+      <rect x="199" y="199" width="1539.457" height="1537.815" fill="none"/>
+    </clipPath>
+  </defs>
+  <g id="Group_32" data-name="Group 32" transform="translate(15197.651 9491.302)">
+    <g id="Group_29" data-name="Group 29" transform="matrix(0.999, 0.035, -0.035, 0.999, 3550.789, -2116.765)">
+      <g id="Group_24" data-name="Group 24">
+        <g id="Scroll_Group_12" data-name="Scroll Group 12" transform="translate(-19139.75 -6916.606)" clip-path="url(#clip-path)" style="isolation: isolate">
+          <g id="Group_23" data-name="Group 23" transform="translate(19139.75 6916.606)">
+            <text id="R" transform="matrix(0.999, -0.035, 0.035, 0.999, -18707.813, -6451.297)" fill="#b2e2ae" font-size="1000" font-family="TeluguMN-Bold, Telugu MN" font-weight="700"><tspan x="175.077" y="891">R</tspan></text>
+            <path id="Path_6" data-name="Path 6" d="M-18181.037-6735.742c87.641-69.971,145.85-103.757,120.02-118.224-18.211-10.2-285.637,54.274-385.912,179.281-41.32,24.027,33.057,109.029,0,46.438s179.672-260.89,140.916-268.453-221.666,111.765-236.848,227.759c-4.8,36.654,47.344,66.894,44.658,111.5-5.773,95.879-53.371,227.011-11.381,406.921,61.389,263.027,62.654-443.511,62.654-443.511S-18268.678-6665.771-18181.037-6735.742Z" transform="matrix(0.999, -0.035, 0.035, 0.999, 322.197, -219.932)" fill="#b2e2ae"/>
+          </g>
+        </g>
+      </g>
+      <path id="Path_10" data-name="Path 10" d="M-18146.666-6518.71c3.273,33.764-41.041,36.207-41.041,36.207l-18.59-41.754S-18149.939-6552.474-18146.666-6518.71Z" transform="translate(-3525.519 6818.872) rotate(22)" fill="#b2e2ae"/>
+      <path id="Path_11" data-name="Path 11" d="M-18222.363-6360.879l-48.344-64.08s11.963,77.6,0,75.129-35.811-75.129-35.811-75.129,37.777-55.929,63.168-34.982S-18222.363-6360.879-18222.363-6360.879Z" transform="matrix(0.999, -0.035, 0.035, 0.999, 476.597, -157.056)" fill="#b2e2ae"/>
+    </g>
+  </g>
+</svg>

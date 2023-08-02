@@ -14,6 +14,8 @@ export default function RabbitModal(props) {
   const { burner, id, depth, timestamp, msg } = props.rabbit;
   const rabbits = props.rabbits;
   const hole = props.hole;
+
+  console.log(props.useJump);
   return (
     <Modal modal={props.modal} onClose={props.onClose}>
       <ContainerStyled className="dark-box-600w">
@@ -25,6 +27,7 @@ export default function RabbitModal(props) {
         </p>
         <p
           onClick={() => {
+            props.onClose(false);
             navigate("/user");
           }}
           className="toggler"
@@ -49,12 +52,23 @@ export default function RabbitModal(props) {
           onClick={() => props.onClose(false)}
           className="x"
         />
+        {props.useJump && (
+          <div className="jump">
+            <FontAwesomeIcon
+              icon={faArrowsToCircle}
+              onClick={() => {
+                props.onClose(false);
+                navigate(`/archive/${hole.id}`);
+              }}
+            />
+          </div>
+        )}
       </ContainerStyled>
     </Modal>
   );
 }
 
-const ContainerStyled = styled.div`
+export const ContainerStyled = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
@@ -73,9 +87,36 @@ const ContainerStyled = styled.div`
   white-space: pre-wrap;
   max-width: 600px;
   cursor: default;
-
+  width: clamp(75px, 55vw, 500px);
   p {
     /* padding: 0.5rem 0rem; */
+  }
+
+  .jump {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    padding: 2rem;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+    width: 90%;
+
+    svg {
+      margin: 0 auto;
+      color: var(--limeGreen);
+      padding: 0.5rem;
+      font-size: clamp(10px, 5vw, 20px);
+      text-align: center;
+    }
+
+    svg:hover {
+      color: var(--limeGreen);
+      cursor: pointer;
+      box-shadow: 0 0 5px var(--limeGreen);
+      border-radius: 33%;
+    }
   }
 
   .toggler {

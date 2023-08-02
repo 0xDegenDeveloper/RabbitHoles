@@ -16,11 +16,25 @@ import DiggingPage from "./pages/DiggingPage";
 import ArchivePageNew from "./pages/ArchivePageNew";
 
 import AccountModal from "./components/global/AccountModal";
+import HoleModal from "./components/global/HoleModal";
+import RabbitModal from "./components/global/RabbitModal";
+import fetchHolesData from "./components/hooks/fetchHoleData";
 
 function App() {
   const [mobile, setMobile] = useState(false);
 
   const [accountModal, setAccountModal] = useState(false);
+  const [holeModal, setHoleModal] = useState(false);
+  const [rabbitModal, setRabbitModal] = useState(false);
+  const [hole, setHole] = useState(0);
+  const [rabbit, setRabbit] = useState(0);
+  const [useJump, setUseJump] = useState(false);
+
+  const { totalHoles, totalBurns, totalDepth } = {
+    totalHoles: 111,
+    totalBurns: 555,
+    totalDepth: 1234,
+  };
 
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const totalDigs = 1111;
@@ -71,10 +85,31 @@ function App() {
               <InfoPage modal={infoModalOpen} onClose={setInfoModalOpen} />
             }
           ></Route>
-          <Route path="/user" element={<UserPage mobile={mobile} />} />
+          <Route
+            path="/user"
+            element={
+              <UserPage
+                mobile={mobile}
+                setHoleModal={setHoleModal}
+                setRabbitModal={setRabbitModal}
+                setHole={setHole}
+                setRabbit={setRabbit}
+                setUseJump={setUseJump}
+              />
+            }
+          />
           <Route
             path="/archive"
-            element={<ArchivePageNew mobile={mobile} holeId={2} />}
+            element={
+              <ArchivePageNew
+                mobile={mobile}
+                setHoleModal={setHoleModal}
+                setRabbitModal={setRabbitModal}
+                setHole={setHole}
+                setRabbit={setRabbit}
+                setUseJump={setUseJump}
+              />
+            }
           />
           <Route path="/dig-hole" element={<DigHolePage mobile={mobile} />} />
           <Route
@@ -84,7 +119,16 @@ function App() {
           {/* Param routes */}
           <Route
             path="/archive/:key"
-            element={<ArchivePageNew mobile={mobile} />}
+            element={
+              <ArchivePageNew
+                mobile={mobile}
+                setHoleModal={setHoleModal}
+                setRabbitModal={setRabbitModal}
+                setHole={setHole}
+                setRabbit={setRabbit}
+                setUseJump={setUseJump}
+              />
+            }
           />
           {/* <Route
             path="/archive/:key/:key2"
@@ -98,15 +142,45 @@ function App() {
             path="/burn-rabbit/:key"
             element={<BurnRabbitPage mobile={mobile} />}
           />
-          <Route path="/user/:key" element={<UserPage mobile={mobile} />} />
           <Route
-            path="/user/:key/:key2"
-            element={<UserPage mobile={mobile} />}
+            path="/user/:key"
+            element={
+              <UserPage
+                mobile={mobile}
+                setHoleModal={setHoleModal}
+                setRabbitModal={setRabbitModal}
+                setHole={setHole}
+                setRabbit={setRabbit}
+                setUseJump={setUseJump}
+              />
+            }
           />
           <Route path="/new/" element={<ArchivePageNew />} />
         </Routes>
         {accountModal && (
           <AccountModal onClose={setAccountModal} modal={accountModal} />
+        )}
+        {holeModal && (
+          <HoleModal
+            key={hole}
+            onClose={setHoleModal}
+            modal={holeModal}
+            hole={hole}
+            holes={totalHoles}
+            useJump={useJump}
+          />
+        )}
+        {rabbitModal && (
+          <RabbitModal
+            key={rabbit + hole}
+            onClose={setRabbitModal}
+            modal={rabbitModal}
+            hole={hole}
+            holes={totalHoles}
+            rabbits={totalBurns}
+            rabbit={rabbit}
+            useJump={useJump}
+          />
         )}
       </BrowserRouter>
     </>
