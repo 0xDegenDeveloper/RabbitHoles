@@ -22,8 +22,8 @@ import fetchHolesData from "./components/hooks/fetchHoleData";
 
 function App() {
   const [mobile, setMobile] = useState(false);
-
   const [accountModal, setAccountModal] = useState(false);
+  const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [holeModal, setHoleModal] = useState(false);
   const [rabbitModal, setRabbitModal] = useState(false);
   const [hole, setHole] = useState(0);
@@ -35,9 +35,6 @@ function App() {
     totalBurns: 555,
     totalDepth: 1234,
   };
-
-  const [infoModalOpen, setInfoModalOpen] = useState(false);
-  const totalDigs = 1111;
 
   useEffect(() => {
     const faviconPath = `/logo-main.png`;
@@ -62,13 +59,11 @@ function App() {
       <GlobalStyles mobile={mobile} />
       <BrowserRouter>
         <TopComponents
-          totalDigs={totalDigs}
           mobile={mobile}
           setAccountModal={setAccountModal}
           accountModal={accountModal}
         />
         <Routes>
-          {/* Middle route for fetching then passing to final destination */}
           <Route path="/digging/" element={<DiggingPage />} />
           <Route path="/digging/:key" element={<DiggingPage />} />
           {/* Main routes */}
@@ -162,7 +157,7 @@ function App() {
         )}
         {holeModal && (
           <HoleModal
-            key={hole}
+            key={hole + rabbit}
             onClose={setHoleModal}
             modal={holeModal}
             hole={hole}

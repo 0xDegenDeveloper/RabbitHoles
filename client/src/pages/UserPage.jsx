@@ -88,9 +88,9 @@ export default function UserPage(props) {
                   className="rabbit"
                   onClick={() => {
                     props.setUseJump(true);
+                    props.setHole(userData.holes[rabbit.holeId - 1]);
                     props.setRabbit(rabbit);
                     props.setRabbitModal(true);
-                    // navigate(`/archive/${rabbit.holeId}`);
                   }}
                 >
                   <p>{rabbit.msg}</p>
@@ -108,7 +108,7 @@ export default function UserPage(props) {
                       <p>{rabbit.depth}</p>
                       <div className="w">
                         <img
-                          src={`/logo-full-blue.png`}
+                          src={`/logo-full-lime.png`}
                           // src={`/logo-full-${isHovered ? "dark" : "blue"}.png`}
                           alt="logo"
                           className="logo"
@@ -153,23 +153,6 @@ export default function UserPage(props) {
             ))}
           </div>
         )}
-
-        {/* {holeModal && (
-          <HoleModal
-            onClose={setHoleModal}
-            modal={holeModal}
-            hole={hole}
-            holes={111}
-          />
-        )}
-        {rabbitModal && (
-          <RabbitModal
-            onClose={setRabbitModal}
-            modal={rabbitModal}
-            hole={hole}
-            rabbit={rabbit}
-          />
-        )} */}
       </ArchivePageStyled>
       {/* </div> */}
     </>

@@ -19,7 +19,7 @@ export default function TopComponents(props) {
         setAccountModal={props.setAccountModal}
         accountModal={props.accountModal}
       />
-      <Navbar totalDigs={props.totalDigs} style={{ zIndex: 1000 }} />
+      <Navbar style={{ zIndex: 1000 }} />
       <Logo
         mobile={props.mobile}
         walletShowing={walletShowing}

@@ -15,7 +15,6 @@ export default function RabbitModal(props) {
   const rabbits = props.rabbits;
   const hole = props.hole;
 
-  console.log(props.useJump);
   return (
     <Modal modal={props.modal} onClose={props.onClose}>
       <ContainerStyled className="dark-box-600w">
@@ -23,7 +22,7 @@ export default function RabbitModal(props) {
           <span>Rabbit</span> #{id}/{rabbits}
         </h1>
         <p>
-          <span>hole</span> #{hole.id} {hole.title}
+          <span>hole</span> #{props.hole.id} {hole.title}
         </p>
         <p
           onClick={() => {
@@ -101,7 +100,7 @@ export const ContainerStyled = styled.div`
     display: flex;
     justify-content: center;
     /* align-items: center; */
-    width: 90%;
+    width: 10%;
 
     svg {
       margin: 0 auto;

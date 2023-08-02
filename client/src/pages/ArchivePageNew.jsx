@@ -90,7 +90,7 @@ export default function ArchivePageNew(props) {
                     <p>{rabbit.depth}</p>
                     <div className="w">
                       <img
-                        src={`/logo-full-blue.png`}
+                        src={`/logo-full-lime.png`}
                         // src={`/logo-full-${isHovered ? "dark" : "blue"}.png`}
                         alt="logo"
                         className="logo"
@@ -154,18 +154,21 @@ export default function ArchivePageNew(props) {
             icon={faChevronCircleDown}
             onClick={() => {
               // console.log("currnet id", id);
-              setId(id + 1 > holeData.length ? id : id + 1);
-              // setRabbit(thisChunkArray[0]);
+              const newId = id + 1 > holeData.length ? id : id + 1;
+              setId(newId);
               setIndex(1);
+              props.setHole(holeData[newId - 1]);
             }}
             className={`bottom right ${id + 1 > holeData.length ? "fill" : ``}`}
           />
           <FontAwesomeIcon
             icon={faArrowCircleDown}
             onClick={() => {
-              setId(id + 10 > holeData.length ? holeData.length : id + 10);
-              // setRabbit(thisChunkArray[0]);
+              const newId =
+                id + 10 > holeData.length ? holeData.length : id + 10;
+              setId(newId);
               setIndex(1);
+              props.setHole(holeData[newId - 1]);
             }}
             className={`bottom right ${id + 1 > holeData.length ? "fill" : ``}`}
           />
@@ -338,7 +341,7 @@ export const ArchivePageStyled = styled.div`
   .bar {
     width: 100%;
     margin: 1rem auto;
-    border-bottom: 1px dashed var(--lightGreen);
+    border-bottom: 1px dashed var(--greyGreen);
   }
 
   h1,
@@ -377,7 +380,7 @@ export const ArchivePageStyled = styled.div`
       padding: 0 0.5rem;
     }
     padding: 1rem;
-    margin: ${(props) => (props.mobile ? "0" : "1rem")};
+    margin: ${(props) => (props.mobile ? "0.5rem" : "0.5rem")};
 
     :hover {
       cursor: pointer;
@@ -457,7 +460,7 @@ export const ArchivePageStyled = styled.div`
     }
 
     p {
-      color: var(--lightGreen);
+      color: var(--limeGreen);
     }
 
     /* p:hover,
@@ -579,6 +582,16 @@ export const ArchivePageStyled = styled.div`
     border-radius: 1rem;
 
     border: 0.5px solid var(--forrestGreen);
+
+    p {
+      color: var(--lightGreen);
+    }
+
+    .r-stats {
+      p {
+        color: var(--limeGreen);
+      }
+    }
 
     &:hover {
       cursor: pointer;
