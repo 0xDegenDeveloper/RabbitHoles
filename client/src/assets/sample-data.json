@@ -90,13 +90,13 @@
         "timestamp": "2/3/23"
       },
       {
-        "msg": "we are all just a clump of atoms aware of our own existence",
+        "msg": "we just a clump of atoms aware of their own existence",
         "id": "2",
         "burner": "0x1234...abcd",
         "timestamp": "1/4/23"
       },
       {
-        "msg": "whenever you taste your mouth youre switching between first and third person",
+        "msg": "whenever you taste your mouth you switch between first and third person",
         "id": "16",
         "burner": "deployer.stark",
         "timestamp": "1/25/23"
@@ -128,10 +128,16 @@
     "timestamp": "1/8/23",
     "rabbits": [
       {
-        "msg": "when I started doing breathwork everyday life got trippy",
+        "msg": "day 1 of doing breathwork",
         "id": "5",
         "burner": "0x1234...abcd",
         "timestamp": "1/9/23"
+      },
+      {
+        "msg": "day 10 of doing breathwork",
+        "id": "5",
+        "burner": "0x1234...abcd",
+        "timestamp": "1/19/23"
       },
       {
         "msg": "day 45: I could see myself doing this everyday",

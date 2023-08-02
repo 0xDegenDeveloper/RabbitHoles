@@ -100,7 +100,7 @@ const Wrapper = styled.div`
 
     :hover {
       cursor: pointer;
-      animation: rotate360 3s infinite ease-in-out;
+      /* animation: rotate360 3s infinite ease-in-out; */
       color: var(--lightGreen);
     }
   }

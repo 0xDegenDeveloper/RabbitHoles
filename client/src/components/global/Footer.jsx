@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowUpRightFromSquare,
@@ -10,13 +11,34 @@ import styled from "styled-components";
 
 export default function Footer(props) {
   const [isFooterOpen, setIsFooterOpen] = useState(false);
+  const footerRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        footerRef.current &&
+        !footerRef.current.contains(event.target) &&
+        isFooterOpen
+      ) {
+        setIsFooterOpen(false);
+      }
+    }
+    // Bind the event listener
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isFooterOpen]); //
 
   return (
     <>
       <FooterWrapper
-        onMouseEnter={() => setIsFooterOpen(true)}
-        onMouseLeave={() => setIsFooterOpen(false)}
+        onClick={() => {
+          setIsFooterOpen(!isFooterOpen);
+        }}
         darkMode={props.darkMode}
+        ref={footerRef}
       >
         <FooterTop
           darkMode={props.darkMode}

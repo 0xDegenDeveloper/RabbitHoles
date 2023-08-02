@@ -1,11 +1,12 @@
-import { useState, useMemo } from "react";
 import { useAccount, useConnectors } from "@starknet-react/core";
 import styled from "styled-components";
-import Modal from "./Modal";
 import WalletModal from "./WalletModal";
+
+import { useState, useMemo, useEffect } from "react";
 
 export default function LoginButton(props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const { address } = useAccount();
 
   return (
@@ -23,7 +24,7 @@ export default function LoginButton(props) {
   );
 }
 
-function DisconnectedBtn(props) {
+function DisconnectedBtn() {
   return (
     <LoginBtn
       onClick={() => {
@@ -96,12 +97,8 @@ const LoginBtn = styled.div`
       props.connected
         ? "var(--forrestGreen)"
         : "var(--greyGreen)"}; // var(--forrestGreen);
-    box-shadow: 0px 0px 5px 0px var(--forrestGreen);
     background-color: ${(props) =>
       props.connected ? "rgba(0,0,0,0)" : "var(--forrestGreen)"};
-    border-radius: 2rem;
-    top: 1rem;
-    right: 1rem;
   }
 
   transition: all 0.05s 0s ease-in-out;
