@@ -4,23 +4,13 @@ import Modal from "./Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
 import { ContainerStyled, OptionStyled } from "./WalletModal";
-import { useAccount, useConnectors } from "@starknet-react/core";
+import { useAccount, useConnectors, useProvider } from "@starknet-react/core";
 import { useNavigate } from "react-router-dom";
 
 export default function AccountModal(props) {
   const { address } = useAccount();
   const { disconnect } = useConnectors();
   const navigate = useNavigate();
-
-  const handleDisconnect = (connector) => {
-    // const starknetProperty = `starknet_${connector?.id}`;
-    // if (window[starknetProperty]) {
-    //   props.onClose();
-    //   connect(connector);
-    // } else {
-    //   window.open(table[connector.id].download);
-    // }
-  };
 
   return (
     <Modal onClose={props.onClose} modal={props.modal}>
@@ -46,7 +36,6 @@ export default function AccountModal(props) {
             <span>{"disconnect"}</span>
           </OptionStyled>
         </div>
-
         <FontAwesomeIcon
           icon={faXmarkCircle}
           onClick={() => {

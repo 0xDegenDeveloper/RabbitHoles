@@ -59,7 +59,7 @@ export default function FlowModal(props) {
             <p className="token">
               <span className="blue">
                 {" > "}1.000000
-                <img src={`/logo-full-lime.png`} />/ felt
+                <img src={`/logo-full-lime.png`} className="spinner" />/ felt
               </span>
             </p>
           </>
@@ -82,7 +82,7 @@ export default function FlowModal(props) {
             <p className="token">
               <span className="blue">
                 {" > "}cost = 2.000000
-                <img src={`/logo-full-lime.png`} />
+                <img className="spinner" src={`/logo-full-lime.png`} />
               </span>
             </p>
             <p>
@@ -218,6 +218,28 @@ const ContainerStyled = styled.div`
     align-items: ${(props) => (!props.mobile ? "center" : "block")};
     justify-content: ${(props) => (!props.mobile ? "center" : "block")};
     text-align: ${(props) => (!props.mobile ? "center" : "block")};
+  }
+
+  .spinner {
+    :hover {
+      cursor: pointer;
+      animation: rotate360 3s infinite ease-in-out;
+    }
+
+    @keyframes rotate360 {
+      0% {
+        transform: rotate(0deg);
+      }
+      50%,
+      52% {
+        transform: rotate(720deg);
+      }
+
+      75%,
+      100% {
+        transform: rotate(0deg);
+      }
+    }
   }
 
   /* .blue {

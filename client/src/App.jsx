@@ -26,7 +26,7 @@ function App() {
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [holeModal, setHoleModal] = useState(false);
   const [rabbitModal, setRabbitModal] = useState(false);
-  const [hole, setHole] = useState(0);
+  const [hole, setHole] = useState(1);
   const [rabbit, setRabbit] = useState(0);
   const [useJump, setUseJump] = useState(false);
   const [isHoles, setIsHoles] = useState(true);

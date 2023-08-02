@@ -18,12 +18,63 @@ import HoleModal from "../components/global/HoleModal";
 import fetchHolesData from "../components/hooks/fetchHoleData";
 import { useNavigate, useParams } from "react-router-dom";
 import BurnModal from "../components/global/BurnModal";
+import { useEffect } from "react";
+
+function Rabbit({ rabbit, setRabbitModal, setRabbit }) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
+  return (
+    <div
+      className="rabbit"
+      onClick={() => {
+        setRabbitModal(true);
+        setRabbit(rabbit);
+        // setUseJump ?
+      }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <p>{rabbit.msg}</p>
+      <div className="r-stats">
+        <p>- {rabbit.burner}</p>
+        <div className="ww">
+          <p>{rabbit.depth}</p>
+          <div className="w">
+            <img
+              src={`/logo-full-lime.png`}
+              alt="logo"
+              className={`logo ${isHovered ? "spinner" : ""}`}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function ArchivePageNew(props) {
   const { key } = useParams();
   const [id, setId] = useState(!key || parseInt(key) == 0 ? 1 : parseInt(key));
   const [index, setIndex] = useState(1);
   const [burnModal, setBurnModal] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
+  /// mouse enter
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
 
   const holeData = useMemo(() => {
     const array = Array.from({ length: 111 }, (_, i) => i + 1);
@@ -32,19 +83,22 @@ export default function ArchivePageNew(props) {
 
   const hole = holeData[id - 1];
 
-  let start = (index - 1) * 10 + 1,
-    end = start + 9;
-  if (start < 10) start = "0" + start;
-  if (end < 10) end = "0" + end;
-  if (end > hole.digs) end = hole.digs;
+  useEffect(() => {
+    if (hole) {
+      props.setHole(hole);
+    }
+  }, [hole]);
+
+  let start = (index - 1) * 10 + 1;
+  let end = Math.min(start + 9, hole.digs)
+    .toString()
+    .padStart(2, "0");
 
   const chunkSize = 10;
-  const twoDArray = [];
-  for (let i = 0; i < hole.rabbits.length; i += chunkSize) {
-    const chunk = hole.rabbits.slice(i, i + chunkSize);
-    twoDArray.push(chunk);
-  }
-  const thisChunkArray = twoDArray.length == 0 ? [] : twoDArray[index - 1];
+  const thisChunkArray = hole.rabbits.slice(
+    (index - 1) * chunkSize,
+    index * chunkSize
+  );
 
   return (
     <>
@@ -54,12 +108,14 @@ export default function ArchivePageNew(props) {
         mobile={props.mobile}
       >
         <div
-          className="hole-head"
           onClick={() => {
-            props.setUseJump(false);
             props.setHole(hole);
+            props.setUseJump(false);
             props.setHoleModal(true);
           }}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          className={`hole-head`}
         >
           <div className="top">
             <h1>{hole.title}</h1>
@@ -67,21 +123,27 @@ export default function ArchivePageNew(props) {
               <p>{hole.digs}</p> <FontAwesomeIcon icon={faFireFlameCurved} />
               <p>{hole.depth}</p>
               <div className="w">
-                <img src={"/logo-full-dark.png"} alt="logo" className="logo" />
+                <img
+                  src={"/logo-full-dark.png"}
+                  alt="logo"
+                  className={`logo ${isHovered ? "spinner" : ""}`}
+                />
               </div>
             </div>
           </div>
         </div>
         <div className="dark-box rabbits">
-          {thisChunkArray.map((rabbit, id) => (
+          {/* {thisChunkArray.map((rabbit, id) => (
             <div key={rabbit.msg + id} className="rw">
               <div
                 className="rabbit"
                 onClick={() => {
-                  props.setUseJump(false);
+                  // props.setUseJump(false);
                   props.setRabbit(rabbit);
                   props.setRabbitModal(true);
                 }}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
               >
                 <p>{rabbit.msg}</p>
                 <div className="r-stats">
@@ -91,14 +153,23 @@ export default function ArchivePageNew(props) {
                     <div className="w">
                       <img
                         src={`/logo-full-lime.png`}
-                        // src={`/logo-full-${isHovered ? "dark" : "blue"}.png`}
                         alt="logo"
-                        className="logo"
+                        className={`logo ${isHovered ? "spinner" : ""}`}
                       />
                     </div>
                   </div>
                 </div>
               </div>
+              <div className="bar"></div>
+            </div>
+          ))} */}
+          {thisChunkArray.map((rabbit, id) => (
+            <div key={rabbit.msg + id} className="rw">
+              <Rabbit
+                rabbit={rabbit}
+                setRabbitModal={props.setRabbitModal}
+                setRabbit={props.setRabbit}
+              />
               <div className="bar"></div>
             </div>
           ))}
@@ -229,6 +300,28 @@ export const ArchivePageStyled = styled.div`
   .toggler {
     :hover {
       cursor: pointer;
+    }
+  }
+
+  .spinner {
+    /* :hover { */
+    cursor: pointer;
+    animation: rotate360 3s infinite ease-in-out;
+    /* } */
+
+    @keyframes rotate360 {
+      0% {
+        transform: rotate(0deg);
+      }
+      50%,
+      52% {
+        transform: rotate(720deg);
+      }
+
+      75%,
+      100% {
+        transform: rotate(0deg);
+      }
     }
   }
 

@@ -31,14 +31,14 @@ export default function StatsPage(props) {
           <h1 style={{ color: "var(--limeGreen)" }}>Metrics</h1>
           <h4>
             Supply::<em> {totalSupply}</em>
-            <img src={`/logo-full-lime.png`} />
+            <img className="spinner" src={`/logo-full-lime.png`} />
           </h4>
           <h4>
             Fee/Reward::
             <em>
               {digFee}Ξ/{digReward}
             </em>
-            <img src={`/logo-full-lime.png`} />
+            <img className="spinner" src={`/logo-full-lime.png`} />
           </h4>
           <h4>
             Digger BPS::<em>{(parseFloat(diggerBps) / 100.0).toFixed(0)}%</em>
@@ -83,6 +83,28 @@ const Wrap = styled.div`
     text-align: center;
 
     /// center vertically
+  }
+
+  .spinner {
+    :hover {
+      cursor: pointer;
+      animation: rotate360 3s infinite ease-in-out;
+    }
+
+    @keyframes rotate360 {
+      0% {
+        transform: rotate(0deg);
+      }
+      50%,
+      52% {
+        transform: rotate(720deg);
+      }
+
+      75%,
+      100% {
+        transform: rotate(0deg);
+      }
+    }
   }
 `;
 

@@ -11,34 +11,118 @@ import {
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import { ArchivePageStyled } from "./ArchivePageNew";
-import HoleModal from "../components/global/HoleModal";
-import BurnModal from "../components/global/BurnModal";
-import RabbitModal from "../components/global/RabbitModal";
+
+function Rabbit({
+  rabbit,
+  userData,
+  setUseJump,
+  setHole,
+  setRabbit,
+  setRabbitModal,
+}) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
+  return (
+    <div
+      className="rabbit"
+      onClick={() => {
+        setUseJump(true);
+        setHole(userData.holes[rabbit.holeId - 1]);
+        setRabbit(rabbit);
+        setRabbitModal(true);
+      }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <p>{rabbit.msg}</p>
+      <div className="r-stats">
+        <p>{userData.holes[rabbit.holeId - 1].title}</p>
+        <div className="ww">
+          <div className="w">
+            <img src={`/logo-full-dark.png`} alt="logo" />
+          </div>
+        </div>
+        <div className="ww">
+          <p>{rabbit.depth}</p>
+          <div className="w">
+            <img
+              src={`/logo-full-lime.png`}
+              alt="logo"
+              className={`logo ${isHovered ? "spinner" : ""}`}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Hole({ hole, setUseJump, setHole, setHoleModal }) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+  return (
+    <div
+      className="hole"
+      onClick={() => {
+        setUseJump(true);
+        setHole(hole);
+        setHoleModal(true);
+      }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <p className="ital">{hole.title}</p>
+      <div className="h-stats">
+        <p>{hole.rabbits.length}</p>
+        <FontAwesomeIcon icon={faFireFlameCurved} />
+        <p>{hole.depth}</p>
+        <div className="w">
+          <img
+            src={"/logo-full-lime.png"}
+            alt="logo"
+            className={`logo ${isHovered ? "spinner" : ""}`}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function UserPage(props) {
-  const navigate = useNavigate();
-  const { key } = useParams();
-
   const [isHovered, setIsHovered] = useState(false);
-  const [rabbitModal, setRabbitModal] = useState(false);
-  const [holeModal, setHoleModal] = useState(false);
-
-  // const [isHoles, setIsHoles] = useState(true);
   const { isHoles, setIsHoles } = props;
   const { address } = useAccount();
-
   const addr = address ? address : "0x1234...5678";
   const user = `${addr.slice(0, 6)}...${addr.slice(-4)}`;
-
   const userData = fetchUserData(addr);
-
-  const [hole, setHole] = useState(userData.holes[0]);
-  const [rabbit, setRabbit] = useState(userData.rabbits[0]);
 
   const depth = userData.rabbits.reduce(
     (totalDepth, rabbit) => totalDepth + rabbit.depth,
     0
   );
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
 
   return (
     <>
@@ -52,6 +136,8 @@ export default function UserPage(props) {
           onClick={() => {
             setIsHoles(!isHoles);
           }}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         >
           <div className="top">
             <h1>{user}</h1>
@@ -73,7 +159,7 @@ export default function UserPage(props) {
                     <img
                       src={"/logo-full-dark.png"}
                       alt="logo"
-                      className="logo"
+                      className={`logo ${isHovered ? "spinner" : ""}`}
                     />
                   </div>
                 </>
@@ -85,40 +171,7 @@ export default function UserPage(props) {
           <div className="dark-box rabbits">
             {userData.rabbits.map((rabbit, index) => (
               <div key={index} className="rw">
-                <div
-                  className="rabbit"
-                  onClick={() => {
-                    props.setUseJump(true);
-                    props.setHole(userData.holes[rabbit.holeId - 1]);
-                    props.setRabbit(rabbit);
-                    props.setRabbitModal(true);
-                  }}
-                >
-                  <p>{rabbit.msg}</p>
-                  <div className="r-stats">
-                    <p>{userData.holes[rabbit.holeId - 1].title}</p>
-                    <div className="ww">
-                      <div className="w">
-                        <img
-                          src={`/logo-full-dark.png`}
-                          alt="logo"
-                          className="logo"
-                        />
-                      </div>
-                    </div>
-                    <div className="ww">
-                      <p>{rabbit.depth}</p>
-                      <div className="w">
-                        <img
-                          src={`/logo-full-lime.png`}
-                          // src={`/logo-full-${isHovered ? "dark" : "blue"}.png`}
-                          alt="logo"
-                          className="logo"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <Rabbit rabbit={rabbit} userData={userData} {...props} />
                 <div className="bar"></div>
               </div>
             ))}
@@ -128,35 +181,13 @@ export default function UserPage(props) {
           <div className="dark-box rabbits">
             {userData.holes.map((hole, index) => (
               <div key={index} className="rw">
-                <div
-                  className="hole"
-                  onClick={() => {
-                    props.setUseJump(true);
-                    props.setHole(hole);
-                    props.setHoleModal(true);
-                  }}
-                >
-                  <p className="ital">{hole.title}</p>
-                  <div className="h-stats">
-                    <p>{hole.rabbits.length}</p>
-                    <FontAwesomeIcon icon={faFireFlameCurved} />
-                    <p>{hole.depth}</p>
-                    <div className="w">
-                      <img
-                        src={"/logo-full-lime.png"}
-                        alt="logo"
-                        className="logo"
-                      />
-                    </div>
-                  </div>
-                </div>
+                <Hole hole={hole} {...props} />
                 <div className="bar"></div>
               </div>
             ))}
           </div>
         )}
       </ArchivePageStyled>
-      {/* </div> */}
     </>
   );
 }

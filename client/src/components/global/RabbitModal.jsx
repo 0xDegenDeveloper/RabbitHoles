@@ -15,6 +15,8 @@ export default function RabbitModal(props) {
   const rabbits = props.rabbits;
   const hole = props.hole;
 
+  console.log(hole);
+
   return (
     <Modal modal={props.modal} onClose={props.onClose}>
       <ContainerStyled className="dark-box-600w">
