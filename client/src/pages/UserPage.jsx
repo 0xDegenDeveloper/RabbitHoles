@@ -23,7 +23,8 @@ export default function UserPage(props) {
   const [rabbitModal, setRabbitModal] = useState(false);
   const [holeModal, setHoleModal] = useState(false);
 
-  const [isHoles, setIsHoles] = useState(true);
+  // const [isHoles, setIsHoles] = useState(true);
+  const { isHoles, setIsHoles } = props;
   const { address } = useAccount();
 
   const addr = address ? address : "0x1234...5678";
@@ -95,6 +96,7 @@ export default function UserPage(props) {
                 >
                   <p>{rabbit.msg}</p>
                   <div className="r-stats">
+                    <p>{userData.holes[rabbit.holeId - 1].title}</p>
                     <div className="ww">
                       <div className="w">
                         <img
@@ -134,7 +136,7 @@ export default function UserPage(props) {
                     props.setHoleModal(true);
                   }}
                 >
-                  <p>{hole.title}</p>
+                  <p className="ital">{hole.title}</p>
                   <div className="h-stats">
                     <p>{hole.rabbits.length}</p>
                     <FontAwesomeIcon icon={faFireFlameCurved} />

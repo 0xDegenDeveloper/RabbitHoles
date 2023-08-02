@@ -318,6 +318,9 @@ export const ArchivePageStyled = styled.div`
     font-size: clamp(12px, 3vw, 18px);
 
     font-family: "Andale Mono", monospace;
+    .ital {
+      font-family: "Lato", sans-serif;
+    }
     box-shadow: 0px 0px 5px 0px var(--forrestGreen);
     width: 100%;
     min-height: ${(props) => (props.mobile ? "200px" : "400px")};
@@ -381,6 +384,11 @@ export const ArchivePageStyled = styled.div`
     }
     padding: 1rem;
     margin: ${(props) => (props.mobile ? "0.5rem" : "0.5rem")};
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    /* padding: 1rem; */
+    box-shadow: 0px 0px 5px 0px var(--forrestGreen);
 
     :hover {
       cursor: pointer;

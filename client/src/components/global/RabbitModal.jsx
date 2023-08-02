@@ -21,30 +21,38 @@ export default function RabbitModal(props) {
         <h1>
           <span>Rabbit</span> #{id}/{rabbits}
         </h1>
-        <p>
-          <span>hole</span> #{props.hole.id} {hole.title}
-        </p>
         <p
           onClick={() => {
             props.onClose(false);
-            navigate("/user");
+            props.setIsHoles(false);
+            navigate(`/user/${burner}`);
           }}
           className="toggler"
         >
           <span>burner </span>
           {burner}
         </p>
+        <p
+          className="toggler"
+          onClick={() => {
+            props.onClose(false);
+            props.setIsHoles(true);
+            navigate(`/archive/${hole.id}`);
+          }}
+        >
+          <span>hole</span> #{props.hole.id} {hole.title}
+        </p>
         <p>
           <span>depth </span>
           {depth}
         </p>
         <p>
-          <span>timestamp </span>
-          {timestamp}
-        </p>
-        <p>
           <span>msg </span>
           {msg}
+        </p>
+        <p>
+          <span>timestamp </span>
+          {timestamp}
         </p>
         <FontAwesomeIcon
           icon={faXmarkCircle}
@@ -121,6 +129,9 @@ export const ContainerStyled = styled.div`
   .toggler {
     cursor: pointer;
     border: 1px solid var(--forrestGreen);
+    border-style: dashed;
+    border-bottom-color: var(--limeGreen);
+    /* border-width: 30px; */
     :hover {
       border: 1px solid var(--limeGreen);
       /* border-radius: 0.5rem; */

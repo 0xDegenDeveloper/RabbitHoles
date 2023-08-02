@@ -21,19 +21,20 @@ export default function HoleModal(props) {
         <h1>
           <span>Hole</span> #{id}/{holes}
         </h1>
-        <p>
-          <span>title </span>
-          {title}
-        </p>
+
         <p
           onClick={() => {
             props.onClose(false);
-            navigate("/user");
+            navigate(`/user/${digger}`);
           }}
           className="toggler"
         >
           <span>digger </span>
           {digger}
+        </p>
+        <p>
+          <span>title </span>
+          {title}
         </p>
         <p>
           <span>digs </span>

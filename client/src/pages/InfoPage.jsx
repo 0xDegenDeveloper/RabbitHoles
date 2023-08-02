@@ -13,6 +13,8 @@ import {
   faTwitter,
 } from "@fortawesome/free-brands-svg-icons";
 
+import tokenLogo from "/logo-main.png";
+
 const W = styled(StyledBox)`
   svg {
   }
@@ -76,7 +78,7 @@ export default function InfoPage(props) {
             </a>
           </p>
         </div>
-        <img src="/logo-main.png" />
+        <img src={tokenLogo} />
       </Wrapper>
       {props.modal && (
         <FlowModal modal={props.modal} onClose={() => props.onClose(false)} />

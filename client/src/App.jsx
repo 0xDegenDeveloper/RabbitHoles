@@ -29,6 +29,7 @@ function App() {
   const [hole, setHole] = useState(0);
   const [rabbit, setRabbit] = useState(0);
   const [useJump, setUseJump] = useState(false);
+  const [isHoles, setIsHoles] = useState(true);
 
   const { totalHoles, totalBurns, totalDepth } = {
     totalHoles: 111,
@@ -90,6 +91,8 @@ function App() {
                 setHole={setHole}
                 setRabbit={setRabbit}
                 setUseJump={setUseJump}
+                isHoles={isHoles}
+                setIsHoles={setIsHoles}
               />
             }
           />
@@ -147,6 +150,8 @@ function App() {
                 setHole={setHole}
                 setRabbit={setRabbit}
                 setUseJump={setUseJump}
+                isHoles={isHoles}
+                setIsHoles={setIsHoles}
               />
             }
           />
@@ -163,6 +168,7 @@ function App() {
             hole={hole}
             holes={totalHoles}
             useJump={useJump}
+            setIsHoles={setIsHoles}
           />
         )}
         {rabbitModal && (
@@ -175,6 +181,7 @@ function App() {
             rabbits={totalBurns}
             rabbit={rabbit}
             useJump={useJump}
+            setIsHoles={setIsHoles}
           />
         )}
       </BrowserRouter>
