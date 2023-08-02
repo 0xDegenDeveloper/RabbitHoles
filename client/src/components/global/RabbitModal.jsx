@@ -3,14 +3,17 @@ import Modal from "./Modal";
 
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowsToCircle,
+  faXmarkCircle,
+} from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 export default function RabbitModal(props) {
-  console.log(props);
-  const { burner, id, depth, timestamp, msg, holeId } = props.rabbit;
+  const navigate = useNavigate();
+  const { burner, id, depth, timestamp, msg } = props.rabbit;
   const rabbits = props.rabbits;
   const hole = props.hole;
-  const holes = props.holes;
   return (
     <Modal modal={props.modal} onClose={props.onClose}>
       <ContainerStyled className="dark-box-600w">
@@ -20,7 +23,12 @@ export default function RabbitModal(props) {
         <p>
           <span>hole</span> #{hole.id} {hole.title}
         </p>
-        <p>
+        <p
+          onClick={() => {
+            navigate("/user");
+          }}
+          className="toggler"
+        >
           <span>burner </span>
           {burner}
         </p>
@@ -65,6 +73,19 @@ const ContainerStyled = styled.div`
   white-space: pre-wrap;
   max-width: 600px;
   cursor: default;
+
+  p {
+    /* padding: 0.5rem 0rem; */
+  }
+
+  .toggler {
+    cursor: pointer;
+    border: 1px solid var(--forrestGreen);
+    :hover {
+      border: 1px solid var(--limeGreen);
+      /* border-radius: 0.5rem; */
+    }
+  }
   h1 {
     margin: 0.5rem 0;
   }

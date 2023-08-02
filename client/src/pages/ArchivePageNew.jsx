@@ -19,35 +19,12 @@ import fetchHolesData from "../components/hooks/fetchHoleData";
 import { useNavigate, useParams } from "react-router-dom";
 import BurnModal from "../components/global/BurnModal";
 
-const h_array = [];
-const holes = 420;
-// const rabbits = 1234;
-const digger = "0x1234...5678";
-const burner = "0xabcd...beef";
-const title = "SHOWER THOUGHTS";
-const timestamp = "4/20/21";
-for (let i = 0; i < holes; i++) {
-  const digs = Math.floor(Math.random() * 100) + (i + 1);
-  const depth = 3 * digs;
-  h_array.push({
-    digger,
-    timestamp,
-    digs,
-    depth,
-    holes,
-    h_index: i + 1,
-    title,
-  });
-}
-
 export default function ArchivePageNew(props) {
-  const { key, key2 } = useParams();
-  // const navigate = useNavigate();
+  const { key } = useParams();
   const [burnModal, setBurnModal] = useState(false);
   const [rabbitModal, setRabbitModal] = useState(false);
   const [holeModal, setHoleModal] = useState(false);
   const [id, setId] = useState(!key || parseInt(key) == 0 ? 1 : key);
-  // const [index, setIndex] = useState(!key2 || parseInt(key2) == 0 ? 1 : key2);
   const [index, setIndex] = useState(1);
 
   const holeData = useMemo(() => {
@@ -56,16 +33,13 @@ export default function ArchivePageNew(props) {
   }, [id]);
 
   const hole = holeData[id - 1];
-
   const [rabbit, setRabbit] = useState(hole.rabbits[0]);
 
   let start = (index - 1) * 10 + 1;
   let end = start + 9;
-  end = end >= hole.digs ? hole.digs : end;
   if (start < 10) start = "0" + start;
+  if (end > hole.digs) end = hole.digs;
   if (end < 10) end = "0" + end;
-
-  // const hole =
 
   const chunkSize = 10;
   const twoDArray = [];
@@ -74,8 +48,6 @@ export default function ArchivePageNew(props) {
     twoDArray.push(chunk);
   }
   const thisChunkArray = twoDArray.length == 0 ? [] : twoDArray[index - 1];
-
-  console.log(index, id);
 
   return (
     <>
@@ -107,9 +79,6 @@ export default function ArchivePageNew(props) {
               <div
                 className="rabbit"
                 onClick={() => {
-                  console.log(id, "id");
-                  console.log("rabbit clicked:", rabbit);
-                  // setIndex(id + 1);
                   setRabbit(rabbit);
                   setRabbitModal(true);
                 }}
@@ -244,7 +213,7 @@ export default function ArchivePageNew(props) {
   }
 }
 
-const ArchivePageStyled = styled.div`
+export const ArchivePageStyled = styled.div`
   display: flex;
   top: 50%;
   left: 50%;
@@ -258,6 +227,12 @@ const ArchivePageStyled = styled.div`
   /* overflow: scroll; */
   /* gap: ${(props) => (props.mobile ? "0rem" : "1rem")}; */
   /* margin-right: auto; */
+  .toggler {
+    :hover {
+      cursor: pointer;
+    }
+  }
+
   .sels {
     display: flex;
     flex-direction: row;
@@ -349,6 +324,7 @@ const ArchivePageStyled = styled.div`
     min-height: ${(props) => (props.mobile ? "200px" : "400px")};
     border-radius: 1rem;
     padding: 2rem 1rem;
+    /* gap: 0; */
     /* overflow: scroll; */
   }
 
@@ -405,7 +381,7 @@ const ArchivePageStyled = styled.div`
       padding: 0 0.5rem;
     }
     padding: 1rem;
-    margin: ${(props) => (props.props.mobile ? "0" : "1rem")};
+    margin: ${(props) => (props.mobile ? "0" : "1rem")};
 
     :hover {
       cursor: pointer;
@@ -419,14 +395,6 @@ const ArchivePageStyled = styled.div`
       display: flex;
       justify-content: space-between;
       align-items: center;
-
-      /* align-items: bottom; */
-
-      /* margin-bottom: 0; */
-
-      /* :hover {
-        margin-bottom: 1rem;
-      } */
     }
 
     .meta {
@@ -445,6 +413,10 @@ const ArchivePageStyled = styled.div`
 
       .w {
         height: clamp(18px, 3vw, 32px);
+      }
+
+      .active {
+        color: var(--greyGreen);
       }
 
       img {
@@ -466,6 +438,101 @@ const ArchivePageStyled = styled.div`
     gap: clamp(2px, 1vw, 10px);
     width: 100%;
     color: var(--lightGreen);
+
+    .ww {
+      display: flex;
+      /* justify-content: space-between; */
+      align-items: center;
+    }
+
+    .w {
+      height: clamp(27px, 3vw, 32px);
+    }
+
+    img {
+      /* width: clamp(10px, 2vw, 30px);
+        height: clamp(10px, 2vw, 30px); */
+      height: 100%;
+      padding: 0;
+      margin: 0;
+    }
+
+    p {
+      color: var(--lightGreen);
+    }
+
+    /* p:hover,
+    &:hover {
+      color: var(--forrestGreen);
+    } */
+  }
+
+  .hole {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "Lato";
+    gap: 1rem;
+    gap: clamp(2px, 1vw, 10px);
+    /* width: 100%; */
+    color: var(--lightGreen);
+    padding: 1rem;
+
+    /* flex-direction: column; */
+    /* align-items: left; */
+    /* justify-content: center; */
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 1rem;
+
+    border: 0.5px solid var(--forrestGreen);
+
+    &:hover {
+      cursor: pointer;
+      /* color: var(--forrestGreen); */
+      /* background-color: var(--greyGreen); */
+      border: 0.5px solid var(--lightGreen);
+
+      p {
+        /* color: var(--forrestGreen); */
+      }
+    }
+
+    .h-stats {
+      display: flex;
+      /* flex-direction: row; */
+      justify-content: left;
+      align-items: center;
+      font-family: "Lato";
+      gap: 1rem;
+      gap: clamp(2px, 1vw, 10px);
+      /* width: 100%; */
+      color: var(--limeGreen);
+      margin-left: auto;
+
+      .ww {
+        display: flex;
+        /* justify-content: space-between; */
+        align-items: center;
+      }
+
+      .w {
+        height: clamp(27px, 3vw, 32px);
+      }
+
+      img {
+        /* width: clamp(10px, 2vw, 30px);
+        height: clamp(10px, 2vw, 30px); */
+        height: 100%;
+        padding: 0;
+        margin: 0;
+      }
+
+      p {
+        color: var(--limeGreen);
+      }
+    }
 
     .ww {
       display: flex;

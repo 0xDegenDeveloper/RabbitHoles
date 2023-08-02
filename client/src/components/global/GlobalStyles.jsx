@@ -110,11 +110,13 @@ const GlobalStyle = createGlobalStyle`
         display: flex;
         gap: 1rem;
         font-size: clamp(25px, 4vw, 50px);
+        ${"" /* backdrop-filter: blur(10px); */}
+        background-color: var(--forrestGreen);
         align-items: center;
         border-radius: 2rem;
-        border: 3px solid var(--forrestGreen);
-        background-color: var(--forrestGreen);
-        color: var(--lightGreen);
+        ${"" /* border: 3px solid var(--forrestGreen); */}
+        ${"" /* background-color: var(--forrestGreen); */}
+        color: var(--limeGreen);
         box-shadow: 0px 0px 5px 0px var(--forrestGreen);
     }
 
@@ -125,12 +127,12 @@ const GlobalStyle = createGlobalStyle`
         background-color: rgba(0, 0, 0, 0);
         color: var(--lightGreen);
         text-transform: uppercase;
-        width: clamp(100px, 45vw, 500px);
+        width: clamp(100px, 40vw, 500px);
         font-family: "Andale Mono", monospace;
         font-size: clamp(6px, 3vw, 14px);
 
         ::placeholder {
-            color: var(--limeGreen);
+            color: var(--greyGreen);
         }
 
         :focus {

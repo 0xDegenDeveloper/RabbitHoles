@@ -19,6 +19,7 @@ import {
   useBlockNumber,
 } from "@starknet-react/core";
 import REGISTRY_ABI from "../assets/rabbitholes_ERC20.sierra.json";
+import LargeTitle from "../components/digging/LargeTitle";
 
 const ABI = REGISTRY_ABI.abi;
 
@@ -85,6 +86,10 @@ export default function MiddleMan() {
       >
         {key == undefined ? (
           <EmptyTitle />
+        ) : key.length > 31 ? (
+          <>
+            <LargeTitle />
+          </>
         ) : (
           <>
             {/* {isError && <HoleErrror isError={isError} title={key} />}

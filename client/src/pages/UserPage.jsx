@@ -1,26 +1,179 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
 import UserSearchBar from "../components/UserSearchBar";
 import fetchUserData from "../components/hooks/fetchUserData";
+import { useAccount } from "@starknet-react/core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faDigging,
+  faFireFlameCurved,
+  faMagnifyingGlass,
+} from "@fortawesome/free-solid-svg-icons";
+import { ArchivePageStyled } from "./ArchivePageNew";
+import HoleModal from "../components/global/HoleModal";
+import BurnModal from "../components/global/BurnModal";
+import RabbitModal from "../components/global/RabbitModal";
 
 export default function UserPage(props) {
+  const navigate = useNavigate();
   const { key } = useParams();
 
+  const [isHovered, setIsHovered] = useState(false);
+  const [rabbitModal, setRabbitModal] = useState(false);
+  const [holeModal, setHoleModal] = useState(false);
+
   const [isHoles, setIsHoles] = useState(true);
+  const { address } = useAccount();
 
-  const user = key ? key : "0x1234...abcd";
+  const addr = address ? address : "0x1234...5678";
+  const user = `${addr.slice(0, 6)}...${addr.slice(-4)}`;
 
-  const navigate = useNavigate();
-  const userData = fetchUserData(user);
+  const userData = fetchUserData(addr);
+
+  const [hole, setHole] = useState(userData.holes[0]);
+  const [rabbit, setRabbit] = useState(userData.rabbits[0]);
+
+  const depth = userData.rabbits.reduce(
+    (totalDepth, rabbit) => totalDepth + rabbit.depth,
+    0
+  );
 
   return (
     <>
-      <div className="container">
-        <Wrapper isHoles={isHoles}>
-          <UserSearchBar user={user} />
-          {/* DEMO USER H OR R */}
-          {isHoles && !key && (
+      <ArchivePageStyled
+        className="container"
+        isHoles={isHoles}
+        mobile={props.mobile}
+      >
+        <div
+          className="hole-head"
+          onClick={() => {
+            setIsHoles(!isHoles);
+          }}
+        >
+          <div className="top">
+            <h1>{user}</h1>
+            <div className="stats">
+              <p>{userData.holes.length}</p>{" "}
+              <FontAwesomeIcon
+                icon={faDigging}
+                className={`${isHoles ? "active" : ""}`}
+              />
+              <p>{userData.rabbits.length}</p>{" "}
+              <FontAwesomeIcon
+                icon={faFireFlameCurved}
+                className={`${!isHoles ? "active" : ""}`}
+              />
+              <p>{depth}</p>
+              <div className="w">
+                <img src={"/logo-full-dark.png"} alt="logo" className="logo" />
+              </div>
+            </div>
+          </div>
+        </div>
+        {!isHoles && (
+          <div className="dark-box rabbits">
+            {userData.rabbits.map((rabbit, index) => (
+              <div key={index} className="rw">
+                <div
+                  className="rabbit"
+                  onClick={() => {
+                    // console.log(id, "id");
+                    // console.log("rabbit clicked:", rabbit);
+                    // setIndex(id + 1);
+                    // setRabbit(rabbit);
+                    // setRabbitModal(true);
+                    navigate(`/archive/${rabbit.holeId}`);
+                  }}
+                >
+                  <p>{rabbit.msg}</p>
+                  <div className="r-stats">
+                    <div className="ww">
+                      <div className="w">
+                        <img
+                          src={`/logo-full-dark.png`}
+                          alt="logo"
+                          className="logo"
+                        />
+                      </div>
+                    </div>
+                    <div className="ww">
+                      <p>{rabbit.depth}</p>
+                      <div className="w">
+                        <img
+                          src={`/logo-full-blue.png`}
+                          // src={`/logo-full-${isHovered ? "dark" : "blue"}.png`}
+                          alt="logo"
+                          className="logo"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="bar"></div>
+              </div>
+            ))}
+          </div>
+        )}
+        {isHoles && (
+          <div className="dark-box rabbits">
+            {userData.holes.map((hole, index) => (
+              <div key={index} className="rw">
+                <div
+                  className="hole"
+                  onClick={() => {
+                    // console.log(id, "id");
+                    // console.log("rabbit clicked:", rabbit);
+                    // setIndex(id + 1);
+                    // setHole(hole);
+                    // setHoleModal(true);
+                    navigate(`/archive/${hole.id}`);
+                  }}
+                >
+                  <p>{hole.title}</p>
+                  <div className="h-stats">
+                    <p>{hole.rabbits.length}</p>
+                    <FontAwesomeIcon icon={faFireFlameCurved} />
+                    <p>{hole.depth}</p>
+                    <div className="w">
+                      <img
+                        src={"/logo-full-lime.png"}
+                        alt="logo"
+                        className="logo"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="bar"></div>
+              </div>
+            ))}
+          </div>
+        )}
+        {/* <input
+              className="dark-search-bar-input"
+              id="search-input"
+              placeholder={user ? user : "Discorver users..."}
+              onChange={(event) => setInput(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key == "Enter") {
+                  passInput();
+                }
+              }}
+            ></input> */}
+        {/* <div id="h" className={`dark-search-bar-button ${"two"}`}>
+              <FontAwesomeIcon
+                icon={faMagnifyingGlass}
+                onClick={() => {
+                  passInput();
+                }}
+              />
+            </div> */}
+        {/* <FontAwesomeIcon
+              icon={faDigging}
+              className="dark-search-bar-button one"
+            /> */}
+        {/* {isHoles && !key && (
             <div className="user-holes-section">
               <div className="clear-box-dark-border user-holes" id="clear-box">
                 {userData.holes.map((hole, index) => (
@@ -43,11 +196,12 @@ export default function UserPage(props) {
                 ))}
               </div>
             </div>
-          )}
-          {!isHoles && !key && (
+          )} */}
+
+        {/* {!isHoles && !key && (
             <div className="user-holes-section">
               <div className="clear-box-dark-border user-holes" id="clear-box">
-                {userData.rabbits.map((rabbit, index) => (
+                {userData.holes.map((rabbit, index) => (
                   <React.Fragment key={"rabbit" + index}>
                     <div
                       className="hole-link"
@@ -70,9 +224,9 @@ export default function UserPage(props) {
                 ))}
               </div>
             </div>
-          )}
-          {/* NO USER */}
-          {key && (
+          )} */}
+        {/* NO USER */}
+        {/* {key && (
             <div className="user-holes-section">
               <div className="clear-box-dark-border user-holes">
                 <div
@@ -94,27 +248,27 @@ export default function UserPage(props) {
                 </div>
               </div>
             </div>
-          )}
-          <div className="wrapper3">
-            <h1
-              onClick={() => {
-                setIsHoles(true);
-              }}
-              className={`a sel ${isHoles ? "active" : ""}`}
-            >
-              Holes
-            </h1>
-            <VBar />
-            <h1
-              onClick={() => {
-                setIsHoles(false);
-              }}
-              className={`b sel ${isHoles ? "" : "active"}`}
-            >
-              Rabbits
-            </h1>
-          </div>
-          <div className="wrapper2">
+          )} */}
+        {/* <div className="wrapper3">
+          <h1
+            onClick={() => {
+              // setIsHoles(true);
+            }}
+            // className={`a sel ${isHoles ? "active" : ""}`}
+          >
+            Holes
+          </h1>
+          <VBar />
+          <h1
+            onClick={() => {
+              setIsHoles(false);
+            }}
+            className={`b sel ${isHoles ? "" : "active"}`}
+          >
+            Rabbits
+          </h1>
+        </div> */}
+        {/* <div className="wrapper2">
             <div
               className="dark-button-small stat"
               onClick={() => {
@@ -148,155 +302,34 @@ export default function UserPage(props) {
                   {key
                     ? 0
                     : parseInt(userData.holes.length) * 25 -
-                      parseInt(userData.rabbits.length)}{" "}
+                      parseInt(userData.rabbits.length)}
                   RBIT
                 </em>
               </h4>
             </div>
-          </div>
-        </Wrapper>
-      </div>
+          </div> */}
+
+        {/* {holeModal && (
+          <HoleModal
+            onClose={setHoleModal}
+            modal={holeModal}
+            hole={hole}
+            holes={111}
+          />
+        )}
+        {rabbitModal && (
+          <RabbitModal
+            onClose={setRabbitModal}
+            modal={rabbitModal}
+            hole={hole}
+            rabbit={rabbit}
+          />
+        )} */}
+      </ArchivePageStyled>
+      {/* </div> */}
     </>
   );
 }
-
-const Bar = styled.div`
-  width: 100%;
-  margin: 1rem auto;
-  border-bottom: 1px dashed var(--forrestGreen);
-  /* border-style: solid; */
-`;
-
-const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: auto;
-  gap: 1rem;
-  color: var(--forrestGreen);
-  place-items: center;
-  place-content: center;
-  user-select: none;
-  width: clamp(200px, 60%, 400px);
-
-  .wrapper2 {
-    display: grid;
-    grid-template-columns: auto auto auto;
-    gap: 1rem;
-
-    &:hover {
-      cursor: default;
-    }
-  }
-
-  .sel {
-    color: var(--forrestGreen);
-
-    h1 {
-      margin: 0;
-    }
-  }
-
-  .active {
-    color: var(--lightGreen);
-  }
-
-  .activeR {
-    color: var(--limeGreen);
-  }
-
-  .activeH {
-    color: var(--lightGreen);
-  }
-
-  .wrapper3 {
-    display: grid;
-    grid-template-columns: auto auto auto;
-    gap: 0.5rem;
-    font-size: clamp(9px, 3vw, 14px);
-    height: fit-content;
-
-    .a {
-      margin-left: auto;
-    }
-    .b {
-      margin-right: auto;
-    }
-
-    h1:hover {
-      cursor: pointer;
-    }
-
-    h1 {
-      margin: 0.5rem;
-    }
-  }
-
-  @media only screen and (max-width: 760px) {
-    .wrapper2 {
-      grid-template-columns: auto auto;
-    }
-
-    .tt {
-      margin: 0 auto;
-      grid-column: 1/-1;
-    }
-  }
-
-  h4 {
-    margin: 0;
-    /* padding: 0; */
-    padding-bottom: 0.5rem;
-  }
-
-  .stat {
-    padding: 0.75rem;
-    font-size: clamp(9px, 3vw, 14px);
-    border: none;
-    box-shadow: 0px 0px 5px 0px var(--forrestGreen);
-    color: var(--lightGreen);
-
-    h4 {
-      padding: 0;
-    }
-  }
-
-  h2 {
-    color: var(--limeGreen);
-  }
-
-  .hole-link {
-    padding: 1rem;
-    &:hover {
-      cursor: pointer;
-      color: var(--lightGreen);
-      background-color: var(--forrestGreen);
-
-      border-radius: 1rem;
-      em {
-        color: var(--limeGreen);
-      }
-    }
-  }
-
-  #clear-box {
-    width: clamp(200px, 40vw, 600px);
-  }
-
-  .user-holes {
-    max-height: 200px;
-    overflow-y: scroll;
-    display: grid;
-    grid-template-columns: auto;
-    gap: 0rem;
-    margin: 0 auto;
-    width: fit-content;
-    margin-top: 1rem;
-
-    color: var(--forrestGreen);
-    em {
-      color: var(--lightGreen);
-    }
-  }
-`;
 
 const VBar = styled.div`
   width: 0;

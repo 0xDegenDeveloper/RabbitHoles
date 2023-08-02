@@ -3,9 +3,14 @@ import Modal from "./Modal";
 
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowsToCircle,
+  faXmarkCircle,
+} from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 export default function HoleModal(props) {
+  const navigate = useNavigate();
   const { digger, id, digs, depth, timestamp, title } = props.hole;
   const holes = props.holes;
   return (
@@ -18,7 +23,12 @@ export default function HoleModal(props) {
           <span>title </span>
           {title}
         </p>
-        <p>
+        <p
+          onClick={() => {
+            navigate("/user");
+          }}
+          className="toggler"
+        >
           <span>digger </span>
           {digger}
         </p>
@@ -69,6 +79,15 @@ const ContainerStyled = styled.div`
     margin: 0.5rem 0;
   }
 
+  .toggler {
+    cursor: pointer;
+    border: 1px solid var(--forrestGreen);
+    :hover {
+      border: 1px solid var(--limeGreen);
+      /* border-radius: 0.5rem; */
+    }
+  }
+
   span {
     color: var(--lightGreen);
   }
@@ -99,4 +118,32 @@ const ContainerStyled = styled.div`
       right: 1rem;
     }
   }
+
+  /* svg {
+    color: var(--limeGreen);
+    padding: 0.5rem;
+    font-size: clamp(10px, 5vw, 25px);
+    text-align: center;
+  }
+
+  svg:hover {
+    color: var(--limeGreen);
+    cursor: pointer;
+    box-shadow: 0 0 5px var(--limeGreen);
+    border-radius: 33%;
+  }
+
+  .top-right {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+
+    svg {
+      color: var(--lightGreen);
+
+      &:hover {
+        color: var(--limeGreen);
+      }
+    }
+  } */
 `;
