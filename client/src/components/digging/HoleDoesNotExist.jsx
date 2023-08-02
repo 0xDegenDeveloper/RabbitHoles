@@ -20,6 +20,7 @@ export default function HoleDoesNotExist(props) {
             );
             console.log("digging...");
           }}
+          className="bottom"
         ></FontAwesomeIcon>
       </div>
       <div className="btn-container top-right">

@@ -54,7 +54,7 @@ export default function WalletModal(props) {
   );
 }
 
-const OptionStyled = styled.div`
+export const OptionStyled = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -87,7 +87,7 @@ const OptionStyled = styled.div`
   /* You can add any additional styles here as needed */
 `;
 
-const ContainerStyled = styled.div`
+export const ContainerStyled = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;

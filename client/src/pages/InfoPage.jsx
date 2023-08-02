@@ -47,15 +47,8 @@ export default function InfoPage(props) {
             permanent and censorship-resistant conversations
           </h4>
           <h4>
-            We are currently under development and will be launching soon. An
-            off-chain demo can be found at{" "}
-            <a
-              target="_blank"
-              href="https://demo.rbits.space"
-              style={{ color: "var(--limeGreen)" }}
-            >
-              demo.rbits.space
-            </a>
+            We are currently under development and will be launching soon, treat
+            this as a demo for now.
           </h4>
           <p>
             <FontAwesomeIcon

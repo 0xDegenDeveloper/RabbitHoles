@@ -162,6 +162,15 @@ fn deploy_suite() -> (
 fn constructor() {
     let (Manager, Rbits, Registry, V1, DigToken) = deploy_suite();
 
+    '?:></;--0230-a;lk'.print();
+    // '''.print();
+    ':'.print();
+    '>'.print();
+    '<'.print();
+    '/'.print();
+    ';'.print();
+    '('.print();
+
     'permits'.print();
     'MINT_PERMIT'.print();
     'BURN_PERMIT'.print();

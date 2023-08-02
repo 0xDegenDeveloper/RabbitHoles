@@ -4,14 +4,17 @@ import styled from "styled-components";
 import Modal from "./Modal";
 import WalletModal from "./WalletModal";
 
-export default function LoginButton() {
+export default function LoginButton(props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { address } = useAccount();
 
   return (
     <>
       {address ? (
-        <ConnectedBtn />
+        <ConnectedBtn
+          setAccountModal={props.setAccountModal}
+          modal={props.accountModal}
+        />
       ) : (
         <DisconnectedBtn setIsModalOpen={setIsModalOpen} />
       )}
@@ -33,7 +36,7 @@ function DisconnectedBtn(props) {
   );
 }
 
-function ConnectedBtn() {
+function ConnectedBtn(props) {
   const { address } = useAccount();
   const { disconnect } = useConnectors();
 
@@ -44,10 +47,13 @@ function ConnectedBtn() {
 
   return (
     <LoginBtn
-      onClick={() => {
-        disconnect();
-      }}
+      setAccountModal={props.setAccountModal}
       connected={true}
+      // disconnect={disconnect}
+      onClick={() => {
+        props.setAccountModal(true);
+      }}
+      modal={props.modal}
     >
       <span>{shortenedAddress}</span>
     </LoginBtn>

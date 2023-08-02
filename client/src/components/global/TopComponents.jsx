@@ -16,6 +16,8 @@ export default function TopComponents(props) {
         // setWalletShowing={setWalletShowing}
         darkMode={darkMode}
         setDarkMode={setDarkMode}
+        setAccountModal={props.setAccountModal}
+        accountModal={props.accountModal}
       />
       <Navbar totalDigs={props.totalDigs} style={{ zIndex: 1000 }} />
       <Logo

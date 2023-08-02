@@ -121,7 +121,7 @@ export const StyledBox = styled.div`
   text-align: center;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* justify-content: center; */
   cursor: default;
 
   min-width: clamp(75px, 55vw, 500px);
@@ -132,10 +132,17 @@ export const StyledBox = styled.div`
     color: var(--lightGreen);
   }
 
+  .bottom {
+    position: fixed;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
   svg {
     color: var(--limeGreen);
     padding: 0.5rem;
-    font-size: clamp(10px, 5vw, 25px);
+    font-size: clamp(10px, 5vw, 20px);
     text-align: center;
   }
 

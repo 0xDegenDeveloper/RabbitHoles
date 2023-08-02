@@ -15,8 +15,13 @@ import Graphics from "./components/graphics/Graphics";
 import DiggingPage from "./pages/DiggingPage";
 import ArchivePageNew from "./pages/ArchivePageNew";
 
+import AccountModal from "./components/global/AccountModal";
+
 function App() {
   const [mobile, setMobile] = useState(false);
+
+  const [accountModal, setAccountModal] = useState(false);
+
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const totalDigs = 1111;
 
@@ -42,7 +47,12 @@ function App() {
       <Graphics />
       <GlobalStyles mobile={mobile} />
       <BrowserRouter>
-        <TopComponents totalDigs={totalDigs} mobile={mobile} />
+        <TopComponents
+          totalDigs={totalDigs}
+          mobile={mobile}
+          setAccountModal={setAccountModal}
+          accountModal={accountModal}
+        />
         <Routes>
           {/* Middle route for fetching then passing to final destination */}
           <Route path="/digging/" element={<DiggingPage />} />
@@ -95,6 +105,9 @@ function App() {
           />
           <Route path="/new/" element={<ArchivePageNew />} />
         </Routes>
+        {accountModal && (
+          <AccountModal onClose={setAccountModal} modal={accountModal} />
+        )}
       </BrowserRouter>
     </>
   );

@@ -24,7 +24,7 @@ export default function ArchivePageNew(props) {
   const [burnModal, setBurnModal] = useState(false);
   const [rabbitModal, setRabbitModal] = useState(false);
   const [holeModal, setHoleModal] = useState(false);
-  const [id, setId] = useState(!key || parseInt(key) == 0 ? 1 : key);
+  const [id, setId] = useState(!key || parseInt(key) == 0 ? 1 : parseInt(key));
   const [index, setIndex] = useState(1);
 
   const holeData = useMemo(() => {
@@ -153,6 +153,7 @@ export default function ArchivePageNew(props) {
           <FontAwesomeIcon
             icon={faChevronCircleDown}
             onClick={() => {
+              // console.log("currnet id", id);
               setId(id + 1 > holeData.length ? id : id + 1);
               // setRabbit(thisChunkArray[0]);
               setIndex(1);
@@ -472,7 +473,7 @@ export const ArchivePageStyled = styled.div`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    font-family: "Lato";
+    font-family: "Andale Mono", monospace;
     gap: 1rem;
     gap: clamp(2px, 1vw, 10px);
     /* width: 100%; */

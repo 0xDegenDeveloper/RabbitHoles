@@ -22,6 +22,7 @@ export default function HoleExists(props) {
           onClick={() => {
             navigate(`/archive/${props.id}`);
           }}
+          className="bottom"
         ></FontAwesomeIcon>
         <div className="btn-container top-right">
           <FontAwesomeIcon
