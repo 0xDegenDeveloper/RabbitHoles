@@ -76,7 +76,7 @@ export default function FlowModal(props) {
             </p>
             <p>
               <span className="blue">
-                {" > "}If msg is 32 characters, it fills 2 felts
+                {" > "}If a msg is 32 characters, it fills 2 felts
               </span>
             </p>
             <p className="token">
@@ -149,9 +149,9 @@ const ContainerStyled = styled.div`
   width: clamp(100px, 55vw, 500px);
   text-align: center;
   white-space: pre-wrap;
-  height: fit-content;
+  /* height: fit-content; */
   /* min-height: clamp(150px, 50vh, 400px); */
-  min-height: 220px;
+  min-height: ${(props) => (props.mobile ? "150px" : "350px")};
   /* height: fit-content; */
   cursor: default;
 

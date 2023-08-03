@@ -4,13 +4,22 @@ import { useState, useEffect } from "react";
 
 export default function Logo(props) {
   const [toggled, setToggled] = useState(false);
+  const [hovered, setHovered] = useState(false);
+
+  /// mouse in/out listners
+  const handleMouseEnter = () => {
+    setHovered(true);
+  };
+  const handleMouseLeave = () => {
+    setHovered(false);
+  };
 
   useEffect(() => {
     let timer;
     if (toggled) {
       timer = setTimeout(() => {
         setToggled(false);
-      }, 4000);
+      }, 2900);
     }
     return () => clearTimeout(timer);
   }, [toggled]);
@@ -24,9 +33,12 @@ export default function Logo(props) {
           props.setDarkMode(!props.darkMode);
           setToggled(!toggled);
         }}
-        // onMouseEnter={startSpinner} // start the spinner after 5 seconds
+        // onMouseEnter={() => {
+        //   setHovered(true);
+        // }} // start the spinner after 5 seconds
         onMouseLeave={() => {
           setToggled(false);
+          // setHovered(false);
         }} // stop the spinner
         // className={`${toggled ? "toggled" : ""}`}
       >
@@ -64,8 +76,8 @@ const LogoStyle = styled.div`
   -o-backdrop-filter: blur(10px);
   -ms-backdrop-filter: blur(10px);
   border-radius: 0 0 50% 0;
-  border: 2px solid;
-  border-color: rgba(0, 0, 0, 0);
+  /* border: 2px solid; */
+  /* border-color: rgba(0, 0, 0, 0); */
   background-color: ${(props) =>
     props.darkMode ? "var(--forrestGreen)" : "none"};
 
@@ -100,6 +112,13 @@ const LogoStyle = styled.div`
   left: ${(props) => (props.toggled ? "1rem" : "-2px")};
   border-radius: ${(props) => (props.toggled ? "50%" : "0 0 50% 0")};
 
+  /* border: ${(props) =>
+    props.toggled
+      ? props.darkMode
+        ? "1px solid var(--greyGreen)"
+        : "1px solid var(--forrestGreen)"
+      : "2px solid rgba(0, 0, 0, 0)"}; */
+
   // Add transition property for smooth hover effect
   transition: all 0.05s 0s ease-in-out;
 
@@ -126,7 +145,7 @@ const LogoStyle = styled.div`
     props.toggled &&
     `
     animation: infinite rotate360 3s ease-in-out;
-    animation-delay: 1s;
+    animation-delay: 0.2s;
   `}
 
   @keyframes rotate360 {

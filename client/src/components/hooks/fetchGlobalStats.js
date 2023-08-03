@@ -19,7 +19,7 @@ export default function fetchGlobalStats() {
       totalSupply: "12,3456",
       digFee: 0.001,
       digReward: "25",
-      diggerBps: 5000,
+      diggerBps: 2500,
     });
   }, []);
 

@@ -133,36 +133,6 @@ export default function ArchivePageNew(props) {
           </div>
         </div>
         <div className="dark-box rabbits">
-          {/* {thisChunkArray.map((rabbit, id) => (
-            <div key={rabbit.msg + id} className="rw">
-              <div
-                className="rabbit"
-                onClick={() => {
-                  // props.setUseJump(false);
-                  props.setRabbit(rabbit);
-                  props.setRabbitModal(true);
-                }}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-              >
-                <p>{rabbit.msg}</p>
-                <div className="r-stats">
-                  <p>- {rabbit.burner}</p>
-                  <div className="ww">
-                    <p>{rabbit.depth}</p>
-                    <div className="w">
-                      <img
-                        src={`/logo-full-lime.png`}
-                        alt="logo"
-                        className={`logo ${isHovered ? "spinner" : ""}`}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="bar"></div>
-            </div>
-          ))} */}
           {thisChunkArray.map((rabbit, id) => (
             <div key={rabbit.msg + id} className="rw">
               <Rabbit
@@ -432,6 +402,7 @@ export const ArchivePageStyled = styled.div`
     gap: 1rem;
     overflow: scroll;
     /* overflow: auto; */
+    /* height: ${(props) => (props.mobile ? "250px" : "350px")}; */
   }
 
   .bar {

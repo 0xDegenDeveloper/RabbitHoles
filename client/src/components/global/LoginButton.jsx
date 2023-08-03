@@ -24,7 +24,7 @@ export default function LoginButton(props) {
   );
 }
 
-function DisconnectedBtn() {
+function DisconnectedBtn(props) {
   return (
     <LoginBtn
       onClick={() => {
@@ -32,7 +32,7 @@ function DisconnectedBtn() {
       }}
       connected={false}
     >
-      <span>Connect Wallet</span>
+      <span>Verify Keys</span>
     </LoginBtn>
   );
 }
@@ -95,10 +95,10 @@ const LoginBtn = styled.div`
     cursor: pointer;
     color: ${(props) =>
       props.connected
-        ? "var(--forrestGreen)"
+        ? "var(--greyGreen)"
         : "var(--greyGreen)"}; // var(--forrestGreen);
     background-color: ${(props) =>
-      props.connected ? "rgba(0,0,0,0)" : "var(--forrestGreen)"};
+      props.connected ? "var(--forrestGreen)" : "var(--forrestGreen)"};
   }
 
   transition: all 0.05s 0s ease-in-out;
