@@ -17,7 +17,7 @@ import { useState } from "react";
 export default function FlowModal(props) {
   const [index, setIndex] = useState(1);
 
-  const maxIndex = 3;
+  const maxIndex = 4;
 
   return (
     <Modal modal={props.modal} onClose={props.onClose}>
@@ -91,6 +91,16 @@ export default function FlowModal(props) {
                 are burned
               </span>
             </p>
+          </>
+        )}
+        {index === 4 && (
+          <>
+            <h1>Disclaimer</h1>
+            <p>
+              $RBITS are platform-specific utility tokens, and should not be
+              considered securities.
+            </p>
+            <p>Fees collected from digs are for extending the project</p>
           </>
         )}
         <FontAwesomeIcon

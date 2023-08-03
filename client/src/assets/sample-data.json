@@ -171,7 +171,7 @@
         "timestamp": "1/14/23"
       },
       {
-        "msg": "Graham Hancock, Gobekli Tepe, Ben van Kerkwyk...",
+        "msg": "Gobekli Tepe, Ben van Kerkwyk...",
         "id": "10",
         "burner": "0x1234...abcd",
         "timestamp": "1/15/23"
@@ -232,6 +232,61 @@
         "id": "15",
         "burner": "0x1234...abcd",
         "timestamp": "1/23/23"
+      }
+    ]
+  },
+  "8": {
+    "title": "GM",
+    "digger": "DegenDev.stark",
+    "timestamp": "4/40/23",
+    "rabbits": [
+      {
+        "msg": "gm",
+        "id": "21",
+        "burner": "0x1234...abcd",
+        "timestamp": "4/20/23"
+      },
+      {
+        "msg": "Gm",
+        "id": "22",
+        "burner": "0x1234...abcd",
+        "timestamp": "4/20/23"
+      },
+      {
+        "msg": "gm",
+        "id": "23",
+        "burner": "0x1234...abcd",
+        "timestamp": "4/20/23"
+      },
+      {
+        "msg": "gm",
+        "id": "24",
+        "burner": "0x1234...abcd",
+        "timestamp": "4/20/23"
+      },
+      {
+        "msg": "GM",
+        "id": "25",
+        "burner": "0x1234...abcd",
+        "timestamp": "4/20/23"
+      },
+      {
+        "msg": "HAVE A GOOD FUCKING DAY",
+        "id": "26",
+        "burner": "0x1234...abcd",
+        "timestamp": "4/20/23"
+      },
+      {
+        "msg": "gm",
+        "id": "27",
+        "burner": "0x1234...abcd",
+        "timestamp": "4/20/23"
+      },
+      {
+        "msg": "gm",
+        "id": "28",
+        "burner": "0x1234...abcd",
+        "timestamp": "4/20/23"
       }
     ]
   }

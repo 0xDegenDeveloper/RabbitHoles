@@ -67,11 +67,17 @@ export const OptionStyled = styled.div`
   cursor: pointer;
 
   /* Hover effect */
-  &:hover {
+  &:hover,
+  a:hover {
     background-color: var(--lightGreen);
     box-shadow: 0px 0px 5px 0px var(--lightGreen);
     color: var(--forrestGreen);
     transform: scale(1.05); /* Example of scaling on hover */
+  }
+
+  a {
+    color: var(--lightGreen);
+    text-decoration: none;
   }
 
   img {

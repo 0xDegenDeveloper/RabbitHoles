@@ -42,7 +42,8 @@ export default function Footer(props) {
       >
         <FooterTop
           darkMode={props.darkMode}
-          onClick={() => props.setDarkMode(!props.darkMode)}
+          // onClick={() => props.setDarkMode(!props.darkMode)}
+          // style={{ cursor: "pointer" }}
         >
           <Link onClick={() => setIsFooterOpen(!isFooterOpen)}>
             Powered By Novemberfork
@@ -109,6 +110,8 @@ const FooterWrapper = styled.div`
   /* box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.3); */
   overflow: hidden;
 
+  cursor: pointer;
+
   &:hover {
     /* background-color: var(--lightGreen); */
   }
@@ -137,9 +140,9 @@ const FooterTop = styled.div`
   color: ${(props) =>
     props.darkMode ? "var(--greyGreen)" : "var(--forrestGreen)"};
 
-  svg {
-    cursor: pointer;
-  }
+  /* svg { */
+  cursor: pointer;
+  /* } */
 `;
 
 const FooterBottom = styled.div`

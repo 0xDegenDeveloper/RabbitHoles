@@ -36,6 +36,21 @@ export default function AccountModal(props) {
             <span>{"disconnect"}</span>
           </OptionStyled>
         </div>
+        <div>
+          <OptionStyled
+          // onClick={() => {
+          //   disconnect();
+          //   props.onClose(false);
+          // }}
+          >
+            <a
+              target="_blank"
+              href="https://app.ens.domains/degendeveloper.eth"
+            >
+              <span>{"donate :)"}</span>
+            </a>
+          </OptionStyled>
+        </div>
         <FontAwesomeIcon
           icon={faXmarkCircle}
           onClick={() => {

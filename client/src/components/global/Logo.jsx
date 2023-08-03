@@ -4,33 +4,16 @@ import { useState, useEffect } from "react";
 
 export default function Logo(props) {
   const [toggled, setToggled] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-  const location = useLocation();
 
-  let timerId = null;
-
-  const startSpinner = () => {
-    timerId = setTimeout(() => {
-      setToggled(true);
-    }, 500);
-  };
-
-  const stopSpinner = () => {
-    clearTimeout(timerId);
-    setToggled(false);
-  };
-
-  // useEffect(() => {
-  //   let timer;
-  //   if (toggled) {
-  //     timer = setTimeout(() => {
-  //       setToggled(false);
-  //     }, 1500);
-  //   }
-  //   return () => clearTimeout(timer);
-  // }, [toggled]);
-
-  // useEffect(() => {}, [props.darkMode]);
+  useEffect(() => {
+    let timer;
+    if (toggled) {
+      timer = setTimeout(() => {
+        setToggled(false);
+      }, 4000);
+    }
+    return () => clearTimeout(timer);
+  }, [toggled]);
 
   return (
     <>
@@ -48,7 +31,8 @@ export default function Logo(props) {
         // className={`${toggled ? "toggled" : ""}`}
       >
         <Link
-          to={location.pathname == "/" ? "/info" : "/"}
+          // to={location.pathname == "/" ? "/info" : "/"}
+          to={"/"}
           className={props.mobile ? "mobile" : "non-mobile"}
         >
           <img
@@ -141,8 +125,8 @@ const LogoStyle = styled.div`
   ${(props) =>
     props.toggled &&
     `
-    animation: rotate360 3s ease-in-out;
-    animation-delay: 0.7s;
+    animation: infinite rotate360 3s ease-in-out;
+    animation-delay: 1s;
   `}
 
   @keyframes rotate360 {
