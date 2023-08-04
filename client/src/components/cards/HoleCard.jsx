@@ -28,6 +28,7 @@ export default function HoleModal(props) {
         <p
           onClick={() => {
             props.onClose(false);
+            props.setIsHoles(true);
             navigate(`/user/${digger}`);
           }}
           className="toggler"

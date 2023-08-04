@@ -2,7 +2,7 @@ import { useAccount, useConnectors } from "@starknet-react/core";
 import styled from "styled-components";
 import WalletModal from "../cards/ProviderCard";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 
 export default function LoginButton(props) {
   const [isModalOpen, setIsModalOpen] = useState(false);

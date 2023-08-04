@@ -1,14 +1,14 @@
-import { faInfo, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
-import fetchGlobalStats from "../components/hooks/fetchGlobalStats";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
 import FlowModal from "../components/cards/FlowCard";
 
 import styled from "styled-components";
+import fetchGlobalStatistics from "../components/hooks/fetchGlobalStatistics";
+import fetchGlobalMetrics from "../components/hooks/fetchGlobalMetrics";
 
 export default function StatsPage(props) {
-  const { holes, rabbits, depth, totalSupply, digFee, digReward, diggerBps } =
-    fetchGlobalStats();
+  const { holes, rabbits, depth } = props.globalStatistics;
+  const { totalSupply, digFee, digReward, diggerBps } = fetchGlobalMetrics();
 
   return (
     <>
@@ -24,8 +24,6 @@ export default function StatsPage(props) {
             position: "relative",
             textAlign: "center",
             cursor: "default",
-            // minWidth: "clamp(75px, 55vw, 500px)",
-            // minWidth: "clamp(75px, 55vw, 500px)",
           }}
         >
           <h1 style={{ color: "var(--limeGreen)" }}>Metrics</h1>
@@ -70,8 +68,6 @@ export default function StatsPage(props) {
 }
 
 const Wrap = styled.div`
-  /* width: clamp(100px, 55vw, 500px); */
-
   img {
     height: clamp(22px, 3vw, 32px);
   }
@@ -81,8 +77,6 @@ const Wrap = styled.div`
     align-items: center;
     justify-content: center;
     text-align: center;
-
-    /// center vertically
   }
 
   .spinner {
@@ -117,9 +111,5 @@ export const StyledBox = styled.div`
 
   &:hover {
     color: var(--limeGreen);
-  }
-
-  img {
-    /* height: clamp(27px, 3vw, 32px); */
   }
 `;

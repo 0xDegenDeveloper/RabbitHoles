@@ -15,15 +15,11 @@ import AccountModal from "./components/cards/AccountCard";
 import HoleModal from "./components/cards/HoleCard";
 import RabbitModal from "./components/cards/RabbitCard";
 import fetchGlobalStatistics from "./components/hooks/fetchGlobalStatistics";
-import fetchGlobalMetrics from "./components/hooks/fetchGlobalMetrics";
 
 export const ModalContext = createContext();
 
 function Modals({
   globalStatistics,
-  globalMetrics,
-  totalHoles,
-  totalBurns,
   useJump,
   setIsHoles,
   accountModal,
@@ -35,6 +31,7 @@ function Modals({
   hole,
   rabbit,
 }) {
+  console.log(hole, rabbit);
   return (
     <>
       {accountModal && (
@@ -42,19 +39,16 @@ function Modals({
       )}
       {holeModal && (
         <HoleModal
-          key={hole + rabbit}
           onClose={setHoleModal}
           modal={holeModal}
           hole={hole}
           setIsHoles={setIsHoles}
           useJump={useJump}
           globalStatistics={globalStatistics}
-          globalMetrics={globalMetrics}
         />
       )}
       {rabbitModal && (
         <RabbitModal
-          key={rabbit + hole}
           onClose={setRabbitModal}
           modal={rabbitModal}
           hole={hole}
@@ -62,7 +56,6 @@ function Modals({
           useJump={useJump}
           setIsHoles={setIsHoles}
           globalStatistics={globalStatistics}
-          globalMetrics={globalMetrics}
         />
       )}
     </>
@@ -80,13 +73,7 @@ function App() {
   const [useJump, setUseJump] = useState(false);
   const [isHoles, setIsHoles] = useState(true);
 
-  const { totalHoles, totalBurns } = {
-    totalHoles: 111,
-    totalBurns: 555,
-  };
-
   const globalStatistics = fetchGlobalStatistics();
-  const globalMetrics = fetchGlobalMetrics();
 
   useEffect(() => {
     document
@@ -121,7 +108,11 @@ function App() {
           <Route
             path="/stats"
             element={
-              <StatsPage modal={infoModalOpen} onClose={setInfoModalOpen} />
+              <StatsPage
+                modal={infoModalOpen}
+                onClose={setInfoModalOpen}
+                globalStatistics={globalStatistics}
+              />
             }
           ></Route>
           {/* Archive Page */}
@@ -195,9 +186,6 @@ function App() {
         </Routes>
         <Modals
           globalStatistics={globalStatistics}
-          globalMetrics={globalMetrics}
-          totalHoles={totalHoles}
-          totalBurns={totalBurns}
           useJump={useJump}
           setIsHoles={setIsHoles}
           accountModal={accountModal}

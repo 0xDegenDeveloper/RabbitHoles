@@ -23,5 +23,7 @@ export function fetchHoleData(holeId) {
 }
 
 export default function fetchHolesData(holeIds) {
+  /// make into 1 call when contract connection is made
+
   return holeIds.map((holeId) => fetchHoleData(holeId));
 }
