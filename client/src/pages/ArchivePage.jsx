@@ -13,34 +13,19 @@ import {
   faChevronCircleUp,
   faFireFlameCurved,
 } from "@fortawesome/free-solid-svg-icons";
-import RabbitModal from "../components/cards/RabbitCard";
-import HoleModal from "../components/cards/HoleCard";
 import fetchHolesData from "../components/hooks/fetchHoleData";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import BurnModal from "../components/cards/BurningCard";
 import { useEffect } from "react";
 
 function Rabbit({ rabbit, setRabbitModal, setRabbit }) {
-  const [isHovered, setIsHovered] = useState(false);
-
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-  };
-
   return (
     <div
-      className="rabbit"
+      className="rabbit spinner"
       onClick={() => {
         setRabbitModal(true);
         setRabbit(rabbit);
-        // setUseJump ?
       }}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
     >
       <p>{rabbit.msg}</p>
       <div className="r-stats">
@@ -48,11 +33,7 @@ function Rabbit({ rabbit, setRabbitModal, setRabbit }) {
         <div className="ww">
           <p>{rabbit.depth}</p>
           <div className="w">
-            <img
-              src={`/logo-full-lime.png`}
-              alt="logo"
-              className={`logo ${isHovered ? "spinner" : ""}`}
-            />
+            <img src={`/logo-full-lime.png`} alt="logo" className={`logo`} />
           </div>
         </div>
       </div>
@@ -65,32 +46,18 @@ export default function ArchivePage(props) {
   const [id, setId] = useState(!key || parseInt(key) == 0 ? 1 : parseInt(key));
   const [index, setIndex] = useState(1);
   const [burnModal, setBurnModal] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
 
-  /// mouse enter
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-  };
-
-  const holeData = useMemo(() => {
-    const array = Array.from({ length: 111 }, (_, i) => i + 1);
-    return fetchHolesData(array);
-  }, [id]);
-
-  const hole = holeData[id - 1];
+  const hole = props.holes.length > 0 ? props.holes[id - 1] : {};
 
   useEffect(() => {
     if (hole) {
-      props.setHole(hole);
+      props.setModals.setHole(hole);
+      props.setModals.setRabbit(hole.rabbits[0]);
     }
   }, [hole]);
 
   let start = (index - 1) * 10 + 1;
-  let end = Math.min(start + 9, hole.digs)
+  let end = Math.min(start + 9, hole == 0 ? 0 : hole.digs)
     .toString()
     .padStart(2, "0");
 
@@ -109,15 +76,13 @@ export default function ArchivePage(props) {
       >
         <div
           onClick={() => {
-            props.setHole(hole);
+            props.setModals.setHole(hole);
             props.setUseJump(false);
-            props.setHoleModal(true);
+            props.setModals.setHoleModal(true);
           }}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
           className={`hole-head`}
         >
-          <div className="top">
+          <div className="top spinner">
             <h1>{hole.title}</h1>
             <div className="stats">
               <p>{hole.digs}</p> <FontAwesomeIcon icon={faFireFlameCurved} />
@@ -126,7 +91,7 @@ export default function ArchivePage(props) {
                 <img
                   src={"/logo-full-dark.png"}
                   alt="logo"
-                  className={`logo ${isHovered ? "spinner" : ""}`}
+                  // className={`logo ${isHovered ? "spinner" : ""}`}
                 />
               </div>
             </div>
@@ -137,8 +102,8 @@ export default function ArchivePage(props) {
             <div key={rabbit.msg + id} className="rw">
               <Rabbit
                 rabbit={rabbit}
-                setRabbitModal={props.setRabbitModal}
-                setRabbit={props.setRabbit}
+                setRabbitModal={props.setModals.setRabbitModal}
+                setRabbit={props.setModals.setRabbit}
               />
               <div className="bar"></div>
             </div>
@@ -195,23 +160,27 @@ export default function ArchivePage(props) {
             icon={faChevronCircleDown}
             onClick={() => {
               // console.log("currnet id", id);
-              const newId = id + 1 > holeData.length ? id : id + 1;
+              const newId = id + 1 > props.holes.length ? id : id + 1;
               setId(newId);
               setIndex(1);
-              props.setHole(holeData[newId - 1]);
+              props.setModals.setHole(props.holes[newId - 1]);
             }}
-            className={`bottom right ${id + 1 > holeData.length ? "fill" : ``}`}
+            className={`bottom right ${
+              id + 1 > props.holes.length ? "fill" : ``
+            }`}
           />
           <FontAwesomeIcon
             icon={faArrowCircleDown}
             onClick={() => {
               const newId =
-                id + 10 > holeData.length ? holeData.length : id + 10;
+                id + 10 > props.holes.length ? props.holes.length : id + 10;
               setId(newId);
               setIndex(1);
-              props.setHole(holeData[newId - 1]);
+              props.setModals.setHole(props.holes[newId - 1]);
             }}
-            className={`bottom right ${id + 1 > holeData.length ? "fill" : ``}`}
+            className={`bottom right ${
+              id + 1 > props.holes.length ? "fill" : ``
+            }`}
           />
         </div>
         <div className="sels3">
@@ -223,29 +192,11 @@ export default function ArchivePage(props) {
             className={`bottom`}
           />
         </div>
-        {/* {props.rabbitModal && (
-          <RabbitModal
-            onClose={props.setRabbitModal}
-            modal={props.rabbitModal}
-            rabbit={props.rabbit}
-            rabbits={props.rabbits}
-            hole={props.hole}
-            holes={props.holes}
-          />
-        )}
-        {props.holeModal && (
-          <HoleModal
-            onClose={props.setHoleModal}
-            modal={props.holeModal}
-            hole={props.hole}
-            holes={props.holes}
-          />
-        )} */}
         {burnModal && (
           <BurnModal
             onClose={setBurnModal}
             modal={burnModal}
-            hole={holeData[id - 1]}
+            hole={props.holes[id - 1]}
           />
         )}
       </ArchivePageStyled>
@@ -273,10 +224,12 @@ export const ArchivePageStyled = styled.div`
     }
   }
 
-  .spinner {
+  .spinner:hover img {
     /* :hover { */
     cursor: pointer;
+    /* &:img { */
     animation: rotate360 3s infinite ease-in-out;
+    /* } */
     /* } */
 
     @keyframes rotate360 {

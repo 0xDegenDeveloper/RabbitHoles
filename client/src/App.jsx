@@ -4,75 +4,62 @@ import { useState, useEffect, createContext } from "react";
 import GlobalStyles from "./components/global/GlobalStyles";
 import TopComponents from "./components/global/TopComponents";
 import HomePage from "./pages/HomePage";
+import DiggingPage from "./pages/DiggingPage";
 import StatsPage from "./pages/StatsPage";
 import UserPage from "./pages/UserPage";
 import InfoPage from "./pages/InfoPage";
-import DiggingPage from "./pages/DiggingPage";
 import ArchivePage from "./pages/ArchivePage";
 import Graphics from "./components/graphics/Graphics";
+import Modals from "./components/global/Modals";
 
-import AccountModal from "./components/cards/AccountCard";
-import HoleModal from "./components/cards/HoleCard";
-import RabbitModal from "./components/cards/RabbitCard";
 import fetchGlobalStatistics from "./components/hooks/fetchGlobalStatistics";
-
-export const ModalContext = createContext();
-
-function Modals({
-  globalStatistics,
-  useJump,
-  setIsHoles,
-  accountModal,
-  setAccountModal,
-  holeModal,
-  setHoleModal,
-  rabbitModal,
-  setRabbitModal,
-  hole,
-  rabbit,
-}) {
-  return (
-    <>
-      {accountModal && (
-        <AccountModal onClose={setAccountModal} modal={accountModal} />
-      )}
-      {holeModal && (
-        <HoleModal
-          onClose={setHoleModal}
-          modal={holeModal}
-          hole={hole}
-          setIsHoles={setIsHoles}
-          useJump={useJump}
-          globalStatistics={globalStatistics}
-        />
-      )}
-      {rabbitModal && (
-        <RabbitModal
-          onClose={setRabbitModal}
-          modal={rabbitModal}
-          hole={hole}
-          rabbit={rabbit}
-          useJump={useJump}
-          setIsHoles={setIsHoles}
-          globalStatistics={globalStatistics}
-        />
-      )}
-    </>
-  );
-}
+import fetchGlobalArchive from "./components/hooks/fetchGlobalArchive";
+import fetchUserArchive from "./components/hooks/fetchUserArchive";
+import { useAccount } from "@starknet-react/core";
 
 function App() {
+  const { address } = useAccount();
   const [mobile, setMobile] = useState(false);
-  const [accountModal, setAccountModal] = useState(false);
-  const [infoModalOpen, setInfoModalOpen] = useState(false);
-  const [holeModal, setHoleModal] = useState(false);
-  const [rabbitModal, setRabbitModal] = useState(false);
-  const [hole, setHole] = useState(1);
-  const [rabbit, setRabbit] = useState(0);
+  const [modals, setModals] = useState({
+    accountModal: false,
+    infoModalOpen: false,
+    holeModal: false,
+    rabbitModal: false,
+    hole: null,
+    rabbit: null,
+  });
+
   const [useJump, setUseJump] = useState(false);
   const [isHoles, setIsHoles] = useState(true);
 
   const globalStatistics = fetchGlobalStatistics();
+
+  const archive = fetchGlobalArchive(
+    globalStatistics.holes > 111 ? 111 : globalStatistics.holes
+  );
+
+  const userArchive = fetchUserArchive(address);
+
+  const modalSetters = {
+    setAccountModal: (value) => {
+      setModals((prevModals) => ({ ...prevModals, accountModal: value }));
+    },
+    setInfoModalOpen: (value) => {
+      setModals((prevModals) => ({ ...prevModals, infoModalOpen: value }));
+    },
+    setHoleModal: (value) => {
+      setModals((prevModals) => ({ ...prevModals, holeModal: value }));
+    },
+    setRabbitModal: (value) => {
+      setModals((prevModals) => ({ ...prevModals, rabbitModal: value }));
+    },
+    setHole: (value) => {
+      setModals((prevModals) => ({ ...prevModals, hole: value }));
+    },
+    setRabbit: (value) => {
+      setModals((prevModals) => ({ ...prevModals, rabbit: value }));
+    },
+  };
 
   useEffect(() => {
     document
@@ -97,8 +84,8 @@ function App() {
       <BrowserRouter>
         <TopComponents
           mobile={mobile}
-          setAccountModal={setAccountModal}
-          accountModal={accountModal}
+          setAccountModal={modalSetters.setAccountModal}
+          accountModal={modals.accountModal}
         />
         <Routes>
           {/* Home Page */}
@@ -108,8 +95,8 @@ function App() {
             path="/stats"
             element={
               <StatsPage
-                modal={infoModalOpen}
-                onClose={setInfoModalOpen}
+                modal={modals.infoModalOpen}
+                onClose={modalSetters.setInfoModalOpen}
                 globalStatistics={globalStatistics}
               />
             }
@@ -120,10 +107,9 @@ function App() {
             element={
               <ArchivePage
                 mobile={mobile}
-                setHoleModal={setHoleModal}
-                setRabbitModal={setRabbitModal}
-                setHole={setHole}
-                setRabbit={setRabbit}
+                setModals={modalSetters}
+                globalStatistics={globalStatistics}
+                holes={archive}
                 setUseJump={setUseJump}
               />
             }
@@ -133,10 +119,9 @@ function App() {
             element={
               <ArchivePage
                 mobile={mobile}
-                setHoleModal={setHoleModal}
-                setRabbitModal={setRabbitModal}
-                setHole={setHole}
-                setRabbit={setRabbit}
+                setModals={modalSetters}
+                globalStatistics={globalStatistics}
+                holes={archive}
                 setUseJump={setUseJump}
               />
             }
@@ -147,10 +132,8 @@ function App() {
             element={
               <UserPage
                 mobile={mobile}
-                setHoleModal={setHoleModal}
-                setRabbitModal={setRabbitModal}
-                setHole={setHole}
-                setRabbit={setRabbit}
+                setModals={modalSetters}
+                userArchive={userArchive}
                 setUseJump={setUseJump}
                 isHoles={isHoles}
                 setIsHoles={setIsHoles}
@@ -162,10 +145,8 @@ function App() {
             element={
               <UserPage
                 mobile={mobile}
-                setHoleModal={setHoleModal}
-                setRabbitModal={setRabbitModal}
-                setHole={setHole}
-                setRabbit={setRabbit}
+                setModals={modalSetters}
+                userArchive={userArchive}
                 setUseJump={setUseJump}
                 isHoles={isHoles}
                 setIsHoles={setIsHoles}
@@ -176,25 +157,28 @@ function App() {
           <Route
             path="/info"
             element={
-              <InfoPage modal={infoModalOpen} onClose={setInfoModalOpen} />
+              <InfoPage
+                modal={modals.infoModalOpen}
+                onClose={modalSetters.setInfoModalOpen}
+              />
             }
           ></Route>
 
-          <Route path="/digging/" element={<DiggingPage />} />
-          <Route path="/digging/:key" element={<DiggingPage />} />
+          <Route
+            path="/digging/"
+            element={<DiggingPage setModals={modalSetters} />}
+          />
+          <Route
+            path="/digging/:key"
+            element={<DiggingPage setModals={modalSetters} />}
+          />
         </Routes>
         <Modals
           globalStatistics={globalStatistics}
           useJump={useJump}
           setIsHoles={setIsHoles}
-          accountModal={accountModal}
-          setAccountModal={setAccountModal}
-          holeModal={holeModal}
-          setHoleModal={setHoleModal}
-          rabbitModal={rabbitModal}
-          setRabbitModal={setRabbitModal}
-          hole={hole}
-          rabbit={rabbit}
+          modals={modals}
+          setModals={modalSetters}
         />
       </BrowserRouter>
     </>

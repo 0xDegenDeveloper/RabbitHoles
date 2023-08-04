@@ -35,7 +35,7 @@ export default function WalletModal(props) {
   return (
     <Modal onClose={props.onClose} modal={props.modal}>
       <ContainerStyled className="dark-box-600w">
-        <h3>Connect Wallet:</h3>
+        <h3>Connect Account:</h3>
         {connectors.map((connector) => {
           return (
             <React.Fragment key={connector?.id}>

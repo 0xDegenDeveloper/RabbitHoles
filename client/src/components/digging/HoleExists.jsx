@@ -9,7 +9,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 export default function HoleExists(props) {
   const navigate = useNavigate();
-
+  console.log(props);
   return (
     <StyledBox className="dark-box-600w">
       <h2>Already Dug!</h2>

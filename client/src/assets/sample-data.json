@@ -2,7 +2,7 @@
   "0": {
     "title": "EXAMPLE HOLE",
     "digger": "0x0000...0000",
-    "timestamp": "1/1/23",
+    "timestamp": "0",
     "rabbits": [
       {
         "msg": "Example of a message burned inside a hole",

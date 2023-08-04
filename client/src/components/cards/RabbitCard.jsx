@@ -12,11 +12,11 @@ import { useNavigate } from "react-router-dom";
 export default function RabbitModal(props) {
   const navigate = useNavigate();
   const { rabbits, depth } = props.globalStatistics;
-  const { burner, id, timestamp, msg } = props.rabbit;
-  const hole = props.hole;
+  const { burner, id, timestamp, msg } = props.modals.rabbit;
+  const hole = props.modals.hole;
 
   return (
-    <Modal modal={props.modal} onClose={props.onClose}>
+    <Modal modal={props.modals.rabbit} onClose={props.onClose}>
       <ContainerStyled className="dark-box-600w">
         <h1>
           <span>Rabbit</span> #{id}/{rabbits}
@@ -40,7 +40,7 @@ export default function RabbitModal(props) {
             navigate(`/archive/${hole.id}`);
           }}
         >
-          <span>hole</span> #{props.hole.id} {hole.title}
+          <span>hole</span> #{hole.id} {hole.title}
         </p>
         <p>
           <span>depth </span>

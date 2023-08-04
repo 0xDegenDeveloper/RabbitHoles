@@ -11,7 +11,7 @@ import fetchIdFromTitle from "../components/hooks/fetchIdFromTitle";
 
 import HoleTitleTooBig from "../components/digging/HoleTitleTooBig";
 
-export default function MiddleMan() {
+export default function MiddleMan(props) {
   const { key } = useParams();
   // const { data, isLoading, isError } = fetchIdFromTitle(key); ** use when starknet-react updated
   const { id } = fetchIdFromTitle(key);
@@ -48,7 +48,7 @@ export default function MiddleMan() {
               </>
             ) : (
               <>
-                <HoleExists title={key} id={id} />
+                <HoleExists title={key} id={id} setModals={props.setModals} />
               </>
             )}
           </>

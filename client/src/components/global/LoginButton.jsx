@@ -32,7 +32,7 @@ function DisconnectedBtn(props) {
       }}
       connected={false}
     >
-      <span>Verify Keys</span>
+      <span>Connect Account</span>
     </LoginBtn>
   );
 }

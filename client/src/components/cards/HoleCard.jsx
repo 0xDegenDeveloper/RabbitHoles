@@ -1,9 +1,5 @@
-import React, { useContext } from "react";
+import React from "react";
 import Modal from "../global/Modal";
-
-import { ModalContext } from "../../App";
-
-import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowsToCircle,
@@ -15,11 +11,11 @@ import { ContainerStyled } from "./RabbitCard";
 
 export default function HoleModal(props) {
   const navigate = useNavigate();
-  const { digger, id, digs, timestamp, title } = props.hole;
+  const { digger, id, digs, timestamp, title } = props.modals.hole;
   const { holes, depth } = props.globalStatistics;
 
   return (
-    <Modal modal={props.modal} onClose={props.onClose}>
+    <Modal modal={props.modals.hole} onClose={props.onClose}>
       <ContainerStyled className="dark-box-600w">
         <h1>
           <span>Hole</span> #{id}/{holes}

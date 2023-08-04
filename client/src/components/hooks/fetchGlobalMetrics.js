@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 export default function fetchGlobalMetrics() {
-  const [globalStats, setGlobalStats] = useState({
+  const [globalMetrics, setGlobalMetrics] = useState({
     totalSupply: 0,
     digFee: 0,
     digReward: 0,
@@ -10,7 +10,7 @@ export default function fetchGlobalMetrics() {
 
   useEffect(() => {
     /// place contract call
-    setGlobalStats({
+    setGlobalMetrics({
       totalSupply: "12,3456",
       digFee: 0.001,
       digReward: "25",
@@ -20,5 +20,5 @@ export default function fetchGlobalMetrics() {
 
   /// make contract read
 
-  return globalStats;
+  return globalMetrics;
 }
