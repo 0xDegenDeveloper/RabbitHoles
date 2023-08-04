@@ -31,7 +31,6 @@ function Modals({
   hole,
   rabbit,
 }) {
-  console.log(hole, rabbit);
   return (
     <>
       {accountModal && (
