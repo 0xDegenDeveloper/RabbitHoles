@@ -18,7 +18,7 @@ export default function FlowModal(props) {
   const [index, setIndex] = useState(1);
 
   const maxIndex = 4;
-
+  console.log(props.mobile);
   return (
     <Modal modal={props.modal} onClose={props.onClose}>
       <ContainerStyled className="dark-box-600w" mobile={props.mobile}>
@@ -153,7 +153,7 @@ const ContainerStyled = styled.div`
   white-space: pre-wrap;
   /* height: fit-content; */
   /* min-height: clamp(150px, 50vh, 400px); */
-  min-height: ${(props) => (props.mobile ? "150px" : "350px")};
+  min-height: ${(props) => (props.mobile ? "250px" : "350px")};
   /* height: fit-content; */
   cursor: default;
 

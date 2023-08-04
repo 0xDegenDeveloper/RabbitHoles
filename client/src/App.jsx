@@ -189,6 +189,7 @@ function App() {
           setIsHoles={setIsHoles}
           modals={modals}
           setModals={modalSetters}
+          mobile={mobile}
         />
       </BrowserRouter>
     </>

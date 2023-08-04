@@ -10,6 +10,7 @@ export default function Modals({
   setIsHoles,
   modals,
   setModals,
+  mobile,
 }) {
   return (
     <>
@@ -39,7 +40,11 @@ export default function Modals({
         />
       )}
       {modals.infoModal && (
-        <FlowModal modal={modals.infoModal} onClose={setModals.setInfoModal} />
+        <FlowModal
+          modal={modals.infoModal}
+          onClose={setModals.setInfoModal}
+          mobile={mobile}
+        />
       )}
       {modals.burningModal && (
         <BurnModal onClose={setModals.setBurningModal} modals={modals} />
