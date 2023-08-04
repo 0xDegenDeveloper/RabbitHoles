@@ -10,8 +10,6 @@ export default function StatsPage(props) {
   const { holes, rabbits, depth } = props.globalStatistics;
   const { totalSupply, digFee, digReward, diggerBps } = fetchGlobalMetrics();
 
-  console.log(props);
-
   return (
     <>
       <div className="container">

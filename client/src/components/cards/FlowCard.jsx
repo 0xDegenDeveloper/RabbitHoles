@@ -226,10 +226,10 @@ const ContainerStyled = styled.div`
   }
 
   .token span {
-    display: ${(props) => (!props.mobile ? "flex" : "block")};
-    align-items: ${(props) => (!props.mobile ? "center" : "block")};
-    justify-content: ${(props) => (!props.mobile ? "center" : "block")};
-    text-align: ${(props) => (!props.mobile ? "center" : "block")};
+    display: ${(props) => (props.mobile ? "flex" : "block")};
+    align-items: ${(props) => (props.mobile ? "center" : "block")};
+    justify-content: ${(props) => (props.mobile ? "center" : "block")};
+    text-align: ${(props) => (props.mobile ? "center" : "block")};
   }
 
   .spinner {
