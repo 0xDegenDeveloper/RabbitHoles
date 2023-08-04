@@ -46,7 +46,7 @@ function App() {
       setModals((prevModals) => ({ ...prevModals, accountModal: value }));
     },
     setInfoModal: (value) => {
-      setModals((prevModals) => ({ ...prevModals, infoModalOpen: value }));
+      setModals((prevModals) => ({ ...prevModals, infoModal: value }));
     },
     setHoleModal: (value) => {
       setModals((prevModals) => ({ ...prevModals, holeModal: value }));
@@ -100,7 +100,8 @@ function App() {
             element={
               <StatsPage
                 modal={modals.infoModal}
-                onClose={modalSetters.setInfoModal}
+                setModals={modalSetters}
+                // onClose={modalSetters.setInfoModal}
                 globalStatistics={globalStatistics}
               />
             }

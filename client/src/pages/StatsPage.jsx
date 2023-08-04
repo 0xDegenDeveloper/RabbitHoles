@@ -10,6 +10,8 @@ export default function StatsPage(props) {
   const { holes, rabbits, depth } = props.globalStatistics;
   const { totalSupply, digFee, digReward, diggerBps } = fetchGlobalMetrics();
 
+  console.log(props);
+
   return (
     <>
       <div className="container">
@@ -63,7 +65,7 @@ export default function StatsPage(props) {
             <StyledBox>
               <FontAwesomeIcon
                 icon={faInfoCircle}
-                onClick={() => props.onClose(true)}
+                onClick={() => props.setModals.setInfoModal(true)}
               />
             </StyledBox>
           </div>
