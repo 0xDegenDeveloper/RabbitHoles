@@ -4,14 +4,14 @@ import { useAccount } from "@starknet-react/core";
 import fetchUserStatistics from "./fetchUserStatistics";
 
 export default function fetchUserArchive(user) {
-  if (!user)
-    return {
-      holes: [],
-      rabbits: [],
-      totalHoles: 0,
-      totalRabbits: 0,
-      totalDepth: 0,
-    };
+  //   if (!user)
+  //     return {
+  //       holes: [],
+  //       rabbits: [],
+  //       totalHoles: 0,
+  //       totalRabbits: 0,
+  //       totalDepth: 0,
+  //     };
 
   /// use this when using contract calls
   //   const globalStats = fetchUserStatistics(user);
