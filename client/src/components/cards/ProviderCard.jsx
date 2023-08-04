@@ -48,6 +48,7 @@ export default function WalletModal(props) {
             </React.Fragment>
           );
         })}
+
         <FontAwesomeIcon icon={faXmarkCircle} onClick={props.onClose} />
       </ContainerStyled>
     </Modal>
@@ -84,6 +85,9 @@ export const OptionStyled = styled.div`
   a {
     color: var(--lightGreen);
     text-decoration: none;
+
+    /* width: 100%;
+    height: 100%; */
   }
 
   img {
@@ -135,6 +139,11 @@ export const ContainerStyled = styled.div`
   h1 {
     text-align: center;
     font-size: clamp(12px, 5vw, 30px);
+  }
+
+  a {
+    color: var(--lightGreen);
+    text-decoration: none;
   }
 `;
 
