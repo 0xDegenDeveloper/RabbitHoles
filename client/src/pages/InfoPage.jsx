@@ -10,11 +10,6 @@ import { faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons";
 
 import tokenLogo from "/logo-main.png";
 
-const W = styled(StyledBox)`
-  svg {
-  }
-`;
-
 export default function InfoPage(props) {
   return (
     <>
@@ -25,16 +20,14 @@ export default function InfoPage(props) {
           style={{
             display: "flex",
             flexDirection: "column",
-            // justifyContent: "",
             alignItems: "center",
+            justifyContent: "center",
             gap: "0",
-
             position: "relative",
             textAlign: "center",
             maxWidth: "500px",
             width: "clamp(75px, 55vw, 500px)",
             overflow: "scroll",
-
             padding: "2rem",
           }}
         >
@@ -105,7 +98,7 @@ const Wrapper = styled.div`
     width: clamp(70px, 10vw, 100px);
 
     :hover {
-      cursor: pointer;
+      /* cursor: pointer; */
       animation: rotate360 3s infinite ease-in-out;
     }
   }
@@ -120,35 +113,5 @@ const Wrapper = styled.div`
     min-height: 200px;
     height: ${(props) => (props.mobile ? "200px" : "fit-content")};
     overflow: scroll;
-  }
-
-  .token-logo {
-    margin-top: 1rem;
-    display: grid;
-    place-items: center;
-
-    img {
-      width: clamp(50px, 30vw, 100px);
-
-      :hover {
-        cursor: pointer;
-        animation: rotate360 3s infinite ease-in-out;
-      }
-    }
-
-    @keyframes rotate360 {
-      0% {
-        transform: rotate(0deg);
-      }
-      50%,
-      52% {
-        transform: rotate(720deg);
-      }
-
-      75%,
-      100% {
-        transform: rotate(0deg);
-      }
-    }
   }
 `;

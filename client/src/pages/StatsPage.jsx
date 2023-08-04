@@ -14,7 +14,7 @@ export default function StatsPage(props) {
     <>
       <div className="container">
         <Wrap
-          className="dark-box-600w"
+          // className="dark-box-600w"
           style={{
             display: "flex",
             flexDirection: "column",
@@ -26,42 +26,71 @@ export default function StatsPage(props) {
             cursor: "default",
           }}
         >
-          <h1 style={{ color: "var(--limeGreen)" }}>Metrics</h1>
-          <h4>
-            Supply::<em> {totalSupply}</em>
-            <img className="spinner" src={`/logo-full-lime.png`} />
-          </h4>
-          <h4>
-            Fee/Reward::
-            <em>
-              {digFee}Ξ/{digReward}
-            </em>
-            <img className="spinner" src={`/logo-full-lime.png`} />
-          </h4>
-          <h4>
-            Digger BPS::<em>{(parseFloat(diggerBps) / 100.0).toFixed(0)}%</em>
-          </h4>
-          <h1 style={{ color: "var(--limeGreen)" }}>Stats</h1>
-          <h4>
-            Holes::<em>{holes}</em>
-            {"::"}Rabbits::<em>{rabbits}</em>
-            {"::"}Depth::<em>{depth}</em>
-          </h4>
-          <StyledBox>
-            <FontAwesomeIcon
-              icon={faInfoCircle}
-              onClick={() => props.onClose(true)}
-            />
-          </StyledBox>
+          <div
+            className="statss dark-box-600w"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "0",
+              position: "relative",
+              textAlign: "center",
+              cursor: "default",
+            }}
+          >
+            <h1 style={{ color: "var(--limeGreen)" }}>Metrics</h1>
+            <h4>
+              Supply::<em> {totalSupply}</em>
+              <img className="spinner" src={`/logo-full-lime.png`} />
+            </h4>
+            <h4>
+              Fee/Reward::
+              <em>
+                {digFee}Ξ/{digReward}
+              </em>
+              <img className="spinner" src={`/logo-full-lime.png`} />
+            </h4>
+            <h4>
+              Digger BPS::<em>{(parseFloat(diggerBps) / 100.0).toFixed(0)}%</em>
+            </h4>
+            <h1 style={{ color: "var(--limeGreen)" }}>Stats</h1>
+            <h4>
+              Holes::<em>{holes}</em>
+              {"::"}Rabbits::<em>{rabbits}</em>
+              {"::"}Depth::<em>{depth}</em>
+            </h4>
+            <StyledBox>
+              <FontAwesomeIcon
+                icon={faInfoCircle}
+                onClick={() => props.onClose(true)}
+              />
+            </StyledBox>
+          </div>
+          <img src={"/logo-main.png"} className="token-logo" />
         </Wrap>
       </div>
     </>
   );
 }
 
+const WW = styled.div``;
+
 const Wrap = styled.div`
   img {
     height: clamp(22px, 3vw, 32px);
+  }
+
+  .token-logo {
+    /* img { */
+    margin-top: 1rem;
+    width: clamp(70px, 10vw, 100px);
+    height: clamp(70px, 10vw, 100px);
+
+    :hover {
+      /* cursor: pointer; */
+      animation: rotate360 3s infinite ease-in-out;
+    }
   }
 
   h4 {
