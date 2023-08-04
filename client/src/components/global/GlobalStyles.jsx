@@ -186,7 +186,7 @@ const GlobalStyle = createGlobalStyle`
         }
 
         h4{
-          margin: 1rem 0;
+          margin: 1rem 0 0rem;
         }
 
         ${

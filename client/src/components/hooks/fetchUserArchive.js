@@ -1,5 +1,4 @@
 import sample from "../../assets/sample-data.json";
-import fetchGlobalStatistics from "./fetchGlobalStatistics";
 import fetchHolesData from "./fetchHoleData";
 import { useAccount } from "@starknet-react/core";
 import fetchUserStatistics from "./fetchUserStatistics";
@@ -13,14 +12,22 @@ export default function fetchUserArchive(user) {
       totalRabbits: 0,
       totalDepth: 0,
     };
-  const globalStats = fetchUserStatistics(user);
+
+  /// use this when using contract calls
+  //   const globalStats = fetchUserStatistics(user);
 
   const holeKeys = Object.keys(sample).filter((key) => parseInt(key) !== 0);
   const holes = fetchHolesData(holeKeys);
 
   let rabbits = [];
+  let totalHoles = 0;
+  let totalRabbits = 0;
+  let totalDepth = 0;
   for (let hole in holes) {
+    totalHoles += 1;
     for (let rabbit in holes[hole].rabbits) {
+      totalRabbits += 1;
+      totalDepth += holes[hole].rabbits[rabbit].depth;
       rabbits.push(holes[hole].rabbits[rabbit]);
     }
   }
@@ -30,8 +37,8 @@ export default function fetchUserArchive(user) {
   return {
     holes,
     rabbits,
-    totalHoles: globalStats.holes,
-    totalRabbits: globalStats.rabbits,
-    totalDepth: globalStats.depth,
+    totalHoles,
+    totalRabbits,
+    totalDepth,
   };
 }

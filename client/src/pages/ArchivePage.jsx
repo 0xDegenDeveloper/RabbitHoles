@@ -18,18 +18,53 @@ import { useParams } from "react-router-dom";
 import BurnModal from "../components/cards/BurningCard";
 import { useEffect } from "react";
 
-function Rabbit({ rabbit, setRabbitModal, setRabbit }) {
+// function Rabbit({ rabbit, setRabbitModal, setRabbit }) {
+//   return (
+//     <div
+//       className="rabbit spinner"
+//       onClick={() => {
+//         setRabbitModal(true);
+//         setRabbit(rabbit);
+//       }}
+//     >
+//       <p>{rabbit.msg}</p>
+//       <div className="r-stats">
+//         <p>- {rabbit.burner}</p>
+//         <div className="ww">
+//           <p>{rabbit.depth}</p>
+//           <div className="w">
+//             <img src={`/logo-full-lime.png`} alt="logo" className={`logo`} />
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+export function Rabbit({
+  rabbit,
+  setModals,
+  setUseJump,
+  isGlobalRabbit,
+  hole,
+}) {
+  const onClickHandler = () => {
+    if (isGlobalRabbit) {
+      setModals.setRabbitModal(true);
+      setModals.setRabbit(rabbit);
+    } else {
+      setUseJump(true);
+      setModals.setHole(hole);
+      setModals.setRabbit(rabbit);
+      setModals.setRabbitModal(true);
+    }
+  };
+
   return (
-    <div
-      className="rabbit spinner"
-      onClick={() => {
-        setRabbitModal(true);
-        setRabbit(rabbit);
-      }}
-    >
+    <div className="rabbit spinner" onClick={onClickHandler}>
       <p>{rabbit.msg}</p>
       <div className="r-stats">
-        <p>- {rabbit.burner}</p>
+        <p>{isGlobalRabbit ? rabbit.burner : hole.title}</p>
         <div className="ww">
           <p>{rabbit.depth}</p>
           <div className="w">
@@ -56,10 +91,10 @@ export default function ArchivePage(props) {
     }
   }, [hole]);
 
-  let start = (index - 1) * 10 + 1;
-  let end = Math.min(start + 9, hole == 0 ? 0 : hole.digs)
+  let start = ((index - 1) * 10 + 1).toString().padStart(3, "0");
+  let end = Math.min(parseInt(start) + 9, hole == 0 ? 0 : hole.digs)
     .toString()
-    .padStart(2, "0");
+    .padStart(3, "0");
 
   const chunkSize = 10;
   const thisChunkArray = hole.rabbits.slice(
@@ -102,8 +137,9 @@ export default function ArchivePage(props) {
             <div key={rabbit.msg + id} className="rw">
               <Rabbit
                 rabbit={rabbit}
-                setRabbitModal={props.setModals.setRabbitModal}
+                setModals={props.setModals}
                 setRabbit={props.setModals.setRabbit}
+                isGlobalRabbit={true}
               />
               <div className="bar"></div>
             </div>
@@ -119,16 +155,16 @@ export default function ArchivePage(props) {
           />
           <div id="bottom" className="bottom">
             <p>
-              {start}-{end} / {hole.digs < 10 ? "0" + hole.digs : hole.digs}
+              {start}-{end} / {hole.digs.toString().padStart(3, "0")}
             </p>
           </div>
           <FontAwesomeIcon
             icon={faArrowCircleRight}
             onClick={() =>
-              setIndex((index - 1) * 10 + 9 >= hole.digs ? index : index + 1)
+              setIndex((index - 1) * 10 + 10 >= hole.digs ? index : index + 1)
             }
             className={`bottom right ${
-              (index - 1) * 10 + 9 >= hole.digs ? "fill" : ``
+              (index - 1) * 10 + 10 >= hole.digs ? "fill" : ``
             }`}
           />
         </div>
@@ -249,6 +285,7 @@ export const ArchivePageStyled = styled.div`
   }
 
   .sels {
+    /* position: fixed; */
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -341,7 +378,7 @@ export const ArchivePageStyled = styled.div`
     width: 100%;
     min-height: ${(props) => (props.mobile ? "200px" : "400px")};
     border-radius: 1rem;
-    padding: 2rem 1rem;
+    padding: 1rem 1rem;
     /* gap: 0; */
     /* overflow: scroll; */
   }
@@ -590,6 +627,11 @@ export const ArchivePageStyled = styled.div`
   }
   .bottom svg:hover {
     color: var(--limeGreen);
+  }
+
+  .hidden {
+    color: rgba(0, 0, 0, 0);
+    cursor: default;
   }
 
   .rw {

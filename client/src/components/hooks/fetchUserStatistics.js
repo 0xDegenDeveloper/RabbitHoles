@@ -2,6 +2,7 @@ import sample from "../../assets/sample-data.json";
 import fetchGlobalStatistics from "./fetchGlobalStatistics";
 import fetchHolesData from "./fetchHoleData";
 import { useAccount } from "@starknet-react/core";
+import fetchUserArchive from "./fetchUserArchive";
 
 export default function fetchUserStatistics(user) {
   // const { address } = useAccount();
@@ -18,8 +19,15 @@ export default function fetchUserStatistics(user) {
   // }
   // return { holes, rabbits };
   /// get user holes, rabbits, depth #
-
   // const { holes, rabbits, depth } = fetchGlobalStatistics();
-
-  return { holes: 0, rabbits: 0, depth: 0 };
+  // const userArchive = fetchUserArchive(user);
+  // let depth = 0;
+  // for (let hole in userArchive.holes) {
+  //   totalDepth += userArchive.holes[hole].depth;
+  // }
+  // return {
+  //   holes: userArchive.holes.length,
+  //   rabbits: userArchive.rabbits.length,
+  //   depth,
+  // };
 }

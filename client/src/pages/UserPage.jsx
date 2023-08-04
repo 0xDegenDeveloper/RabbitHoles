@@ -4,41 +4,12 @@ import fetchUserStatistics from "../components/hooks/fetchUserStatistics";
 import { useAccount } from "@starknet-react/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faArrowCircleLeft,
+  faArrowCircleRight,
   faDigging,
   faFireFlameCurved,
-  faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
-import { ArchivePageStyled } from "./ArchivePage";
-
-function Rabbit({ rabbit, userArchive, setUseJump, setModals }) {
-  return (
-    <div
-      className="rabbit spinner"
-      onClick={() => {
-        setUseJump(true);
-        setModals.setHole(userArchive.holes[rabbit.holeId - 1]);
-        setModals.setRabbit(rabbit);
-        setModals.setRabbitModal(true);
-      }}
-    >
-      <p>{rabbit.msg}</p>
-      <div className="r-stats">
-        <p>{userArchive.holes[rabbit.holeId - 1].title}</p>
-        <div className="ww">
-          <div className="w">
-            <img src={`/logo-full-dark.png`} alt="logo" />
-          </div>
-        </div>
-        <div className="ww">
-          <p>{rabbit.depth}</p>
-          <div className="w">
-            <img src={`/logo-full-lime.png`} alt="logo" className={`logo`} />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+import { ArchivePageStyled, Rabbit } from "./ArchivePage";
 
 function Hole({ hole, setUseJump, setModals }) {
   return (
@@ -64,10 +35,32 @@ function Hole({ hole, setUseJump, setModals }) {
 }
 
 export default function UserPage(props) {
+  const [index, setIndex] = useState(1);
   const { isHoles, setIsHoles } = props;
   const { address } = useAccount();
   const addr = address ? address : "0x1234...5678";
   const user = `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+
+  const userArchive = props.userArchive; // fetchUserStatistics(addr) if user is not the one connected (searching)
+
+  const chunkSize = 10;
+  const thisArchive = isHoles ? userArchive.holes : userArchive.rabbits;
+  const thisChunkArray = thisArchive.slice(
+    (index - 1) * chunkSize,
+    index * chunkSize
+  );
+
+  let start = ((index - 1) * 10 + 1).toString().padStart(3, "0");
+  let end = Math.min(
+    parseInt(start) + 9,
+    isHoles ? userArchive.totalHoles : userArchive.totalRabbits
+  )
+    .toString()
+    .padStart(3, "0");
+
+  /// when connected to contract
+  /// add check for userSearch == address,
+  /// if false, use userArchive, else replace userArchive with fetchUserArchive(userSearch)
 
   return (
     <>
@@ -79,18 +72,19 @@ export default function UserPage(props) {
         <div
           className="hole-head spinner"
           onClick={() => {
+            setIndex(1);
             setIsHoles(!isHoles);
           }}
         >
           <div className="top">
             <h1>{user}</h1>
             <div className="stats">
-              {!props.mobile && <p>{props.userArchive.holes.length}</p>}
+              {!props.mobile && <p>{props.userArchive.totalHoles}</p>}
               <FontAwesomeIcon
                 icon={faDigging}
                 className={`${isHoles ? "active" : ""}`}
               />
-              {!props.mobile && <p>{props.userArchive.rabbits.length}</p>}
+              {!props.mobile && <p>{props.userArchive.totalRabbits}</p>}
               <FontAwesomeIcon
                 icon={faFireFlameCurved}
                 className={`${!isHoles ? "active" : ""}`}
@@ -112,11 +106,12 @@ export default function UserPage(props) {
         </div>
         {!isHoles && (
           <div className="dark-box rabbits">
-            {props.userArchive.rabbits.map((rabbit, index) => (
+            {thisChunkArray.map((rabbit, index) => (
               <div key={index} className="rw">
                 <Rabbit
                   rabbit={rabbit}
-                  userArchive={props.userArchive}
+                  hole={props.userArchive.holes[rabbit.holeId - 1]}
+                  isGlobalRabbit={false}
                   {...props}
                 />
                 <div className="bar"></div>
@@ -126,7 +121,7 @@ export default function UserPage(props) {
         )}
         {isHoles && (
           <div className="dark-box rabbits">
-            {props.userArchive.holes.map((hole, index) => (
+            {thisChunkArray.map((hole, index) => (
               <div key={index} className="rw">
                 <Hole hole={hole} {...props} />
                 <div className="bar"></div>
@@ -134,6 +129,46 @@ export default function UserPage(props) {
             ))}
           </div>
         )}
+        <div className="sels">
+          <FontAwesomeIcon
+            icon={faArrowCircleLeft}
+            onClick={() => {
+              setIndex(index == 1 ? index : index - 1);
+            }}
+            className={`bottom left ${index == 1 ? "fill" : ``}`}
+          />
+          <div id="bottom" className="bottom">
+            <p>
+              {start}-{end} /{" "}
+              {isHoles
+                ? userArchive.totalHoles.toString().padStart(3, "0")
+                : userArchive.totalRabbits.toString().padStart(3, "0")}
+            </p>
+          </div>
+          <FontAwesomeIcon
+            icon={faArrowCircleRight}
+            onClick={() => {
+              setIndex(
+                (index - 1) * 10 + 10 >=
+                  (isHoles ? userArchive.totalHoles : userArchive.totalRabbits)
+                  ? index
+                  : index + 1
+              );
+            }}
+            className={`bottom right ${
+              (index - 1) * 10 + 10 >=
+              (isHoles ? userArchive.totalHoles : userArchive.totalRabbits)
+                ? "fill"
+                : ``
+            }`}
+          />
+        </div>
+        <div className="sels3">
+          <FontAwesomeIcon
+            icon={faFireFlameCurved}
+            className={`bottom hidden`}
+          />
+        </div>
       </ArchivePageStyled>
     </>
   );
