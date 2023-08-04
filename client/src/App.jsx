@@ -26,7 +26,6 @@ function App() {
     holeModal: false,
     rabbitModal: false,
     burningModal: false,
-    infoModal: false,
     hole: null,
     rabbit: null,
   });
@@ -57,9 +56,6 @@ function App() {
     },
     setBurningModal: (value) => {
       setModals((prevModals) => ({ ...prevModals, burningModal: value }));
-    },
-    setInfoModal: (value) => {
-      setModals((prevModals) => ({ ...prevModals, infoModal: value }));
     },
     setHole: (value) => {
       setModals((prevModals) => ({ ...prevModals, hole: value }));
