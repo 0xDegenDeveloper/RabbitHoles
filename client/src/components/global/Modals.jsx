@@ -1,4 +1,6 @@
 import AccountModal from "../cards/AccountCard";
+import BurnModal from "../cards/BurningCard";
+import FlowModal from "../cards/FlowCard";
 import HoleModal from "../cards/HoleCard";
 import RabbitModal from "../cards/RabbitCard";
 
@@ -35,6 +37,12 @@ export default function Modals({
           setIsHoles={setIsHoles}
           globalStatistics={globalStatistics}
         />
+      )}
+      {modals.infoModal && (
+        <FlowModal modal={modals.infoModal} onClose={setModals.setInfoModal} />
+      )}
+      {modals.burningModal && (
+        <BurnModal onClose={setModals.setBurningModal} modals={modals} />
       )}
     </>
   );

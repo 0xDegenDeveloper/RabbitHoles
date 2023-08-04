@@ -223,18 +223,18 @@ export default function ArchivePage(props) {
           <FontAwesomeIcon
             icon={faFireFlameCurved}
             onClick={() => {
-              setBurnModal(true);
+              props.setModals.setBurningModal(true);
             }}
             className={`bottom`}
           />
         </div>
-        {burnModal && (
+        {/* {burnModal && (
           <BurnModal
             onClose={setBurnModal}
             modal={burnModal}
             hole={props.holes[id - 1]}
           />
-        )}
+        )} */}
       </ArchivePageStyled>
     </>
   );

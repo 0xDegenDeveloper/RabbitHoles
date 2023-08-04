@@ -8,6 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { stringToFelts } from "../utils/Utils";
+
 export default function BurnModal(props) {
   const [msg, setMsg] = useState("");
   const felts = stringToFelts(msg);
@@ -19,7 +20,7 @@ export default function BurnModal(props) {
     console.log("burning...");
   }
   return (
-    <Modal modal={props.modal} onClose={props.onClose}>
+    <Modal modal={props.modals.burningModal} onClose={props.onClose}>
       <StyledBox className="dark-box-600w">
         <FontAwesomeIcon
           icon={faXmarkCircle}
@@ -27,7 +28,7 @@ export default function BurnModal(props) {
           className="x"
         />
         <h2>
-          <span>Hole </span># {props.hole.id} {props.hole.title}
+          <span>Hole </span># {props.modals.hole.id} {props.modals.hole.title}
         </h2>
         <textarea
           placeholder="burn a rabbit..."

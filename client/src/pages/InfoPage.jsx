@@ -6,12 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
 import { StyledBox } from "./StatsPage";
 import FlowModal from "../components/cards/FlowCard";
-import {
-  faGit,
-  faGithub,
-  faTwitch,
-  faTwitter,
-} from "@fortawesome/free-brands-svg-icons";
+import { faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons";
 
 import tokenLogo from "/logo-main.png";
 
@@ -80,9 +75,9 @@ export default function InfoPage(props) {
         </div>
         <img src={tokenLogo} />
       </Wrapper>
-      {props.modal && (
+      {/* {props.modal && (
         <FlowModal modal={props.modal} onClose={() => props.onClose(false)} />
-      )}
+      )} */}
     </>
   );
 }

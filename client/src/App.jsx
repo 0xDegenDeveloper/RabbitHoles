@@ -22,9 +22,11 @@ function App() {
   const [mobile, setMobile] = useState(false);
   const [modals, setModals] = useState({
     accountModal: false,
-    infoModalOpen: false,
+    infoModal: false,
     holeModal: false,
     rabbitModal: false,
+    burningModal: false,
+    infoModal: false,
     hole: null,
     rabbit: null,
   });
@@ -44,7 +46,7 @@ function App() {
     setAccountModal: (value) => {
       setModals((prevModals) => ({ ...prevModals, accountModal: value }));
     },
-    setInfoModalOpen: (value) => {
+    setInfoModal: (value) => {
       setModals((prevModals) => ({ ...prevModals, infoModalOpen: value }));
     },
     setHoleModal: (value) => {
@@ -52,6 +54,12 @@ function App() {
     },
     setRabbitModal: (value) => {
       setModals((prevModals) => ({ ...prevModals, rabbitModal: value }));
+    },
+    setBurningModal: (value) => {
+      setModals((prevModals) => ({ ...prevModals, burningModal: value }));
+    },
+    setInfoModal: (value) => {
+      setModals((prevModals) => ({ ...prevModals, infoModal: value }));
     },
     setHole: (value) => {
       setModals((prevModals) => ({ ...prevModals, hole: value }));
@@ -95,8 +103,8 @@ function App() {
             path="/stats"
             element={
               <StatsPage
-                modal={modals.infoModalOpen}
-                onClose={modalSetters.setInfoModalOpen}
+                modal={modals.infoModal}
+                onClose={modalSetters.setInfoModal}
                 globalStatistics={globalStatistics}
               />
             }
@@ -107,6 +115,7 @@ function App() {
             element={
               <ArchivePage
                 mobile={mobile}
+                modals={modals}
                 setModals={modalSetters}
                 globalStatistics={globalStatistics}
                 holes={archive}
@@ -119,6 +128,7 @@ function App() {
             element={
               <ArchivePage
                 mobile={mobile}
+                modals={modals}
                 setModals={modalSetters}
                 globalStatistics={globalStatistics}
                 holes={archive}
@@ -158,8 +168,8 @@ function App() {
             path="/info"
             element={
               <InfoPage
-                modal={modals.infoModalOpen}
-                onClose={modalSetters.setInfoModalOpen}
+                modal={modals.infoModal}
+                onClose={modalSetters.setInfoModal}
               />
             }
           ></Route>

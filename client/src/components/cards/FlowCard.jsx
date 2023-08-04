@@ -105,7 +105,9 @@ export default function FlowModal(props) {
         )}
         <FontAwesomeIcon
           icon={faXmarkCircle}
-          onClick={props.onClose}
+          onClick={() => {
+            props.onClose(false);
+          }}
           className="x"
         />
         <FontAwesomeIcon

@@ -55,14 +55,6 @@ export default function StatsPage(props) {
           </StyledBox>
         </Wrap>
       </div>
-
-      {props.modal && (
-        <FlowModal
-          modal={props.modal}
-          onClose={() => props.onClose(false)}
-          mobile={props.mobile}
-        />
-      )}
     </>
   );
 }
