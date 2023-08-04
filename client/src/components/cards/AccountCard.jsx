@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import Modal from "./Modal";
+import Modal from "../global/Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
-import { ContainerStyled, OptionStyled } from "./WalletModal";
+import { ContainerStyled, OptionStyled } from "./ProviderCard";
 import { useAccount, useConnectors, useProvider } from "@starknet-react/core";
 import { useNavigate } from "react-router-dom";
 

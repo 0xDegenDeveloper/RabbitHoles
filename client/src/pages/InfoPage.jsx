@@ -5,7 +5,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
 import { StyledBox } from "./StatsPage";
-import FlowModal from "../components/FlowModal";
+import FlowModal from "../components/cards/FlowCard";
 import {
   faGit,
   faGithub,

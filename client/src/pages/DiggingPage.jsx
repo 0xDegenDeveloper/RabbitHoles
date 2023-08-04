@@ -1,78 +1,20 @@
 import React from "react";
 import styled from "styled-components";
-import { useState, useEffect, useMemo } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { stringToFelts } from "../components/utils/Utils";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useParams } from "react-router-dom";
 
 import HoleSearching from "../components/digging/HoleSearching";
 import HoleExists from "../components/digging/HoleExists";
 import HoleDoesNotExists from "../components/digging/HoleDoesNotExist";
 import HoleErrror from "../components/digging/HoleError";
-import EmptyTitle from "../components/digging/EmptyTitle";
+import HoleTitleEmpty from "../components/digging/HoleTitleEmpty";
 import fetchIdFromTitle from "../components/hooks/fetchIdFromTitle";
-import sample from "../assets/sample-data.json";
 
-import {
-  useContractRead,
-  useContract,
-  useBlockNumber,
-} from "@starknet-react/core";
-import REGISTRY_ABI from "../assets/rabbitholes_ERC20.sierra.json";
-import LargeTitle from "../components/digging/LargeTitle";
-
-const ABI = REGISTRY_ABI.abi;
-
-const MANAGER_ADDRESS =
-  "0x026a60f9b16975e44c11550c2baff45ac4c52d399cdccab5532dccc73ffa3298";
-const RBITS_ADDRESS =
-  "0x06a3e59fce87072a652e7d67df0782e89b337b65ff50f1d8553e990dd3c95cef";
-const REGISTRY_ADDRESS =
-  "0x026377bcc9b973eae8500eca7f916e42a645ffd4b15146e62b69e57e958502fc";
-const V1_ADDRESS =
-  "0x01c8ca977ca1c5721fb5150f63b1ae5b75e6155ef9b4e0f19acc9082d8c7fff3";
-
-function fetchID(title) {
-  //   const { data, isLoading, error, refetch } = useContractRead({
-  //     address: REGISTRY_ADDRESS,
-  //     abi: ABI,
-  //     functionName: "is_minting",
-  //     args: [],
-  //     // args: [stringToFelts(title)],
-  //     watch: true,
-  //     blockIdentifier: "11111",
-  //   });
-
-  const { data, isLoading, isError } = useBlockNumber({
-    refetchInterval: false,
-  });
-
-  // If no match is found, return 0
-  // return 0;
-
-  return { data, isLoading, isError };
-}
-
-function fetchIDSudo(title) {
-  const [id, setID] = useState(0);
-  for (let key in sample) {
-    // If the title matches the input title, return the key
-    if (sample[key].title === title) {
-      // data = key;
-      setID(key);
-    }
-  }
-
-  return { id };
-}
+import HoleTitleTooBig from "../components/digging/HoleTitleTooBig";
 
 export default function MiddleMan() {
   const { key } = useParams();
-  // const { data, isLoading, isError } = fetchID(key);
-  // const { id } = fetchIDSudo(key);
+  // const { data, isLoading, isError } = fetchIdFromTitle(key); ** use when starknet-react updated
   const { id } = fetchIdFromTitle(key);
-
-  const navigate = useNavigate();
 
   return (
     <div className="container">
@@ -85,10 +27,10 @@ export default function MiddleMan() {
         }}
       >
         {key == undefined ? (
-          <EmptyTitle />
+          <HoleTitleEmpty />
         ) : key.length > 31 ? (
           <>
-            <LargeTitle />
+            <HoleTitleTooBig />
           </>
         ) : (
           <>
@@ -130,6 +72,10 @@ export const StyledBox = styled.div`
 
   h4 {
     color: var(--lightGreen);
+  }
+
+  h2 {
+    color: var(--limeGreen);
   }
 
   .bottom {

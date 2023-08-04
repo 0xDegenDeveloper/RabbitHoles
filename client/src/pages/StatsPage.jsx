@@ -2,7 +2,7 @@ import { faInfo, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import fetchGlobalStats from "../components/hooks/fetchGlobalStats";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import FlowModal from "../components/FlowModal";
+import FlowModal from "../components/cards/FlowCard";
 
 import styled from "styled-components";
 

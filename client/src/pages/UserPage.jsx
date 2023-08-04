@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { useNavigate, useParams } from "react-router-dom";
-import UserSearchBar from "../components/UserSearchBar";
 import fetchUserData from "../components/hooks/fetchUserData";
 import { useAccount } from "@starknet-react/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,7 +8,7 @@ import {
   faFireFlameCurved,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
-import { ArchivePageStyled } from "./ArchivePageNew";
+import { ArchivePageStyled } from "./ArchivePage";
 
 function Rabbit({
   rabbit,

@@ -8,9 +8,7 @@ export default function HoleError(props) {
   const navigate = useNavigate();
   return (
     <StyledBox className="dark-box-600w">
-      <h2 style={{ color: "var(--limeGreen)" }}>
-        Error looking up hole "{props.title}"
-      </h2>
+      <h2>Error looking up hole "{props.title}"</h2>
       <h4>{props.isError}</h4>
       <div className="btn-container top-right">
         <FontAwesomeIcon

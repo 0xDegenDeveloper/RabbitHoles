@@ -1,6 +1,6 @@
 import { useAccount, useConnectors } from "@starknet-react/core";
 import styled from "styled-components";
-import WalletModal from "./WalletModal";
+import WalletModal from "../cards/ProviderCard";
 
 import { useState, useMemo, useEffect } from "react";
 

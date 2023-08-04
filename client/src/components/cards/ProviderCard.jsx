@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useConnectors } from "@starknet-react/core";
-import Modal from "./Modal";
+import Modal from "../global/Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
 

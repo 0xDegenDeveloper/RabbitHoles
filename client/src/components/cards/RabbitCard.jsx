@@ -1,5 +1,5 @@
 import React from "react";
-import Modal from "./Modal";
+import Modal from "../global/Modal";
 
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,11 +11,9 @@ import { useNavigate } from "react-router-dom";
 
 export default function RabbitModal(props) {
   const navigate = useNavigate();
-  const { burner, id, depth, timestamp, msg } = props.rabbit;
-  const rabbits = props.rabbits;
+  const { rabbits, depth } = props.globalStatistics;
+  const { burner, id, timestamp, msg } = props.rabbit;
   const hole = props.hole;
-
-  console.log(hole);
 
   return (
     <Modal modal={props.modal} onClose={props.onClose}>
@@ -87,19 +85,12 @@ export const ContainerStyled = styled.div`
   box-shadow: 0px 0px 25px 0px var(--forrestGreen);
   padding: 2rem;
   z-index: 2000;
-  /* display: grid;
-  grid-template-columns: 1fr; */
-  /* flex-direction: column; */
   justify-content: center;
   border-radius: 1.5rem;
-  /* max-width: 500px; */
   white-space: pre-wrap;
   max-width: 600px;
   cursor: default;
   width: clamp(75px, 55vw, 500px);
-  p {
-    /* padding: 0.5rem 0rem; */
-  }
 
   .jump {
     position: absolute;

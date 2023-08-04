@@ -1,5 +1,7 @@
-import React from "react";
-import Modal from "./Modal";
+import React, { useContext } from "react";
+import Modal from "../global/Modal";
+
+import { ModalContext } from "../../App";
 
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,12 +11,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
-import { ContainerStyled } from "./RabbitModal";
+import { ContainerStyled } from "./RabbitCard";
 
 export default function HoleModal(props) {
   const navigate = useNavigate();
-  const { digger, id, digs, depth, timestamp, title } = props.hole;
-  const holes = props.holes;
+  const { digger, id, digs, timestamp, title } = props.hole;
+  const { holes, depth } = props.globalStatistics;
+
   return (
     <Modal modal={props.modal} onClose={props.onClose}>
       <ContainerStyled className="dark-box-600w">
