@@ -127,6 +127,8 @@ export const ContainerStyled = styled.div`
     /* border-width: 30px; */
     :hover {
       border: 1px solid var(--limeGreen);
+      /* border-radius: 1rem; */
+      scale: 1.05;
       /* border-radius: 0.5rem; */
     }
   }

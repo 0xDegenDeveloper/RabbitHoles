@@ -107,6 +107,9 @@ const NavLinkEl = styled(Link)`
   color: var(--forrestGreen);
   &:hover {
     color: var(--limeGreen);
+    svg {
+      scale: 1.1;
+    }
 
     &.active {
       color: var(--lightGreen);

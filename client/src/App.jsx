@@ -26,6 +26,7 @@ function App() {
     holeModal: false,
     rabbitModal: false,
     burningModal: false,
+    darkMode: false,
     hole: null,
     rabbit: null,
   });
@@ -57,6 +58,9 @@ function App() {
     setBurningModal: (value) => {
       setModals((prevModals) => ({ ...prevModals, burningModal: value }));
     },
+    setDarkMode: (value) => {
+      setModals((prevModals) => ({ ...prevModals, darkMode: value }));
+    },
     setHole: (value) => {
       setModals((prevModals) => ({ ...prevModals, hole: value }));
     },
@@ -84,12 +88,14 @@ function App() {
   return (
     <>
       <Graphics />
-      <GlobalStyles mobile={mobile} />
+      <GlobalStyles mobile={mobile} modals={modals} />
       <BrowserRouter>
         <TopComponents
           mobile={mobile}
           setAccountModal={modalSetters.setAccountModal}
           accountModal={modals.accountModal}
+          setDarkMode={modalSetters.setDarkMode}
+          darkMode={modals.darkMode}
         />
         <Routes>
           {/* Home Page */}
@@ -167,6 +173,8 @@ function App() {
               <InfoPage
                 modal={modals.infoModal}
                 onClose={modalSetters.setInfoModal}
+                setDarkMode={modalSetters.setDarkMode}
+                darkMode={modals.darkMode}
               />
             }
           ></Route>

@@ -44,6 +44,7 @@ export default function InfoPage(props) {
             <FontAwesomeIcon
               icon={faInfoCircle}
               onClick={() => props.onClose(true)}
+              className="info-icon"
             />{" "}
             <a target="_blank" href="https://twitter.com/degendeveloper">
               <FontAwesomeIcon
@@ -65,8 +66,13 @@ export default function InfoPage(props) {
               />
             </a>
           </p>
+          <img
+            src={tokenLogo}
+            onClick={() => {
+              props.setDarkMode(!props.darkMode);
+            }}
+          />
         </div>
-        <img src={tokenLogo} />
       </Wrapper>
       {/* {props.modal && (
         <FlowModal modal={props.modal} onClose={() => props.onClose(false)} />
@@ -81,6 +87,22 @@ const Wrapper = styled.div`
   align-content: center;
   overflow: scroll;
 
+  .info-icon {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: clamp(10px, 4vw, 25px);
+    cursor: pointer;
+    margin: 0;
+    color: var(--lightGreen);
+
+    &:hover {
+      cursor: pointer;
+      color: var(--limeGreen);
+      scale: 1.05;
+    }
+  }
+
   svg {
     color: var(--limeGreen);
     font-size: clamp(15px, 5vw, 25px);
@@ -90,15 +112,20 @@ const Wrapper = styled.div`
       cursor: pointer;
       /* animation: rotate360 3s infinite ease-in-out; */
       color: var(--lightGreen);
+      scale: 1.05;
     }
   }
 
   img {
     margin-top: 1rem;
     width: clamp(70px, 10vw, 100px);
+    border-radius: 50%;
+    box-shadow: 0px 0px 5px 0px var(--greyGreen);
 
     :hover {
-      /* cursor: pointer; */
+      cursor: pointer;
+      scale: 1.05;
+
       animation: rotate360 3s infinite ease-in-out;
     }
   }

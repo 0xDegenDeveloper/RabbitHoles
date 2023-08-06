@@ -113,6 +113,7 @@ const FooterWrapper = styled.div`
   cursor: pointer;
 
   &:hover {
+    scale: 1.01;
     /* background-color: var(--lightGreen); */
   }
 

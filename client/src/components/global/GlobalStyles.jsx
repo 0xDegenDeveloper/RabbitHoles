@@ -118,6 +118,12 @@ const GlobalStyle = createGlobalStyle`
         ${"" /* background-color: var(--forrestGreen); */}
         color: var(--limeGreen);
         box-shadow: 0px 0px 5px 0px var(--forrestGreen);
+
+         :hover{
+            scale:1.01;
+        }
+
+
     }
 
     .dark-search-bar-input {
@@ -130,6 +136,8 @@ const GlobalStyle = createGlobalStyle`
         width: clamp(100px, 40vw, 500px);
         font-family: "Andale Mono", monospace;
         font-size: clamp(6px, 3vw, 14px);
+
+       
 
         ::placeholder {
             color: var(--greyGreen);
@@ -144,6 +152,12 @@ const GlobalStyle = createGlobalStyle`
         font-size: clamp(15px, 4vw, 20px);
         padding: 0.5rem;
         padding-right: 1rem;
+
+        :hover {
+            svg{
+                scale:1.05;
+            }
+        }
 
         &.one {
             color: var(--forrestGreen);
@@ -185,9 +199,7 @@ const GlobalStyle = createGlobalStyle`
             font-size: clamp(20px, 3vw, 40px);
         }
 
-        h4{
-          margin: 1rem 0 0rem;
-        }
+   
 
         ${
           "" /* h5{

@@ -99,8 +99,6 @@ export const OptionStyled = styled.div`
   span {
     font-size: clamp(8px, 4vw, 15px);
   }
-
-  /* You can add any additional styles here as needed */
 `;
 
 export const ContainerStyled = styled.div`

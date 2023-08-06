@@ -36,7 +36,14 @@ export default function AccountModal(props) {
             <span>{"disconnect"}</span>
           </OptionStyled>
         </div>
-        <a target="_blank" href="https://app.ens.domains/degendeveloper.eth">
+        <a
+          target="_blank"
+          href="https://app.ens.domains/degendeveloper.eth"
+          onClick={() => {
+            console.log("you're awesome !");
+          }}
+        >
+          {" "}
           <OptionStyled>
             <span>{"donate :)"}</span>
           </OptionStyled>

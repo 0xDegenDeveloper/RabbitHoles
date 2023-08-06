@@ -42,18 +42,14 @@ export default function StatsPage(props) {
             <h1 style={{ color: "var(--limeGreen)" }}>Metrics</h1>
             <h4>
               Supply::<em> {totalSupply}</em>
-              <img className="spinner" src={`/logo-full-lime.png`} />
+              <img className="spinner" src={`/logo-cropped-lime.png`} />
             </h4>
             <h4>
-              Fee/Reward::
-              <em>
-                {digFee}Ξ/{digReward}
-              </em>
-              <img className="spinner" src={`/logo-full-lime.png`} />
+              Fee::<em>{digFee}Ξ</em>&nbsp;Reward::<em>{digReward}</em>
+              <img className="spinner" src={`/logo-cropped-lime.png`} />
+              &nbsp;Bps::<em>{parseFloat(diggerBps) / 100}%</em>
             </h4>
-            <h4>
-              Digger BPS::<em>{(parseFloat(diggerBps) / 100.0).toFixed(0)}%</em>
-            </h4>
+
             <h1 style={{ color: "var(--limeGreen)" }}>Stats</h1>
             <h4>
               Holes::<em>{holes}</em>
@@ -67,7 +63,7 @@ export default function StatsPage(props) {
               />
             </StyledBox>
           </div>
-          <img src={"/logo-main.png"} className="token-logo" />
+          {/* <img src={"/logo-main.png"} className="token-logo" /> */}
         </Wrap>
       </div>
     </>
@@ -78,7 +74,13 @@ const WW = styled.div``;
 
 const Wrap = styled.div`
   img {
-    height: clamp(22px, 3vw, 32px);
+    height: clamp(18px, 3vw, 32px);
+  }
+
+  h4 {
+    /* margin: 0; */
+    /* margin-bottom: 1rem; */
+    /* padding: 1rem; */
   }
 
   .token-logo {
@@ -108,16 +110,16 @@ const Wrap = styled.div`
 
     @keyframes rotate360 {
       0% {
-        transform: rotate(0deg);
+        transform: rotateY(0deg);
       }
       50%,
       52% {
-        transform: rotate(720deg);
+        transform: rotateY(720deg);
       }
 
       75%,
       100% {
-        transform: rotate(0deg);
+        transform: rotateY(0deg);
       }
     }
   }
@@ -131,6 +133,7 @@ export const StyledBox = styled.div`
   cursor: pointer;
 
   &:hover {
+    scale: 1.05;
     color: var(--limeGreen);
   }
 `;

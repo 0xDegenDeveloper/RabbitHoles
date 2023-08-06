@@ -30,7 +30,8 @@ export default function Logo(props) {
         darkMode={props.darkMode}
         toggled={toggled}
         onClick={() => {
-          props.setDarkMode(!props.darkMode);
+          // props.setDarkMode(!props.darkMode);
+          if (toggled) props.setDarkMode(!props.darkMode);
           setToggled(!toggled);
         }}
         // onMouseEnter={() => {
@@ -105,11 +106,11 @@ const LogoStyle = styled.div`
       props.darkMode ? "var(--greyGreen)" : "var(--forrestGreen)"};
   }
 
-  top: -2px;
-  left: -2px;
+  top: -0;
+  left: -0;
 
-  top: ${(props) => (props.toggled ? "1rem" : "-2px")};
-  left: ${(props) => (props.toggled ? "1rem" : "-2px")};
+  top: ${(props) => (props.toggled ? "1rem" : "0")};
+  left: ${(props) => (props.toggled ? "1rem" : "0")};
   border-radius: ${(props) => (props.toggled ? "50%" : "0 0 50% 0")};
 
   /* border: ${(props) =>
@@ -121,6 +122,10 @@ const LogoStyle = styled.div`
 
   // Add transition property for smooth hover effect
   transition: all 0.05s 0s ease-in-out;
+
+  :hover {
+    scale: 1.05;
+  }
 
   /* .toggled {
     animation: rotate360 1.5s ease-in-out;

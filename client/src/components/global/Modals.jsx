@@ -18,6 +18,8 @@ export default function Modals({
         <AccountModal
           onClose={setModals.setAccountModal}
           modal={modals.accountModal}
+          modals={modals}
+          setModals={setModals}
         />
       )}
       {modals.holeModal && (
@@ -44,6 +46,8 @@ export default function Modals({
           modal={modals.infoModal}
           onClose={setModals.setInfoModal}
           mobile={mobile}
+          darkMode={modals.darkMode}
+          setDarkMode={setModals.setDarkMode}
         />
       )}
       {modals.burningModal && (

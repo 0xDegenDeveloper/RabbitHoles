@@ -18,7 +18,6 @@ export default function FlowModal(props) {
   const [index, setIndex] = useState(1);
 
   const maxIndex = 4;
-  console.log(props.mobile);
   return (
     <Modal modal={props.modal} onClose={props.onClose}>
       <ContainerStyled className="dark-box-600w" mobile={props.mobile}>
@@ -49,8 +48,11 @@ export default function FlowModal(props) {
             <h1>Burning a Rabbit</h1>
             <p>
               A <span>Rabbit</span> is a user's msg in a <span>Hole</span>. This
-              msg is an array of felts. The length of this array is referred to
-              as the <span>Rabbit</span>'s <span>depth</span>.
+              msg is an array of felts.
+            </p>
+            <p>
+              The length of this array is referred to as the <span>Rabbit</span>
+              's <span>depth</span>.
             </p>
             <p>
               To burn a <span>Rabbit</span>, a user will spend some of their
@@ -58,8 +60,9 @@ export default function FlowModal(props) {
             </p>
             <p className="token">
               <span className="blue">
-                {" > "}1.000000
-                <img src={`/logo-full-lime.png`} className="spinner" />/ felt
+                {" > "}cost = 1.000000
+                <img src={`/logo-cropped-lime.png`} className="spinner" />
+                &nbsp;per felt
               </span>
             </p>
           </>
@@ -82,7 +85,7 @@ export default function FlowModal(props) {
             <p className="token">
               <span className="blue">
                 {" > "}cost = 2.000000
-                <img className="spinner" src={`/logo-full-lime.png`} />
+                <img className="spinner" src={`/logo-cropped-lime.png`} />
               </span>
             </p>
             <p>
@@ -101,6 +104,13 @@ export default function FlowModal(props) {
               considered securities.
             </p>
             <p>Fees collected from digs are for extending the project</p>
+            <img
+              src={"/logo-main.png"}
+              className="token-logo"
+              onClick={() => {
+                props.setDarkMode(!props.darkMode);
+              }}
+            />
           </>
         )}
         <FontAwesomeIcon
@@ -157,6 +167,36 @@ const ContainerStyled = styled.div`
   /* height: fit-content; */
   cursor: default;
 
+  .token-logo {
+    /* img { */
+    margin-top: 1rem;
+    width: clamp(70px, 10vw, 100px);
+    height: clamp(70px, 10vw, 100px);
+    border-radius: 50%;
+    box-shadow: 0px 0px 5px 0px var(--greyGreen);
+
+    :hover {
+      /* cursor: pointer; */
+      animation: rotate360 3s infinite ease-in-out;
+      scale: 1.05;
+    }
+
+    @keyframes rotate360 {
+      0% {
+        transform: rotate(0deg);
+      }
+      50%,
+      52% {
+        transform: rotate(720deg);
+      }
+
+      75%,
+      100% {
+        transform: rotate(0deg);
+      }
+    }
+  }
+
   p {
     color: var(--lightGreen);
   }
@@ -179,6 +219,7 @@ const ContainerStyled = styled.div`
     &:hover {
       color: var(--limeGreen);
       transform: scale(1.05); /* Example of scaling on hover */
+      scale: 1.05;
 
       &.fill {
         color: var(--forrestGreen);
@@ -222,20 +263,32 @@ const ContainerStyled = styled.div`
   }
 
   img {
-    height: clamp(27px, 3vw, 32px);
+    height: clamp(22px, 3vw, 32px);
+    :hover {
+      cursor: pointer;
+    }
   }
 
   .token span {
-    display: ${(props) => (props.mobile ? "flex" : "block")};
-    align-items: ${(props) => (props.mobile ? "center" : "block")};
-    justify-content: ${(props) => (props.mobile ? "center" : "block")};
-    text-align: ${(props) => (props.mobile ? "center" : "block")};
+    /* display: ${(props) => (props.mobile ? "flex" : "flex")};
+    align-items: ${(props) => (props.mobile ? "center" : "center")};
+    justify-content: ${(props) => (props.mobile ? "center" : "center")};
+    text-align: ${(props) => (props.mobile ? "center" : "center")}; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }
 
   .spinner {
     :hover {
       cursor: pointer;
-      animation: rotate360 3s infinite ease-in-out;
+
+      animation: rotate360Y 3s infinite ease-in-out;
+
+      .token-logo {
+        animation: rotate360 3s infinite ease-in-out;
+      }
     }
 
     @keyframes rotate360 {
@@ -250,6 +303,21 @@ const ContainerStyled = styled.div`
       75%,
       100% {
         transform: rotate(0deg);
+      }
+    }
+
+    @keyframes rotate360Y {
+      0% {
+        transform: rotateY(0deg);
+      }
+      50%,
+      52% {
+        transform: rotateY(720deg);
+      }
+
+      75%,
+      100% {
+        transform: rotateY(0deg);
       }
     }
   }

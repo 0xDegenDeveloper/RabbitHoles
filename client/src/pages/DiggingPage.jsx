@@ -151,6 +151,7 @@ const Wrapper = styled.div`
       cursor: pointer;
       box-shadow: 0 0 5px var(--limeGreen);
       border-radius: 33%;
+      scale: 1.05;
     }
 
     .top-right {

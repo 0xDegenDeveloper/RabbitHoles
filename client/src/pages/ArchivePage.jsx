@@ -260,6 +260,12 @@ export const ArchivePageStyled = styled.div`
     }
   }
 
+  svg {
+    :hover {
+      scale: 1.1;
+    }
+  }
+
   .spinner:hover img {
     /* :hover { */
     cursor: pointer;
@@ -450,6 +456,7 @@ export const ArchivePageStyled = styled.div`
       border-radius: 1rem;
       /* padding: 1rem; */
       box-shadow: 0px 0px 5px 0px var(--forrestGreen);
+      scale: 1.01;
     }
 
     .top {
@@ -557,6 +564,7 @@ export const ArchivePageStyled = styled.div`
       /* color: var(--forrestGreen); */
       /* background-color: var(--greyGreen); */
       border: 0.5px solid var(--lightGreen);
+      scale: 1.01;
 
       p {
         /* color: var(--forrestGreen); */
@@ -665,6 +673,7 @@ export const ArchivePageStyled = styled.div`
       /* color: var(--forrestGreen); */
       /* background-color: var(--greyGreen); */
       border: 0.5px solid var(--lightGreen);
+      scale: 1.01;
 
       p {
         /* color: var(--forrestGreen); */
