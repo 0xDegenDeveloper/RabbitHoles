@@ -116,7 +116,7 @@ fn deploy_suite() -> (
 
 /// tests
 #[test]
-#[available_gas(4000000)]
+#[available_gas(12000000)]
 fn constructor() {
     let (Manager, Rbits, Registry, V1, DigToken) = deploy_suite();
     assert(V1.TOGGLE_DIGGING_PERMIT() == 'TOGGLE_DIGGING_PERMIT', 'Wrong TOGGLE_DIGGING_PERMIT');
@@ -136,7 +136,7 @@ fn constructor() {
 
 /// sudo
 #[test]
-#[available_gas(8000000)]
+#[available_gas(16000000)]
 fn sudo_functions_as_owner() {
     let anon = contract_address_const::<'anon'>();
     let (Manager, Rbits, Registry, V1, DigToken) = deploy_suite();
@@ -166,7 +166,7 @@ fn sudo_functions_as_owner() {
 }
 
 #[test]
-#[available_gas(10000000)]
+#[available_gas(20000000)]
 fn sudo_functions_with_permit() {
     let anon = contract_address_const::<'anon'>();
     let manager = contract_address_const::<'manager'>();
@@ -205,7 +205,7 @@ fn sudo_functions_with_permit() {
 }
 
 #[test]
-#[available_gas(4000000)]
+#[available_gas(9000000)]
 #[should_panic(expected: ('Rabbitholes: invalid permit', 'ENTRYPOINT_FAILED'))]
 fn sudo_no_permit_toggle_burning() {
     let anon = contract_address_const::<'anon'>();
@@ -214,7 +214,7 @@ fn sudo_no_permit_toggle_burning() {
     V1.toggle_digging();
 }
 #[test]
-#[available_gas(4000000)]
+#[available_gas(9000000)]
 #[should_panic(expected: ('Rabbitholes: invalid permit', 'ENTRYPOINT_FAILED'))]
 fn sudo_no_permit_toggle_digging() {
     let anon = contract_address_const::<'anon'>();
@@ -224,7 +224,7 @@ fn sudo_no_permit_toggle_digging() {
 }
 
 #[test]
-#[available_gas(4000000)]
+#[available_gas(9000000)]
 #[should_panic(expected: ('Rabbitholes: invalid permit', 'ENTRYPOINT_FAILED'))]
 fn sudo_no_permit_set_dig_fee() {
     let anon = contract_address_const::<'anon'>();
@@ -234,7 +234,7 @@ fn sudo_no_permit_set_dig_fee() {
 }
 
 #[test]
-#[available_gas(4000000)]
+#[available_gas(9000000)]
 #[should_panic(expected: ('Rabbitholes: invalid permit', 'ENTRYPOINT_FAILED'))]
 fn sudo_no_permit_set_dig_reward() {
     let anon = contract_address_const::<'anon'>();
@@ -244,7 +244,7 @@ fn sudo_no_permit_set_dig_reward() {
 }
 
 #[test]
-#[available_gas(4000000)]
+#[available_gas(9000000)]
 #[should_panic(expected: ('Rabbitholes: invalid permit', 'ENTRYPOINT_FAILED'))]
 fn sudo_no_permit_set_dig_token() {
     let anon = contract_address_const::<'anon'>();
@@ -254,7 +254,7 @@ fn sudo_no_permit_set_dig_token() {
 }
 
 #[test]
-#[available_gas(4000000)]
+#[available_gas(9000000)]
 #[should_panic(expected: ('Rabbitholes: invalid permit', 'ENTRYPOINT_FAILED'))]
 fn sudo_no_permit_set_digger_bps() {
     let anon = contract_address_const::<'anon'>();
@@ -264,7 +264,7 @@ fn sudo_no_permit_set_digger_bps() {
 }
 
 #[test]
-#[available_gas(4000000)]
+#[available_gas(9000000)]
 #[should_panic(expected: ('Rabbitholes: invalid permit', 'ENTRYPOINT_FAILED'))]
 fn sudo_no_permit_withdraw() {
     let anon = contract_address_const::<'anon'>();
@@ -274,7 +274,7 @@ fn sudo_no_permit_withdraw() {
 }
 
 #[test]
-#[available_gas(8000000)]
+#[available_gas(32000000)]
 fn dig_hole() {
     let anon = contract_address_const::<'anon'>();
     let (Manager, Rbits, Registry, V1, DigToken) = deploy_suite();
@@ -296,7 +296,7 @@ fn dig_hole() {
 }
 
 #[test]
-#[available_gas(10000000)]
+#[available_gas(19000000)]
 fn burn_rabbit() {
     let anon = contract_address_const::<'anon'>();
     let digger = contract_address_const::<'digger'>();
@@ -327,7 +327,7 @@ fn burn_rabbit() {
     assert(stats_anon.depth == 2, 'Wrong depth');
 }
 #[test]
-#[available_gas(32000000)]
+#[available_gas(50000000)]
 fn burn_rabbit_intense() {
     let anon = contract_address_const::<'anon'>();
     let digger = contract_address_const::<'digger'>();

@@ -50,7 +50,7 @@ fn deploy_suite() -> (IManagerDispatcher, IERC20Dispatcher) {
 
 /// tests
 #[test]
-#[available_gas(2000000)]
+#[available_gas(6000000)]
 fn constructor() {
     let (Manager, Rbits) = deploy_suite();
     assert(Rbits.name() == 'RabbitHoles', 'Incorrect name');
@@ -67,7 +67,7 @@ fn constructor() {
 }
 
 #[test]
-#[available_gas(2000000)]
+#[available_gas(6000000)]
 fn allowances() {
     let (Manager, Rbits) = deploy_suite();
     let spender = contract_address_const::<'spender'>();
@@ -82,7 +82,7 @@ fn allowances() {
 }
 
 #[test]
-#[available_gas(2000000)]
+#[available_gas(6000000)]
 fn toggle_minting() {
     let (Manager, Rbits) = deploy_suite();
     assert(Rbits.is_minting() == true, 'Incorrect is_minting');
@@ -93,7 +93,7 @@ fn toggle_minting() {
 }
 
 #[test]
-#[available_gas(2000000)]
+#[available_gas(6000000)]
 #[should_panic(expected: ('ERC20: invalid permit', 'ENTRYPOINT_FAILED'))]
 fn toggle_minting_anon() {
     let (Manager, Rbits) = deploy_suite();
@@ -102,7 +102,7 @@ fn toggle_minting_anon() {
 }
 
 #[test]
-#[available_gas(2000000)]
+#[available_gas(6000000)]
 fn toggle_minting_with_permit() {
     let (Manager, Rbits) = deploy_suite();
     let manager = contract_address_const::<'manager'>();
@@ -115,7 +115,7 @@ fn toggle_minting_with_permit() {
 }
 
 #[test]
-#[available_gas(2000000)]
+#[available_gas(6000000)]
 fn toggle_burning() {
     let (Manager, Rbits) = deploy_suite();
     assert(Rbits.is_burning() == true, 'Incorrect is_burning');
@@ -126,7 +126,7 @@ fn toggle_burning() {
 }
 
 #[test]
-#[available_gas(2000000)]
+#[available_gas(6000000)]
 #[should_panic(expected: ('ERC20: invalid permit', 'ENTRYPOINT_FAILED'))]
 fn toggle_burning_anon() {
     let (Manager, Rbits) = deploy_suite();
@@ -135,7 +135,7 @@ fn toggle_burning_anon() {
 }
 
 #[test]
-#[available_gas(2000000)]
+#[available_gas(6000000)]
 fn toggle_burning_with_permit() {
     let (Manager, Rbits) = deploy_suite();
     let manager = contract_address_const::<'manager'>();
@@ -148,7 +148,7 @@ fn toggle_burning_with_permit() {
 }
 
 #[test]
-#[available_gas(2000000)]
+#[available_gas(6000000)]
 fn transfer() {
     let (Manager, Rbits) = deploy_suite();
     let to = contract_address_const::<'to'>();
@@ -158,7 +158,7 @@ fn transfer() {
 }
 
 #[test]
-#[available_gas(2000000)]
+#[available_gas(6000000)]
 fn transfer_from() {
     let (Manager, Rbits) = deploy_suite();
     let to = contract_address_const::<'to'>();
@@ -173,7 +173,7 @@ fn transfer_from() {
 }
 
 #[test]
-#[available_gas(3000000)]
+#[available_gas(6000000)]
 #[should_panic(expected: ('ERC20: insufficient allowance', 'ENTRYPOINT_FAILED'))]
 fn transfer_from_no_allowance() {
     let (Manager, Rbits) = deploy_suite();
@@ -189,7 +189,7 @@ fn transfer_from_no_allowance() {
 }
 
 #[test]
-#[available_gas(2000000)]
+#[available_gas(6000000)]
 fn transfer_from_unlimited_allowance() {
     let (Manager, Rbits) = deploy_suite();
     let recipient = contract_address_const::<222>();
@@ -202,7 +202,7 @@ fn transfer_from_unlimited_allowance() {
 }
 
 #[test]
-#[available_gas(2000000)]
+#[available_gas(6000000)]
 fn mint_as_owner() {
     let (Manager, Rbits) = deploy_suite();
     let recipient = contract_address_const::<222>();
@@ -212,7 +212,7 @@ fn mint_as_owner() {
 }
 
 #[test]
-#[available_gas(2000000)]
+#[available_gas(6000000)]
 #[should_panic(expected: ('ERC20: invalid permit', 'ENTRYPOINT_FAILED'))]
 fn mint_as_anon() {
     set_block_timestamp(12345);
@@ -222,7 +222,7 @@ fn mint_as_anon() {
 }
 
 #[test]
-#[available_gas(2000000)]
+#[available_gas(6000000)]
 fn sudo_mint_with_permit() {
     let (Manager, Rbits) = deploy_suite();
     let manager = contract_address_const::<'manager'>();
@@ -258,7 +258,7 @@ fn mint_manager() {
 }
 
 #[test]
-#[available_gas(3000000)]
+#[available_gas(6000000)]
 fn burn_as_owner() {
     let (Manager, Rbits) = deploy_suite();
     let user = contract_address_const::<'user'>();
@@ -276,7 +276,7 @@ fn burn_as_owner() {
 }
 
 #[test]
-#[available_gas(3000000)]
+#[available_gas(6000000)]
 #[should_panic(expected: ('ERC20: invalid permit', 'ENTRYPOINT_FAILED'))]
 fn burn_as_anon() {
     let (Manager, Rbits) = deploy_suite();
@@ -293,7 +293,7 @@ fn burn_as_anon() {
 }
 
 #[test]
-#[available_gas(3000000)]
+#[available_gas(6000000)]
 fn burn_with_permit() {
     let (Manager, Rbits) = deploy_suite();
     let anon = contract_address_const::<'anon'>();

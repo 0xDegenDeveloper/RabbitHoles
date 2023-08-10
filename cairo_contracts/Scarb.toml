@@ -8,7 +8,7 @@ repository = "https://github.com/0xDegenDeveloper/Rabbitholes"
 description = "---"
 
 [dependencies]
-starknet = "2.0.1"
+starknet = "2.1.0"
 # sierra-compile = "starknet-sierra-compile src/lib.cairo sierra/rbits.json"
 
 [[target.starknet-contract]]

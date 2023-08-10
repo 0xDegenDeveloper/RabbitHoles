@@ -43,9 +43,9 @@ mod RabbitholesV1 {
     };
     use starknet::{
         get_block_timestamp, get_caller_address, get_contract_address, contract_address_const,
-        ContractAddress, ContractAddressIntoFelt252, StorageAccess,
-        storage_address_from_base_and_offset, StorageBaseAddress, SyscallResult,
-        storage_read_syscall, storage_write_syscall, Felt252TryIntoContractAddress
+        ContractAddress, ContractAddressIntoFelt252, Store, storage_address_from_base_and_offset,
+        StorageBaseAddress, SyscallResult, storage_read_syscall, storage_write_syscall,
+        Felt252TryIntoContractAddress
     };
     use core::integer;
     use option::{Option, OptionTrait};
@@ -304,22 +304,18 @@ mod RabbitholesV1 {
 
     #[generate_trait]
     impl InternalImpl of StorageTrait {
-        fn burn_and_send_rbits(ref self: ContractState, hole_id: u64, cost: u256) {
-            /// use u128_div for now 
-            let bps: u128 = self.s_digger_bps.read().into();
-            let mut cost: u128 = cost.try_into().unwrap();
-
+        fn burn_and_send_rbits(ref self: ContractState, hole_id: u64, mut cost: u256) {
             cost = cost * 1000000; /// 1e6
-            let to_digger = (cost * bps) / 10000;
+            let to_digger = (cost * self.s_digger_bps.read().into()) / 10000;
             let to_burn = cost - to_digger;
             /// transfer rbits from burner to digger
             IERC20Dispatcher {
                 contract_address: self.s_RBITS_ADDRESS.read()
-            }.transfer_from(get_caller_address(), self.fetch_digger(hole_id), to_digger.into());
+            }.transfer_from(get_caller_address(), self.fetch_digger(hole_id), to_digger);
             /// burn the rest
             IERC20Dispatcher {
                 contract_address: self.s_RBITS_ADDRESS.read()
-            }.burn(get_caller_address(), to_burn.into());
+            }.burn(get_caller_address(), to_burn);
         }
 
         fn charge_dig_fee(ref self: ContractState) {

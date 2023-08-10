@@ -40,9 +40,7 @@ mod Registry {
     use rabbitholes::{core::manager::{IManager, IManagerDispatcherTrait, IManagerDispatcher}};
     use starknet::{
         get_block_timestamp, get_caller_address, contract_address_const, ContractAddress,
-        ContractAddressIntoFelt252, StorageAccess, storage_address_from_base_and_offset,
-        StorageBaseAddress, SyscallResult, storage_read_syscall, storage_write_syscall,
-        Felt252TryIntoContractAddress
+        ContractAddressIntoFelt252, Felt252TryIntoContractAddress
     };
     use core::integer;
     use option::Option;
@@ -105,7 +103,7 @@ mod Registry {
         id: u64,
     }
 
-    #[derive(Serde, Copy, Drop, storage_access::StorageAccess)]
+    #[derive(Serde, Copy, Drop, starknet::Store)]
     struct Hole {
         digger: ContractAddress,
         timestamp: u64,
@@ -115,7 +113,7 @@ mod Registry {
         index: u64,
     }
 
-    #[derive(Serde, Copy, Drop, storage_access::StorageAccess)]
+    #[derive(Serde, Copy, Drop, starknet::Store)]
     struct RabbitCold {
         burner: ContractAddress,
         m_start: u64,
@@ -133,7 +131,7 @@ mod Registry {
         index: u64,
     }
 
-    #[derive(Serde, Copy, Drop, storage_access::StorageAccess)]
+    #[derive(Serde, Copy, Drop, starknet::Store)]
     struct Stats {
         holes: u64,
         rabbits: u64,

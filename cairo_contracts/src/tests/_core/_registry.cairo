@@ -438,7 +438,7 @@ fn create_rabbits() {
 }
 
 #[test]
-#[available_gas(2000000)]
+#[available_gas(4000000)]
 fn toggle_creation() {
     let (Manager, Rbits, Registry) = deploy_suite();
     assert(Registry.is_hole_creation() == true, 'Incorrect is_hole_creation');
