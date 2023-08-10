@@ -22,21 +22,20 @@ export default function WalletModal(props) {
   };
 
   const handleConnect = (connector) => {
-    const starknetProperty = `starknet_${connector?.id}`;
-
-    if (window[starknetProperty]) {
-      props.onClose();
-      connect(connector);
-    } else {
-      window.open(table[connector.id].download);
-    }
+    props.onClose();
+    connect(connector);
   };
+
+  function hasConnector(connector) {
+    return !!window[`starknet_${connector?.id}`];
+  }
 
   return (
     <Modal onClose={props.onClose} modal={props.modal}>
       <ContainerStyled className="dark-box-600w">
         <h3>Connect Account:</h3>
         {connectors.map((connector) => {
+          if (!hasConnector(connector)) return;
           return (
             <React.Fragment key={connector?.id}>
               <div>
