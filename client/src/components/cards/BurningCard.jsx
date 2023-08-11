@@ -79,7 +79,9 @@ const StyledBox = styled.div`
   img {
     /* width: clamp(10px, 2vw, 30px);
         height: clamp(10px, 2vw, 30px); */
-    height: clamp(27px, 3vw, 32px);
+    /* height: clamp(27px, 3vw, 32px); */
+    height: clamp(18px, 3vw, 32px);
+
     padding: 0;
     margin: 0;
   }
