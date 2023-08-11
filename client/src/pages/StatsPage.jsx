@@ -40,13 +40,13 @@ export default function StatsPage(props) {
             }}
           >
             <h1 style={{ color: "var(--limeGreen)" }}>Metrics</h1>
-            <h4>
+            <h4 className="spinnerY">
               Supply::<em> {totalSupply}</em>
-              <img className="spinner" src={`/logo-cropped-lime.png`} />
+              <img src={`/logo-cropped-lime.png`} />
             </h4>
-            <h4>
+            <h4 className="spinnerY">
               Fee::<em>{digFee}Ξ</em>&nbsp;Reward::<em>{digReward}</em>
-              <img className="spinner" src={`/logo-cropped-lime.png`} />
+              <img src={`/logo-cropped-lime.png`} />
               &nbsp;Bps::<em>{parseFloat(diggerBps) / 100}%</em>
             </h4>
 
@@ -102,7 +102,7 @@ const Wrap = styled.div`
     text-align: center;
   }
 
-  .spinner {
+  /* .spinner {
     :hover {
       cursor: pointer;
       animation: rotate360Y 3s infinite ease-in-out;
@@ -122,7 +122,7 @@ const Wrap = styled.div`
         transform: rotateY(0deg);
       }
     }
-  }
+  } */
 `;
 
 export const StyledBox = styled.div`

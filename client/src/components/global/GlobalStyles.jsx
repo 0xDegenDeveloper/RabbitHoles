@@ -57,7 +57,6 @@ const GlobalStyle = createGlobalStyle`
 
     .spinnerY {
         :hover {
-            ${"" /* cursor: pointer; */}
             img{
                 animation: rotate360Y 3s infinite ease-in-out;
             }
