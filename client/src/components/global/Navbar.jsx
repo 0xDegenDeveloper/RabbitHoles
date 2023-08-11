@@ -113,9 +113,17 @@ const NavLinkEl = styled(Link)`
 
     &.active {
       color: var(--lightGreen);
+      svg {
+        animation: rotate360 3s infinite ease-in-out;
+        animation-delay: 0.5s;
+      }
     }
   }
+
   &.active {
     color: var(--greyGreen);
+    svg {
+      scale: 1.1;
+    }
   }
 `;

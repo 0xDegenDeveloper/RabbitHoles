@@ -13,33 +13,8 @@ import {
   faChevronCircleUp,
   faFireFlameCurved,
 } from "@fortawesome/free-solid-svg-icons";
-import fetchHolesData from "../components/hooks/fetchHoleData";
 import { useParams } from "react-router-dom";
-import BurnModal from "../components/cards/BurningCard";
 import { useEffect } from "react";
-
-// function Rabbit({ rabbit, setRabbitModal, setRabbit }) {
-//   return (
-//     <div
-//       className="rabbit spinner"
-//       onClick={() => {
-//         setRabbitModal(true);
-//         setRabbit(rabbit);
-//       }}
-//     >
-//       <p>{rabbit.msg}</p>
-//       <div className="r-stats">
-//         <p>- {rabbit.burner}</p>
-//         <div className="ww">
-//           <p>{rabbit.depth}</p>
-//           <div className="w">
-//             <img src={`/logo-full-lime.png`} alt="logo" className={`logo`} />
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
 
 export function Rabbit({
   rabbit,
@@ -50,6 +25,7 @@ export function Rabbit({
 }) {
   const onClickHandler = () => {
     if (isGlobalRabbit) {
+      setUseJump(false);
       setModals.setRabbitModal(true);
       setModals.setRabbit(rabbit);
     } else {
@@ -61,14 +37,14 @@ export function Rabbit({
   };
 
   return (
-    <div className="rabbit spinner" onClick={onClickHandler}>
+    <div className="rabbit spinnerY" onClick={onClickHandler}>
       <p>{rabbit.msg}</p>
       <div className="r-stats">
         <p>{isGlobalRabbit ? rabbit.burner : hole.title}</p>
         <div className="ww">
           <p>{rabbit.depth}</p>
           <div className="w">
-            <img src={`/logo-full-lime.png`} alt="logo" className={`logo`} />
+            <img src={`/logo-cropped-lime.png`} alt="logo" className={`logo`} />
           </div>
         </div>
       </div>
@@ -115,19 +91,15 @@ export default function ArchivePage(props) {
             props.setUseJump(false);
             props.setModals.setHoleModal(true);
           }}
-          className={`hole-head`}
+          className={`hole-head spinner`}
         >
-          <div className="top spinner">
+          <div className="top">
             <h1>{hole.title}</h1>
             <div className="stats">
               <p>{hole.digs}</p> <FontAwesomeIcon icon={faFireFlameCurved} />
               <p>{hole.depth}</p>
               <div className="w">
-                <img
-                  src={"/logo-full-dark.png"}
-                  alt="logo"
-                  // className={`logo ${isHovered ? "spinner" : ""}`}
-                />
+                <img src={"/logo-cropped-dark.png"} alt="logo" />
               </div>
             </div>
           </div>
@@ -139,6 +111,7 @@ export default function ArchivePage(props) {
                 rabbit={rabbit}
                 setModals={props.setModals}
                 setRabbit={props.setModals.setRabbit}
+                setUseJump={props.setUseJump}
                 isGlobalRabbit={true}
               />
               <div className="bar"></div>
@@ -263,30 +236,6 @@ export const ArchivePageStyled = styled.div`
   svg {
     :hover {
       scale: 1.1;
-    }
-  }
-
-  .spinner:hover img {
-    /* :hover { */
-    cursor: pointer;
-    /* &:img { */
-    animation: rotate360 3s infinite ease-in-out;
-    /* } */
-    /* } */
-
-    @keyframes rotate360 {
-      0% {
-        transform: rotate(0deg);
-      }
-      50%,
-      52% {
-        transform: rotate(720deg);
-      }
-
-      75%,
-      100% {
-        transform: rotate(0deg);
-      }
     }
   }
 
@@ -484,10 +433,15 @@ export const ArchivePageStyled = styled.div`
 
       .w {
         height: clamp(18px, 3vw, 32px);
+        display: grid;
+        align-items: center;
       }
 
       .active {
         color: var(--greyGreen);
+        p {
+          color: var(--greyGreen);
+        }
       }
 
       img {
@@ -496,6 +450,7 @@ export const ArchivePageStyled = styled.div`
         height: 100%;
         padding: 0;
         margin: 0;
+        height: clamp(18px, 3vw, 32px);
       }
     }
   }
@@ -510,14 +465,15 @@ export const ArchivePageStyled = styled.div`
     width: 100%;
     color: var(--lightGreen);
 
+    .w {
+      height: clamp(18px, 3vw, 32px);
+    }
+
     .ww {
       display: flex;
       /* justify-content: space-between; */
       align-items: center;
-    }
-
-    .w {
-      height: clamp(27px, 3vw, 32px);
+      justify-content: center;
     }
 
     img {
@@ -526,6 +482,7 @@ export const ArchivePageStyled = styled.div`
       height: 100%;
       padding: 0;
       margin: 0;
+      height: clamp(18px, 3vw, 32px);
     }
 
     p {
@@ -622,6 +579,8 @@ export const ArchivePageStyled = styled.div`
       height: 100%;
       padding: 0;
       margin: 0;
+
+      height: clamp(18px, 3vw, 32px);
     }
 
     p {

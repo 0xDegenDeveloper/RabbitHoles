@@ -66,12 +66,15 @@ export default function InfoPage(props) {
               />
             </a>
           </p>
-          <img
-            src={tokenLogo}
-            onClick={() => {
-              props.setDarkMode(!props.darkMode);
-            }}
-          />
+          <div className="spinner roller">
+            <img
+              src={tokenLogo}
+              onClick={() => {
+                props.setDarkMode(!props.darkMode);
+              }}
+              // className="spinner"
+            />
+          </div>
         </div>
       </Wrapper>
       {/* {props.modal && (
@@ -110,7 +113,6 @@ const Wrapper = styled.div`
 
     :hover {
       cursor: pointer;
-      /* animation: rotate360 3s infinite ease-in-out; */
       color: var(--lightGreen);
       scale: 1.05;
     }
@@ -121,13 +123,6 @@ const Wrapper = styled.div`
     width: clamp(70px, 10vw, 100px);
     border-radius: 50%;
     box-shadow: 0px 0px 5px 0px var(--greyGreen);
-
-    :hover {
-      cursor: pointer;
-      scale: 1.05;
-
-      animation: rotate360 3s infinite ease-in-out;
-    }
   }
 
   .dark-box-600w {

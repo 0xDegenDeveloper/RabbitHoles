@@ -105,10 +105,10 @@ const Wrap = styled.div`
   .spinner {
     :hover {
       cursor: pointer;
-      animation: rotate360 3s infinite ease-in-out;
+      animation: rotate360Y 3s infinite ease-in-out;
     }
 
-    @keyframes rotate360 {
+    @keyframes rotate360Y {
       0% {
         transform: rotateY(0deg);
       }

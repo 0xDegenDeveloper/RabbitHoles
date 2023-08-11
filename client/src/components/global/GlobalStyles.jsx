@@ -55,6 +55,53 @@ const GlobalStyle = createGlobalStyle`
         border:none;
     }
 
+    .spinnerY {
+        :hover {
+            ${"" /* cursor: pointer; */}
+            img{
+                animation: rotate360Y 3s infinite ease-in-out;
+            }
+        }
+    }
+
+    .spinner {
+        :hover {
+            cursor: pointer;
+            img{
+                animation: rotate360 3s infinite ease-in-out;
+            }
+        }
+    }
+
+     @keyframes rotate360 {
+      0% {
+        transform: rotate(0deg);
+      }
+      50%,
+      52% {
+        transform: rotate(720deg);
+      }
+
+      75%,
+      100% {
+        transform: rotate(0deg);
+      }
+    }
+    @keyframes rotate360Y {
+      0% {
+        transform: rotateY(0deg);
+      }
+      50%,
+      52% {
+        transform: rotateY(720deg);
+      }
+
+      75%,
+      100% {
+        transform: rotateY(0deg);
+      }
+    }
+
     ${
       "" /* .container2 {
         position: absolute;

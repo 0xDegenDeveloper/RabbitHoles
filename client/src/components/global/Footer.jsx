@@ -167,5 +167,6 @@ const FooterBottom = styled.div`
     cursor: pointer;
     color: ${(props) =>
       props.darkMode ? "var(--limeGreen)" : "var(--limeGreen)"};
+    scale: 1.05;
   }
 `;

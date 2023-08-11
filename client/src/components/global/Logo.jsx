@@ -30,18 +30,12 @@ export default function Logo(props) {
         darkMode={props.darkMode}
         toggled={toggled}
         onClick={() => {
-          // props.setDarkMode(!props.darkMode);
           if (toggled) props.setDarkMode(!props.darkMode);
           setToggled(!toggled);
         }}
-        // onMouseEnter={() => {
-        //   setHovered(true);
-        // }} // start the spinner after 5 seconds
         onMouseLeave={() => {
           setToggled(false);
-          // setHovered(false);
-        }} // stop the spinner
-        // className={`${toggled ? "toggled" : ""}`}
+        }}
       >
         <Link
           // to={location.pathname == "/" ? "/info" : "/"}
@@ -127,44 +121,10 @@ const LogoStyle = styled.div`
     scale: 1.05;
   }
 
-  /* .toggled {
-    animation: rotate360 1.5s ease-in-out;
-  } */
-
-  /* @keyframes rotate360 {
-    0% {
-      transform: rotate(0deg);
-    }
-    50%,
-    52% {
-      transform: rotate(720deg);
-    }
-
-    75%,
-    100% {
-      transform: rotate(0deg);
-    }
-  } */
-
   ${(props) =>
     props.toggled &&
     `
     animation: infinite rotate360 3s ease-in-out;
     animation-delay: 0.2s;
   `}
-
-  @keyframes rotate360 {
-    0% {
-      transform: rotate(0deg);
-    }
-    50%,
-    52% {
-      transform: rotate(720deg);
-    }
-
-    75%,
-    100% {
-      transform: rotate(0deg);
-    }
-  }
 `;

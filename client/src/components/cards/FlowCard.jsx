@@ -100,8 +100,8 @@ export default function FlowModal(props) {
           <>
             <h1>Disclaimer</h1>
             <p>
-              $RBITS are platform-specific utility tokens, and should not be
-              considered securities.
+              <span>$RBITS</span> are platform-specific utility tokens, and
+              should not be considered securities.
             </p>
             <p>Fees collected from digs are for extending the project</p>
             <img

@@ -14,7 +14,7 @@ import { ArchivePageStyled, Rabbit } from "./ArchivePage";
 function Hole({ hole, setUseJump, setModals }) {
   return (
     <div
-      className="hole spinner"
+      className="hole spinnerY"
       onClick={() => {
         setUseJump(true);
         setModals.setHole(hole);
@@ -79,12 +79,20 @@ export default function UserPage(props) {
           <div className="top">
             <h1>{user}</h1>
             <div className="stats">
-              {!props.mobile && <p>{props.userArchive.totalHoles}</p>}
+              {!props.mobile && (
+                <p className={`${isHoles ? "active" : ""}`}>
+                  {props.userArchive.totalHoles}
+                </p>
+              )}
               <FontAwesomeIcon
                 icon={faDigging}
                 className={`${isHoles ? "active" : ""}`}
               />
-              {!props.mobile && <p>{props.userArchive.totalRabbits}</p>}
+              {!props.mobile && (
+                <p className={`${!isHoles ? "active" : ""}`}>
+                  {props.userArchive.totalRabbits}
+                </p>
+              )}
               <FontAwesomeIcon
                 icon={faFireFlameCurved}
                 className={`${!isHoles ? "active" : ""}`}

@@ -47,7 +47,6 @@ export default function WalletModal(props) {
             </React.Fragment>
           );
         })}
-
         <FontAwesomeIcon icon={faXmarkCircle} onClick={props.onClose} />
       </ContainerStyled>
     </Modal>

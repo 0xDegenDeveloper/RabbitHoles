@@ -11,8 +11,8 @@ import { ContainerStyled } from "./RabbitCard";
 
 export default function HoleModal(props) {
   const navigate = useNavigate();
-  const { digger, id, digs, timestamp, title } = props.modals.hole;
-  const { holes, depth } = props.globalStatistics;
+  const { digger, id, digs, timestamp, title, depth } = props.modals.hole;
+  const { holes } = props.globalStatistics;
 
   return (
     <Modal modal={props.modals.hole} onClose={props.onClose}>

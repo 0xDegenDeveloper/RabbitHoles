@@ -17,6 +17,7 @@ export default function BurnModal(props) {
     alert(
       "Thank you for your support, but our contracts are still under development!"
     );
+    props.onClose(false);
     console.log("burning...");
   }
   return (
@@ -42,7 +43,7 @@ export default function BurnModal(props) {
         <p>
           <span>depth: </span>
           {stringToFelts(msg).length}
-          <img src={"/logo-full-lime.png"} alt="logo" className="logo" />
+          <img src={"/logo-cropped-lime.png"} alt="logo" className="logo" />
           <FontAwesomeIcon
             className="burn"
             icon={faFireFlameCurved}
