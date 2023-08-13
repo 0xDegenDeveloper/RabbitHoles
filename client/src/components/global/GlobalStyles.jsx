@@ -1,5 +1,36 @@
 import styled, { createGlobalStyle } from "styled-components";
 
+let bgs = {
+  flat: "bg-flat.png",
+  flatInverse: "bg-flat-inv.png",
+  shiftt: "bg-shift.png",
+  shifttInverse: "bg-shift-inv.png",
+  shift2: "bg-shift-2.png",
+  shift3: "bg-shift-3.png",
+};
+
+const whichBg = (mobile, path) => {
+  console.log(mobile, path);
+  if (mobile) {
+    return bgs.flatInverse;
+  } else {
+    if (path == "/") return bgs.shift2;
+    if (path == "/stats") return bgs.shift2;
+
+    if (path.startsWith("/archive")) {
+      return bgs.shift3;
+    }
+    if (path.startsWith("/user")) {
+      return bgs.flatInverse;
+    }
+    if (path.startsWith("/info")) {
+      return bgs.flat;
+    } else {
+      return bgs.flat;
+    }
+  }
+};
+
 const GlobalStyle = createGlobalStyle`
     :root {
         --limeGreen: #FF7600;
@@ -7,7 +38,10 @@ const GlobalStyle = createGlobalStyle`
         --greyGreen: #b2e2ae;
         --forrestGreen: #04241E;
         --nav-link-el-padding-box: 0 clamp(10px, 2vw 100px);
-        background-image: url("/bg.png");
+        ${
+          "" /* background-image: url(${(props) => whichBg(props.mobile, props.path)});  */
+        }
+        background-image: url("/bg-flat-inv.png"); 
         font-synthesis: none;
         text-rendering: optimizeLegibility;
         -webkit-font-smoothing: antialiased;

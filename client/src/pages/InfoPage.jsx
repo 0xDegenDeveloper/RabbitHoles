@@ -34,7 +34,7 @@ export default function InfoPage(props) {
           <h1 style={{ color: "var(--limeGreen)" }}>RabbitHoles</h1>
           <h4>
             A discussion platform built on Starknet, offering a space for
-            permanent and censorship-resistant conversations
+            permanent and censorship-resistant conversations.
           </h4>
           <h4>
             We are currently under development and will be launching soon, treat

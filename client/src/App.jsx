@@ -1,4 +1,10 @@
-import { Route, Routes, BrowserRouter, useParams } from "react-router-dom";
+import {
+  Route,
+  Routes,
+  BrowserRouter,
+  useParams,
+  useLocation,
+} from "react-router-dom";
 import { useState, useEffect, createContext } from "react";
 
 import GlobalStyles from "./components/global/GlobalStyles";
@@ -85,118 +91,159 @@ function App() {
     };
   }, []);
 
+  // mobile uses bg no shift always.
+
+  // const location = useLocation();
+
   return (
     <>
-      <Graphics />
-      <GlobalStyles mobile={mobile} modals={modals} />
       <BrowserRouter>
-        <TopComponents
-          mobile={mobile}
-          setAccountModal={modalSetters.setAccountModal}
-          accountModal={modals.accountModal}
-          setDarkMode={modalSetters.setDarkMode}
-          darkMode={modals.darkMode}
-        />
-        <Routes>
-          {/* Home Page */}
-          <Route path="/" element={<HomePage />}></Route>
-          {/* Statistics Page  */}
-          <Route
-            path="/stats"
-            element={
-              <StatsPage
-                modal={modals.infoModal}
-                setModals={modalSetters}
-                // onClose={modalSetters.setInfoModal}
-                globalStatistics={globalStatistics}
-              />
-            }
-          ></Route>
-          {/* Archive Page */}
-          <Route
-            path="/archive"
-            element={
-              <ArchivePage
-                mobile={mobile}
-                modals={modals}
-                setModals={modalSetters}
-                globalStatistics={globalStatistics}
-                holes={archive}
-                setUseJump={setUseJump}
-              />
-            }
-          />
-          <Route
-            path="/archive/:key"
-            element={
-              <ArchivePage
-                mobile={mobile}
-                modals={modals}
-                setModals={modalSetters}
-                globalStatistics={globalStatistics}
-                holes={archive}
-                setUseJump={setUseJump}
-              />
-            }
-          />
-          {/* User Page */}
-          <Route
-            path="/user"
-            element={
-              <UserPage
-                mobile={mobile}
-                setModals={modalSetters}
-                userArchive={userArchive}
-                setUseJump={setUseJump}
-                isHoles={isHoles}
-                setIsHoles={setIsHoles}
-              />
-            }
-          />
-          <Route
-            path="/user/:key"
-            element={
-              <UserPage
-                mobile={mobile}
-                setModals={modalSetters}
-                userArchive={userArchive}
-                setUseJump={setUseJump}
-                isHoles={isHoles}
-                setIsHoles={setIsHoles}
-              />
-            }
-          />
-          {/* Info Page */}
-          <Route
-            path="/info"
-            element={
-              <InfoPage
-                modal={modals.infoModal}
-                onClose={modalSetters.setInfoModal}
-                setDarkMode={modalSetters.setDarkMode}
-                darkMode={modals.darkMode}
-              />
-            }
-          ></Route>
-
-          <Route
-            path="/digging/"
-            element={<DiggingPage setModals={modalSetters} />}
-          />
-          <Route
-            path="/digging/:key"
-            element={<DiggingPage setModals={modalSetters} />}
-          />
-        </Routes>
-        <Modals
-          globalStatistics={globalStatistics}
-          useJump={useJump}
-          setIsHoles={setIsHoles}
-          modals={modals}
-          setModals={modalSetters}
-          mobile={mobile}
+        <AppInner
+          props={{
+            mobile: mobile,
+            modals: modals,
+            modalSetters: modalSetters,
+            globalStatistics: globalStatistics,
+            archive: archive,
+            userArchive: userArchive,
+            useJump: useJump,
+            setUseJump: setUseJump,
+            isHoles: isHoles,
+            setIsHoles: setIsHoles,
+          }}
         />
       </BrowserRouter>
+    </>
+  );
+}
+
+function AppInner(props) {
+  const {
+    mobile,
+    modals,
+    modalSetters,
+    globalStatistics,
+    archive,
+    userArchive,
+    useJump,
+    setUseJump,
+    isHoles,
+    setIsHoles,
+  } = props.props;
+
+  const location = useLocation();
+
+  return (
+    <>
+      <GlobalStyles mobile={mobile} modals={modals} path={location.pathname} />
+
+      <TopComponents
+        mobile={mobile}
+        setAccountModal={modalSetters.setAccountModal}
+        accountModal={modals.accountModal}
+        setDarkMode={modalSetters.setDarkMode}
+        darkMode={modals.darkMode}
+      />
+      <Routes>
+        {/* Home Page */}
+        <Route path="/" element={<HomePage />}></Route>
+        {/* Statistics Page  */}
+        <Route
+          path="/stats"
+          element={
+            <StatsPage
+              modal={modals.infoModal}
+              setModals={modalSetters}
+              // onClose={modalSetters.setInfoModal}
+              globalStatistics={globalStatistics}
+            />
+          }
+        ></Route>
+        {/* Archive Page */}
+        <Route
+          path="/archive"
+          element={
+            <ArchivePage
+              mobile={mobile}
+              modals={modals}
+              setModals={modalSetters}
+              globalStatistics={globalStatistics}
+              holes={archive}
+              setUseJump={setUseJump}
+            />
+          }
+        />
+        <Route
+          path="/archive/:key"
+          element={
+            <ArchivePage
+              mobile={mobile}
+              modals={modals}
+              setModals={modalSetters}
+              globalStatistics={globalStatistics}
+              holes={archive}
+              setUseJump={setUseJump}
+            />
+          }
+        />
+        {/* User Page */}
+        <Route
+          path="/user"
+          element={
+            <UserPage
+              mobile={mobile}
+              setModals={modalSetters}
+              userArchive={userArchive}
+              setUseJump={setUseJump}
+              isHoles={isHoles}
+              setIsHoles={setIsHoles}
+            />
+          }
+        />
+        <Route
+          path="/user/:key"
+          element={
+            <UserPage
+              mobile={mobile}
+              setModals={modalSetters}
+              userArchive={userArchive}
+              setUseJump={setUseJump}
+              isHoles={isHoles}
+              setIsHoles={setIsHoles}
+            />
+          }
+        />
+        {/* Info Page */}
+        <Route
+          path="/info"
+          element={
+            <InfoPage
+              modal={modals.infoModal}
+              onClose={modalSetters.setInfoModal}
+              setDarkMode={modalSetters.setDarkMode}
+              darkMode={modals.darkMode}
+            />
+          }
+        ></Route>
+
+        <Route
+          path="/digging/"
+          element={<DiggingPage setModals={modalSetters} />}
+        />
+        <Route
+          path="/digging/:key"
+          element={<DiggingPage setModals={modalSetters} />}
+        />
+      </Routes>
+      <Modals
+        globalStatistics={globalStatistics}
+        useJump={useJump}
+        setIsHoles={setIsHoles}
+        modals={modals}
+        setModals={modalSetters}
+        mobile={mobile}
+      />
+      <Graphics path={location.pathname} />
     </>
   );
 }

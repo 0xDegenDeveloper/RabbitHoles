@@ -17,7 +17,7 @@ export default function TopComponents(props) {
         darkMode={props.darkMode}
         accountModal={props.accountModal}
       />
-      <Navbar style={{ zIndex: 1000 }} />
+      <Navbar style={{ zIndex: 1000 }} mobile={props.mobile} />
       <Logo
         mobile={props.mobile}
         walletShowing={walletShowing}

@@ -70,7 +70,7 @@ export default function UserPage(props) {
         mobile={props.mobile}
       >
         <div
-          className="hole-head spinner"
+          className="hole-head spinnerY"
           onClick={() => {
             setIndex(1);
             setIsHoles(!isHoles);

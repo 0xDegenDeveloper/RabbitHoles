@@ -137,13 +137,12 @@ const FooterWrapper = styled.div`
 `;
 
 const FooterTop = styled.div`
-  /* color: var(--forrestGreen); */
   color: ${(props) =>
     props.darkMode ? "var(--greyGreen)" : "var(--forrestGreen)"};
 
-  /* svg { */
-  cursor: pointer;
-  /* } */
+  :hover {
+    cursor: pointer;
+  }
 `;
 
 const FooterBottom = styled.div`

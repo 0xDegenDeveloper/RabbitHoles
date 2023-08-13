@@ -39,7 +39,7 @@ export default function FlowModal(props) {
             </p>
             <p>
               In return the digger is minted the <span>dig reward </span>
-              ($RBITS)
+              ($RBITS).
             </p>
           </>
         )}
@@ -56,12 +56,12 @@ export default function FlowModal(props) {
             </p>
             <p>
               To burn a <span>Rabbit</span>, a user will spend some of their
-              $RBITS
+              $RBITS.
             </p>
-            <p className="token">
+            <p className="token spinnerY">
               <span className="blue">
                 {" > "}cost = 1.000000
-                <img src={`/logo-cropped-lime.png`} className="spinner" />
+                <img src={`/logo-cropped-lime.png`} />
                 &nbsp;per felt
               </span>
             </p>
@@ -82,10 +82,10 @@ export default function FlowModal(props) {
                 {" > "}If a msg is 32 characters, it fills 2 felts
               </span>
             </p>
-            <p className="token">
+            <p className="token spinnerY">
               <span className="blue">
                 {" > "}cost = 2.000000
-                <img className="spinner" src={`/logo-cropped-lime.png`} />
+                <img src={`/logo-cropped-lime.png`} />
               </span>
             </p>
             <p>
@@ -103,7 +103,7 @@ export default function FlowModal(props) {
               <span>$RBITS</span> are platform-specific utility tokens, and
               should not be considered securities.
             </p>
-            <p>Fees collected from digs are for extending the project</p>
+            <p>Fees collected from digs are for extending the project.</p>
             <img
               src={"/logo-main.png"}
               className="token-logo"
@@ -125,8 +125,6 @@ export default function FlowModal(props) {
           onClick={() => setIndex(index == 1 ? index : index - 1)}
           className={`bottom left ${index == 1 ? "fill" : ""}`}
         />
-        {/* <FontAwesomeIcon icon={faChevronLeft} className="bottom" /> */}
-        {/* <FontAwesomeIcon icon={faChevronRight} className="bottom" /> */}
         <div id="bottom" className="bottom">
           <p>
             {index} / {maxIndex}
@@ -280,7 +278,7 @@ const ContainerStyled = styled.div`
     text-align: center;
   }
 
-  .spinner {
+  /* .spinner {
     :hover {
       cursor: pointer;
 
@@ -320,7 +318,7 @@ const ContainerStyled = styled.div`
         transform: rotateY(0deg);
       }
     }
-  }
+  } */
 
   /* .blue {
       color: var(--lightGreen);

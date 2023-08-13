@@ -11,8 +11,8 @@ import { useNavigate } from "react-router-dom";
 
 export default function RabbitModal(props) {
   const navigate = useNavigate();
-  const { rabbits, depth } = props.globalStatistics;
-  const { burner, id, timestamp, msg } = props.modals.rabbit;
+  const { rabbits } = props.globalStatistics;
+  const { burner, id, timestamp, msg, depth } = props.modals.rabbit;
   const hole = props.modals.hole;
 
   return (
