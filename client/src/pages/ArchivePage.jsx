@@ -12,6 +12,7 @@ import {
   faChevronCircleDown,
   faChevronCircleUp,
   faFireFlameCurved,
+  faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
@@ -104,6 +105,7 @@ export default function ArchivePage(props) {
             </div>
           </div>
         </div>
+
         <div className="dark-box rabbits">
           {thisChunkArray.map((rabbit, id) => (
             <div key={rabbit.msg + id} className="rw">
@@ -201,13 +203,6 @@ export default function ArchivePage(props) {
             className={`bottom`}
           />
         </div>
-        {/* {burnModal && (
-          <BurnModal
-            onClose={setBurnModal}
-            modal={burnModal}
-            hole={props.holes[id - 1]}
-          />
-        )} */}
       </ArchivePageStyled>
     </>
   );
@@ -227,11 +222,6 @@ export const ArchivePageStyled = styled.div`
   /* overflow: scroll; */
   /* gap: ${(props) => (props.mobile ? "0rem" : "1rem")}; */
   /* margin-right: auto; */
-  .toggler {
-    :hover {
-      cursor: pointer;
-    }
-  }
 
   svg {
     :hover {
@@ -331,7 +321,7 @@ export const ArchivePageStyled = styled.div`
     }
     box-shadow: 0px 0px 5px 0px var(--forrestGreen);
     width: 100%;
-    min-height: ${(props) => (props.mobile ? "200px" : "400px")};
+    min-height: ${(props) => (props.mobile ? "271px" : "462px")};
     border-radius: 1rem;
     padding: 1rem 1rem;
     /* gap: 0; */
@@ -400,12 +390,11 @@ export const ArchivePageStyled = styled.div`
     box-shadow: 0px 0px 5px 0px var(--forrestGreen);
 
     :hover {
-      cursor: pointer;
-      backdrop-filter: blur(10px);
-      border-radius: 1rem;
+      /* cursor: pointer; */
+      /* backdrop-filter: blur(10px); */
+      /* border-radius: 1rem; */
       /* padding: 1rem; */
-      box-shadow: 0px 0px 5px 0px var(--forrestGreen);
-      scale: 1.01;
+      /* box-shadow: 0px 0px 5px 0px var(--forrestGreen); */
     }
 
     .top {
@@ -422,36 +411,124 @@ export const ArchivePageStyled = styled.div`
       justify-content: space-between;
       align-items: center;
     }
+  }
 
-    .stats {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: "Lato";
-      gap: 1rem;
-      gap: clamp(2px, 1vw, 10px);
+  .uw {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: left;
+    gap: 0;
+    color: var(--forrestGreen);
+    /* padding: 1rem; */
+    margin: ${(props) => (props.mobile ? "0.5rem" : "0.5rem")};
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    padding: 1rem;
+    box-shadow: 0px 0px 5px 0px var(--forrestGreen);
 
-      .w {
-        height: clamp(18px, 3vw, 32px);
-        display: grid;
-        align-items: center;
-      }
+    &.stats {
+      margin-bottom: 0.5rem;
+    }
+  }
 
-      .active {
-        color: var(--greyGreen);
-        p {
+  .user-head {
+    display: flex;
+    width: 100%;
+    /* flex-direction: column; */
+    justify-content: space-between;
+    /* height: 100%; */
+    align-items: center;
+    gap: 1rem;
+    color: var(--forrestGreen);
+    margin: 0;
+
+    svg:hover {
+      cursor: pointer;
+      color: var(--greyGreen);
+    }
+
+    font-size: clamp(15px, 3vw, 30px);
+  }
+
+  .input-box {
+    color: var(--greyGreen);
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    font-family: "Andale Mono", monospace;
+    font-size: clamp(15px, 3vw, 40px);
+    width: 100%;
+    height: 100%;
+
+    /* padding: 1rem; */
+    /* margin: 0.5rem 0; */
+    /* cursor: pointer; */
+    /* backdrop-filter: blur(10px); */
+    /* border-radius: 1rem; */
+    /* padding: 1rem; */
+    /* box-shadow: 0px 0px 5px 0px var(--forrestGreen); */
+
+    ::placeholder {
+      color: var(--greyGreen);
+    }
+  }
+
+  .stats {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    font-family: "Lato";
+    gap: 1rem;
+    gap: clamp(2px, 1vw, 10px);
+    /* height: 100%; */
+    text-align: left;
+    font-size: clamp(12px, 3vw, 18px);
+    /* -left: auto; */
+
+    svg {
+      padding: 0 0.5rem;
+    }
+
+    &.sels2 {
+      right: -3rem;
+      svg {
+        :hover {
           color: var(--greyGreen);
         }
-      }
 
-      img {
-        /* width: clamp(10px, 2vw, 30px);
-        height: clamp(10px, 2vw, 30px); */
-        height: 100%;
-        padding: 0;
-        margin: 0;
-        height: clamp(18px, 3vw, 32px);
+        &.active {
+          color: var(--greyGreen);
+        }
+        padding: 0.5rem 0;
       }
+    }
+
+    :hover {
+      cursor: pointer;
+    }
+
+    .w {
+      height: clamp(18px, 3vw, 32px);
+      display: grid;
+      align-items: center;
+    }
+
+    .active {
+      color: var(--greyGreen);
+      p {
+        color: var(--greyGreen);
+      }
+    }
+
+    img {
+      /* width: clamp(10px, 2vw, 30px);
+        height: clamp(10px, 2vw, 30px); */
+      height: 100%;
+      padding: 0;
+      margin: 0;
+      height: clamp(20px, 3vw, 32px);
     }
   }
 

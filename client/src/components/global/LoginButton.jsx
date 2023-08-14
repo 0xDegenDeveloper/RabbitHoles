@@ -2,7 +2,7 @@ import { useAccount, useConnectors } from "@starknet-react/core";
 import styled from "styled-components";
 import WalletModal from "../cards/ProviderCard";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 export default function LoginButton(props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -63,7 +63,9 @@ function DisconnectedBtn(props) {
 }
 
 function ConnectedBtn(props) {
-  const { address } = useAccount();
+  const { address, status } = useAccount();
+
+  console.log(status);
   const { disconnect } = useConnectors();
 
   const shortenedAddress = useMemo(() => {

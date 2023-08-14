@@ -66,13 +66,12 @@ export default function InfoPage(props) {
               />
             </a>
           </p>
-          <div className="spinner roller">
+          <div className="spinner logo">
             <img
               src={tokenLogo}
               onClick={() => {
                 props.setDarkMode(!props.darkMode);
               }}
-              // className="spinner"
             />
           </div>
         </div>
@@ -103,6 +102,12 @@ const Wrapper = styled.div`
       cursor: pointer;
       color: var(--limeGreen);
       scale: 1.05;
+    }
+  }
+
+  .logo {
+    :hover {
+      cursor: pointer;
     }
   }
 

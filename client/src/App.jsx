@@ -40,6 +40,8 @@ function App() {
   const [useJump, setUseJump] = useState(false);
   const [isHoles, setIsHoles] = useState(true);
 
+  const [opt, setOpt] = useState("depth");
+
   const globalStatistics = fetchGlobalStatistics();
 
   const archive = fetchGlobalArchive(
@@ -110,6 +112,9 @@ function App() {
             setUseJump: setUseJump,
             isHoles: isHoles,
             setIsHoles: setIsHoles,
+
+            opt: opt,
+            setOpt: setOpt,
           }}
         />
       </BrowserRouter>
@@ -127,6 +132,8 @@ function AppInner(props) {
     userArchive,
     useJump,
     setUseJump,
+    opt,
+    setOpt,
     isHoles,
     setIsHoles,
   } = props.props;
@@ -195,6 +202,8 @@ function AppInner(props) {
               setModals={modalSetters}
               userArchive={userArchive}
               setUseJump={setUseJump}
+              opt={opt}
+              setOpt={setOpt}
               isHoles={isHoles}
               setIsHoles={setIsHoles}
             />
@@ -208,6 +217,8 @@ function AppInner(props) {
               setModals={modalSetters}
               userArchive={userArchive}
               setUseJump={setUseJump}
+              opt={opt}
+              setOpt={setOpt}
               isHoles={isHoles}
               setIsHoles={setIsHoles}
             />

@@ -99,7 +99,7 @@ const GlobalStyle = createGlobalStyle`
 
     .spinner {
         :hover {
-            cursor: pointer;
+            ${"" /* cursor: pointer; */}
             img{
                 animation: rotate360 3s infinite ease-in-out;
             }

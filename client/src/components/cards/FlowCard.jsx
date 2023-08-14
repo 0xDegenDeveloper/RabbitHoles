@@ -174,7 +174,7 @@ const ContainerStyled = styled.div`
     box-shadow: 0px 0px 5px 0px var(--greyGreen);
 
     :hover {
-      /* cursor: pointer; */
+      cursor: pointer;
       animation: rotate360 3s infinite ease-in-out;
       scale: 1.05;
     }
@@ -262,9 +262,9 @@ const ContainerStyled = styled.div`
 
   img {
     height: clamp(22px, 3vw, 32px);
-    :hover {
+    /* :hover {
       cursor: pointer;
-    }
+    } */
   }
 
   .token span {
