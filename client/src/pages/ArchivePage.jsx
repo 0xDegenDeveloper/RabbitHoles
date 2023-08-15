@@ -294,13 +294,17 @@ export const ArchivePageStyled = styled.div`
     align-items: center;
     justify-content: center;
     gap: 1rem;
-    color: var(--greyGreen);
+    color: var(--forrestGreen);
     font-size: 1.5rem;
     margin-top: ${(props) => (props.mobile ? "1rem" : "0rem")};
 
     :hover {
       color: var(--limeGreen);
       cursor: pointer;
+    }
+
+    &.stats {
+      color: var(--forrestGreen);
     }
   }
 
@@ -423,7 +427,7 @@ export const ArchivePageStyled = styled.div`
     color: var(--forrestGreen);
     /* padding: 1rem; */
     margin: ${(props) => (props.mobile ? "0.5rem" : "0.5rem")};
-    cursor: pointer;
+    /* cursor: pointer; */
     backdrop-filter: blur(10px);
     border-radius: 1rem;
     padding: 1rem;
@@ -484,25 +488,12 @@ export const ArchivePageStyled = styled.div`
     gap: clamp(2px, 1vw, 10px);
     /* height: 100%; */
     text-align: left;
-    font-size: clamp(12px, 3vw, 18px);
+    /* font-size: clamp(12px, 3vw, 18px); */
+    font-size: 1.25rem;
     /* -left: auto; */
 
     svg {
       padding: 0 0.5rem;
-    }
-
-    &.sels2 {
-      right: -3rem;
-      svg {
-        :hover {
-          color: var(--greyGreen);
-        }
-
-        &.active {
-          color: var(--greyGreen);
-        }
-        padding: 0.5rem 0;
-      }
     }
 
     :hover {
@@ -529,6 +520,31 @@ export const ArchivePageStyled = styled.div`
       padding: 0;
       margin: 0;
       height: clamp(20px, 3vw, 32px);
+    }
+
+    &.sels3 {
+      /* right: -3rem; */
+      font-size: 1.5rem;
+      /* gap: 1rem; */
+      /* margin: 0 0.5rem; */
+      display: flex;
+      gap: 1.5rem;
+      /* color: var(--greyGreen); */
+
+      svg {
+        :hover {
+          color: var(--limeGreen);
+          scale: 1.1;
+        }
+
+        &.active {
+          color: var(--greyGreen);
+          :hover {
+            scale: 1;
+          }
+        }
+        /* padding: 0.5rem 0; */
+      }
     }
   }
 

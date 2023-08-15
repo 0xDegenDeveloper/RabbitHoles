@@ -134,54 +134,48 @@ export default function UserPage(props) {
         )}
         {opt == "depth" && <div className="dark-box depth"></div>}
         <div className="sels">
-          {opt != "depth" && (
-            <>
-              <FontAwesomeIcon
-                icon={faArrowCircleLeft}
-                onClick={() => {
-                  setIndex(index == 1 ? index : index - 1);
-                }}
-                className={`bottom left ${index == 1 ? "fill" : ``}`}
-              />
-              <div id="bottom" className="bottom">
-                <p>
-                  {start}-{end} /{" "}
-                  {opt == "holes"
-                    ? userArchive.totalHoles.toString().padStart(3, "0")
-                    : userArchive.totalRabbits.toString().padStart(3, "0")}
-                </p>
-              </div>
-              <FontAwesomeIcon
-                icon={faArrowCircleRight}
-                onClick={() => {
-                  setIndex(
-                    (index - 1) * 10 + 10 >=
-                      (opt == "holes"
-                        ? userArchive.totalHoles
-                        : userArchive.totalRabbits)
-                      ? index
-                      : index + 1
-                  );
-                }}
-                className={`bottom right ${
-                  (index - 1) * 10 + 10 >=
+          {/* {opt != "depth" && ( */}
+          {/* <> */}
+          <FontAwesomeIcon
+            icon={faArrowCircleLeft}
+            onClick={() => {
+              setIndex(index == 1 ? index : index - 1);
+            }}
+            className={`bottom left ${index == 1 ? "fill" : ``}`}
+            style={opt == "depth" ? { color: "rgba(0,0,0,0)" } : {}}
+          />
+          <div id="bottom" className="bottom">
+            <p style={opt == "depth" ? { color: "rgba(0,0,0,0)" } : {}}>
+              {start}-{end} /{" "}
+              {opt == "holes"
+                ? userArchive.totalHoles.toString().padStart(3, "0")
+                : userArchive.totalRabbits.toString().padStart(3, "0")}
+            </p>
+          </div>
+          <FontAwesomeIcon
+            icon={faArrowCircleRight}
+            onClick={() => {
+              setIndex(
+                (index - 1) * 10 + 10 >=
                   (opt == "holes"
                     ? userArchive.totalHoles
                     : userArchive.totalRabbits)
-                    ? "fill"
-                    : ``
-                }`}
-              />
-            </>
-          )}
-        </div>
-        <div className="sels3">
-          <FontAwesomeIcon
-            icon={faFireFlameCurved}
-            className={`bottom hidden`}
+                  ? index
+                  : index + 1
+              );
+            }}
+            className={`bottom right ${
+              (index - 1) * 10 + 10 >=
+              (opt == "holes"
+                ? userArchive.totalHoles
+                : userArchive.totalRabbits)
+                ? "fill"
+                : ``
+            }`}
+            style={opt == "depth" ? { color: "rgba(0,0,0,0)" } : {}}
           />
         </div>
-        <div className="stats sels2">
+        <div className="stats sels3">
           <FontAwesomeIcon
             icon={faUser}
             className={`${props.opt == "depth" ? "active" : ""} bottom left`}
@@ -207,14 +201,13 @@ export default function UserPage(props) {
             }}
           />
         </div>
+        {/* <div className="sels3">
+          <FontAwesomeIcon
+            icon={faFireFlameCurved}
+            className={`bottom hidden`}
+          />
+        </div> */}
       </ArchivePageStyled>
     </>
   );
 }
-
-const VBar = styled.div`
-  width: 0;
-  height: 50%;
-  margin: auto auto;
-  border-left: 2px solid var(--forrestGreen);
-`;

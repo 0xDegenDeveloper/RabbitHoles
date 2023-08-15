@@ -8,6 +8,8 @@ export default function LoginButton(props) {
 
   const { address } = useAccount();
 
+  useEffect(() => {}, [address]);
+
   return (
     <Wrap>
       {address ? (
@@ -63,11 +65,7 @@ function DisconnectedBtn(props) {
 }
 
 function ConnectedBtn(props) {
-  const { address, status } = useAccount();
-
-  console.log(status);
-  const { disconnect } = useConnectors();
-
+  const { address } = useAccount();
   const shortenedAddress = useMemo(() => {
     if (!address) return "";
     return `${address.slice(0, 6)}...${address.slice(-4)}`;

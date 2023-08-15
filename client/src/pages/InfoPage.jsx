@@ -15,7 +15,7 @@ export default function InfoPage(props) {
     <>
       <Wrapper className="container" mobile={props.mobile}>
         <div
-          className="dark-box-600w"
+          className="dark-box"
           id="special"
           style={{
             display: "flex",
@@ -25,10 +25,12 @@ export default function InfoPage(props) {
             gap: "0",
             position: "relative",
             textAlign: "center",
-            maxWidth: "500px",
-            width: "clamp(75px, 55vw, 500px)",
+            // maxWidth: "500px",
+            // width: "clamp(75px, 55vw, 500px)",
+            width: "clamp(75px, 60vw, 600px)",
+
             overflow: "scroll",
-            padding: "2rem",
+            // padding: "2rem",
           }}
         >
           <h1 style={{ color: "var(--limeGreen)" }}>RabbitHoles</h1>
@@ -68,7 +70,7 @@ export default function InfoPage(props) {
           </p>
           <div className="spinner logo">
             <img
-              src={tokenLogo}
+              src="/logo-main.png"
               onClick={() => {
                 props.setDarkMode(!props.darkMode);
               }}
@@ -84,10 +86,26 @@ export default function InfoPage(props) {
 }
 
 const Wrapper = styled.div`
-  display: grid;
+  /* display: grid;
   place-items: center;
   align-content: center;
-  overflow: scroll;
+  overflow: scroll; */
+
+  /* display: flex;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  flex-direction: column;
+  align-items: left;
+  justify-content: center; */
+  /* width: clamp(75px, 60vw, 600px); */
+  /* margin: 0; */
+
+  /* margin-left: auto;
+  margin-right: auto; */
+  margin: 0;
+  padding: 0;
+  /* width: clamp(75px, 60vw, 600px); */
 
   .info-icon {
     position: absolute;
@@ -126,14 +144,35 @@ const Wrapper = styled.div`
   img {
     margin-top: 1rem;
     width: clamp(70px, 10vw, 100px);
+    height: clamp(70px, 10vw, 100px);
     border-radius: 50%;
     box-shadow: 0px 0px 5px 0px var(--greyGreen);
+
+    bottom: 1rem;
   }
 
-  .dark-box-600w {
-    margin: 0;
+  .dark-box {
+    background-color: var(--forrestGreen);
+    color: var(--lightGreen);
+    font-size: clamp(12px, 3vw, 18px);
+    font-family: "Andale Mono", monospace;
+    box-shadow: 0px 0px 5px 0px var(--forrestGreen);
+    border-radius: 1rem;
+    padding: 1rem 1rem;
 
-    /* justify-content: top; */
+    /* width: 100%; */
+
+    min-height: ${(props) => (props.mobile ? "271px" : "462px")};
+
+    .ital {
+      font-family: "Lato", sans-serif;
+    }
+
+    width: 100%;
+    min-height: ${(props) => (props.mobile ? "271px" : "462px")};
+
+    /* gap: 0; */
+    /* overflow: scroll; */
   }
 
   #special {

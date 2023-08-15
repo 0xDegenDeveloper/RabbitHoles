@@ -25,12 +25,12 @@ let bgs = {
 };
 
 export default (props) => {
-  useEffect(() => {
-    console.log("location changed to", props.path);
-  }, [props]);
+  // useEffect(() => {
+  //   console.log("location changed to", props.path);
+  // }, [props]);
 
   const preload = (p5) => {
-    console.log("preload");
+    // console.log("preload");
     // bg = p5.loadImage(props.path.startsWith("") ? "/bg-shift.png" : "bg.png");
     for (const fn in bgs) {
       const path = `/${bgs[fn]}`;

@@ -27,41 +27,62 @@ export default function StatsPage(props) {
           }}
         >
           <div
-            className="statss dark-box-600w"
+            className="statss"
             style={{
               display: "flex",
               flexDirection: "column",
+              // flexDirection: "column",
+              /// 2 rows
+
               justifyContent: "center",
               alignItems: "center",
-              gap: "0",
+              gap: "3rem",
               position: "relative",
               textAlign: "center",
               cursor: "default",
+              padding: "1rem",
             }}
           >
-            <h1 style={{ color: "var(--limeGreen)" }}>Metrics</h1>
-            <h4 className="spinnerY">
-              Supply::<em> {totalSupply}</em>
-              <img src={`/logo-cropped-lime.png`} />
-            </h4>
-            <h4 className="spinnerY">
-              Fee::<em>{digFee}Ξ</em>&nbsp;Reward::<em>{digReward}</em>
-              <img src={`/logo-cropped-lime.png`} />
-              &nbsp;Bps::<em>{parseFloat(diggerBps) / 100}%</em>
-            </h4>
+            <div className="dark-box">
+              <h1 style={{ color: "var(--limeGreen)" }}>Metrics</h1>
+              <h4 className="spinnerY">
+                Supply::<em> {totalSupply}</em>
+                <img src={`/logo-cropped-lime.png`} />
+              </h4>
+              <h4 className="spinnerY">
+                Fee::<em>{digFee}Ξ</em>&nbsp;Reward::<em>{digReward}</em>
+                <img src={`/logo-cropped-lime.png`} />
+              </h4>
+              <h4>
+                Bps::<em>{parseFloat(diggerBps) / 100}%</em>
+              </h4>
+              <StyledBox>
+                <FontAwesomeIcon
+                  icon={faInfoCircle}
+                  onClick={() => props.setModals.setInfoModal(true)}
+                />
+              </StyledBox>
+            </div>
 
-            <h1 style={{ color: "var(--limeGreen)" }}>Stats</h1>
-            <h4>
-              Holes::<em>{holes}</em>
-              {"::"}Rabbits::<em>{rabbits}</em>
-              {"::"}Depth::<em>{depth}</em>
-            </h4>
-            <StyledBox>
-              <FontAwesomeIcon
-                icon={faInfoCircle}
-                onClick={() => props.setModals.setInfoModal(true)}
+            <div className="dark-box">
+              <h1 style={{ color: "var(--limeGreen)" }}>Stats</h1>
+              <h4>
+                Holes::<em>{holes}</em>
+                {"::"}Rabbits::<em>{rabbits}</em>
+              </h4>
+              <h4>
+                Depth::<em>{depth}</em>
+              </h4>
+            </div>
+
+            {/* <div className="spinner xxx">
+              <img
+                src="/logo-main.png"
+                onClick={() => {
+                  props.setDarkMode(!props.darkMode);
+                }}
               />
-            </StyledBox>
+            </div> */}
           </div>
           {/* <img src={"/logo-main.png"} className="token-logo" /> */}
         </Wrap>
@@ -75,6 +96,36 @@ const WW = styled.div``;
 const Wrap = styled.div`
   img {
     height: clamp(18px, 3vw, 32px);
+  }
+
+  .xxx {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    bottom: 1rem;
+    img {
+      /* margin-top: 1rem; */
+      width: clamp(70px, 10vw, 100px);
+      height: clamp(70px, 10vw, 100px);
+      border-radius: 50%;
+      box-shadow: 0px 0px 5px 0px var(--greyGreen);
+    }
+  }
+
+  .statss {
+    min-height: ${(props) => (props.mobile ? "200px" : "375px")};
+  }
+
+  .dark-box {
+    background-color: var(--forrestGreen);
+    color: var(--lightGreen);
+    font-size: clamp(12px, 3vw, 18px);
+    font-family: "Andale Mono", monospace;
+    box-shadow: 0px 0px 5px 0px var(--forrestGreen);
+    border-radius: 1rem;
+    padding: 1rem 1rem;
+    width: clamp(75px, 60vw, 600px);
+    position: relative;
   }
 
   h4 {
@@ -100,6 +151,7 @@ const Wrap = styled.div`
     align-items: center;
     justify-content: center;
     text-align: center;
+    margin: 1rem;
   }
 
   /* .spinner {
@@ -131,7 +183,6 @@ export const StyledBox = styled.div`
   right: 1rem;
   font-size: clamp(10px, 4vw, 25px);
   cursor: pointer;
-
   &:hover {
     scale: 1.05;
     color: var(--limeGreen);

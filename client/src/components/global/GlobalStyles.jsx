@@ -270,13 +270,13 @@ const GlobalStyle = createGlobalStyle`
         font-size: clamp(7px, 2.5vw, 18px);
         overflow:scroll;
       
-        width: clamp(75px, 60vw, 500px);
+        width: clamp(75px, 60vw, 600px);
 
         min-height: 200px;
 
         h1{
             margin: .5rem;
-            font-size: clamp(20px, 3vw, 40px);
+            ${"" /* font-size: clamp(20px, 3vw, 40px); */}
         }
 
    
