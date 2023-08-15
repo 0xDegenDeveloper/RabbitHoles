@@ -3,13 +3,15 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function HomePage() {
+export default function HomePage(props) {
   const [input, setInput] = useState("");
   const navigate = useNavigate();
 
   function searchForHole() {
     if (input.length > 31) return;
-    navigate("/digging/" + input.toUpperCase());
+    props.setLookupTitle(input);
+    props.setModals.setDiggingModal(true);
+    // navigate("/digging/" + input.toUpperCase());
   }
 
   return (

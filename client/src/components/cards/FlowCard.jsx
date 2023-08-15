@@ -120,21 +120,25 @@ export default function FlowModal(props) {
           }}
           className="x"
         />
-        <FontAwesomeIcon
-          icon={faArrowCircleLeft}
-          onClick={() => setIndex(index == 1 ? index : index - 1)}
-          className={`bottom left ${index == 1 ? "fill" : ""}`}
-        />
-        <div id="bottom" className="bottom">
+        <div className="bottom indexer">
+          <FontAwesomeIcon
+            icon={faArrowCircleLeft}
+            onClick={() => setIndex(index == 1 ? index : index - 1)}
+            className={`${index == 1 ? "fill" : ""}`}
+            // className={`bottom left ${index == 1 ? "fill" : ""}`}
+          />
+
           <p>
             {index} / {maxIndex}
           </p>
+
+          <FontAwesomeIcon
+            icon={faArrowCircleRight}
+            onClick={() => setIndex(index == maxIndex ? index : index + 1)}
+            className={`${index == maxIndex ? "fill" : ""}`}
+            // className={`bottom right ${index == maxIndex ? "fill" : ""}`}
+          />
         </div>
-        <FontAwesomeIcon
-          icon={faArrowCircleRight}
-          onClick={() => setIndex(index == maxIndex ? index : index + 1)}
-          className={`bottom right ${index == maxIndex ? "fill" : ""}`}
-        />
       </ContainerStyled>
     </Modal>
   );
@@ -161,9 +165,26 @@ const ContainerStyled = styled.div`
   white-space: pre-wrap;
   /* height: fit-content; */
   /* min-height: clamp(150px, 50vh, 400px); */
-  min-height: ${(props) => (props.mobile ? "250px" : "350px")};
+  min-height: ${(props) => (props.mobile ? "250px" : "375px")};
   /* height: fit-content; */
   cursor: default;
+
+  .indexer {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    /* width: 50%; */
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    font-size: clamp(10px, 3vw, 20px);
+    /* padding-top: auto; */
+    height: fit-content;
+  }
 
   .token-logo {
     /* img { */
@@ -195,8 +216,14 @@ const ContainerStyled = styled.div`
     }
   }
 
+  h1 {
+    margin: 0;
+  }
+
   p {
     color: var(--lightGreen);
+    padding: 0;
+    font-size: clamp(6px, 3vw, 18px);
   }
 
   span {
@@ -211,8 +238,10 @@ const ContainerStyled = styled.div`
       color: var(--forrestGreen);
     }
 
-    position: absolute;
-    font-size: 1.5rem;
+    /* position: absolute */
+    &.x {
+      font-size: clamp(10px, 4vw, 25px);
+    }
 
     &:hover {
       color: var(--limeGreen);
@@ -226,6 +255,7 @@ const ContainerStyled = styled.div`
     }
 
     &.x {
+      position: absolute;
       top: 1rem;
       right: 1rem;
     }
@@ -233,7 +263,7 @@ const ContainerStyled = styled.div`
     &.bottom {
       bottom: 1rem;
 
-      &.left {
+      /* &.left {
         left: 2rem;
         z-index: 2;
       }
@@ -245,7 +275,7 @@ const ContainerStyled = styled.div`
         position: absolute;
         bottom: 0;
         z-index: 0;
-      }
+      } */
     }
   }
 

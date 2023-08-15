@@ -1,5 +1,6 @@
 import AccountModal from "../cards/AccountCard";
 import BurnModal from "../cards/BurningCard";
+import DiggingCard from "../cards/DiggingCard";
 import FlowModal from "../cards/FlowCard";
 import HoleModal from "../cards/HoleCard";
 import RabbitModal from "../cards/RabbitCard";
@@ -11,6 +12,7 @@ export default function Modals({
   modals,
   setModals,
   mobile,
+  lookupTitle,
 }) {
   return (
     <>
@@ -30,6 +32,7 @@ export default function Modals({
           setIsHoles={setIsHoles}
           useJump={useJump}
           globalStatistics={globalStatistics}
+          setDiggingModal={setModals.setDiggingModal}
         />
       )}
       {modals.rabbitModal && (
@@ -39,6 +42,7 @@ export default function Modals({
           useJump={useJump}
           setIsHoles={setIsHoles}
           globalStatistics={globalStatistics}
+          setDiggingModal={setModals.setDiggingModal}
         />
       )}
       {modals.infoModal && (
@@ -51,7 +55,19 @@ export default function Modals({
         />
       )}
       {modals.burningModal && (
-        <BurnModal onClose={setModals.setBurningModal} modals={modals} />
+        <BurnModal
+          onClose={setModals.setBurningModal}
+          modals={modals}
+          setModals={setModals}
+        />
+      )}
+      {modals.diggingModal && (
+        <DiggingCard
+          onClose={setModals.setDiggingModal}
+          modals={modals}
+          setModals={setModals}
+          lookupTitle={lookupTitle}
+        />
       )}
     </>
   );

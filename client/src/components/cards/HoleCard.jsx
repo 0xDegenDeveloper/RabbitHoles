@@ -61,6 +61,7 @@ export default function HoleModal(props) {
               icon={faArrowsToCircle}
               onClick={() => {
                 props.onClose(false);
+                props.setModals.setDiggingModal(false);
                 navigate(`/archive/${id}`);
               }}
             />

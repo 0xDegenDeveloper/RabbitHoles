@@ -27,6 +27,7 @@ function App() {
   const { address } = useAccount();
   const [mobile, setMobile] = useState(false);
   const [modals, setModals] = useState({
+    diggingModal: false,
     accountModal: false,
     infoModal: false,
     holeModal: false,
@@ -36,9 +37,8 @@ function App() {
     hole: null,
     rabbit: null,
   });
-
+  const [lookupTitle, setLookupTitle] = useState("");
   const [useJump, setUseJump] = useState(false);
-  const [isHoles, setIsHoles] = useState(true);
 
   const [opt, setOpt] = useState("depth");
 
@@ -51,6 +51,9 @@ function App() {
   const userArchive = fetchUserArchive(address);
 
   const modalSetters = {
+    setDiggingModal: (value) => {
+      setModals((prevModals) => ({ ...prevModals, diggingModal: value }));
+    },
     setAccountModal: (value) => {
       setModals((prevModals) => ({ ...prevModals, accountModal: value }));
     },
@@ -102,19 +105,18 @@ function App() {
       <BrowserRouter>
         <AppInner
           props={{
-            mobile: mobile,
-            modals: modals,
-            modalSetters: modalSetters,
-            globalStatistics: globalStatistics,
-            archive: archive,
-            userArchive: userArchive,
-            useJump: useJump,
-            setUseJump: setUseJump,
-            isHoles: isHoles,
-            setIsHoles: setIsHoles,
-
-            opt: opt,
-            setOpt: setOpt,
+            mobile,
+            modals,
+            modalSetters,
+            globalStatistics,
+            archive,
+            userArchive,
+            useJump,
+            setUseJump,
+            opt,
+            setOpt,
+            lookupTitle,
+            setLookupTitle,
           }}
         />
       </BrowserRouter>
@@ -134,8 +136,8 @@ function AppInner(props) {
     setUseJump,
     opt,
     setOpt,
-    isHoles,
-    setIsHoles,
+    lookupTitle,
+    setLookupTitle,
   } = props.props;
 
   const location = useLocation();
@@ -153,7 +155,17 @@ function AppInner(props) {
       />
       <Routes>
         {/* Home Page */}
-        <Route path="/" element={<HomePage />}></Route>
+        <Route
+          path="/"
+          element={
+            <HomePage
+              modals={modals}
+              setModals={modalSetters}
+              setLookupTitle={setLookupTitle}
+              lookupTitle={lookupTitle}
+            />
+          }
+        ></Route>
         {/* Statistics Page  */}
         <Route
           path="/stats"
@@ -204,8 +216,6 @@ function AppInner(props) {
               setUseJump={setUseJump}
               opt={opt}
               setOpt={setOpt}
-              isHoles={isHoles}
-              setIsHoles={setIsHoles}
             />
           }
         />
@@ -219,8 +229,6 @@ function AppInner(props) {
               setUseJump={setUseJump}
               opt={opt}
               setOpt={setOpt}
-              isHoles={isHoles}
-              setIsHoles={setIsHoles}
             />
           }
         />
@@ -249,10 +257,10 @@ function AppInner(props) {
       <Modals
         globalStatistics={globalStatistics}
         useJump={useJump}
-        setIsHoles={setIsHoles}
         modals={modals}
         setModals={modalSetters}
         mobile={mobile}
+        lookupTitle={lookupTitle}
       />
       <Graphics path={location.pathname} />
     </>

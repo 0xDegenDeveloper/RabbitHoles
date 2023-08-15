@@ -65,6 +65,7 @@ export default function RabbitModal(props) {
               icon={faArrowsToCircle}
               onClick={() => {
                 props.onClose(false);
+                props.setModals.setDiggingModal(false);
                 navigate(`/archive/${hole.id}`);
               }}
             />
@@ -108,6 +109,7 @@ export const ContainerStyled = styled.div`
       color: var(--limeGreen);
       padding: 0.5rem;
       font-size: clamp(10px, 5vw, 20px);
+
       text-align: center;
     }
 
@@ -149,7 +151,8 @@ export const ContainerStyled = styled.div`
     }
 
     position: absolute;
-    font-size: 1.5rem;
+    /* font-size: 1.5rem; */
+    font-size: clamp(10px, 4vw, 25px);
 
     &:hover {
       color: var(--limeGreen);

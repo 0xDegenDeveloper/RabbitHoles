@@ -383,6 +383,8 @@ export const ArchivePageStyled = styled.div`
 
     svg {
       font-size: clamp(8px, 3vw, 18px);
+      /* font-size: clamp(10px, 4vw, 25px); */
+
       padding: 0 0.5rem;
     }
     padding: 1rem;
