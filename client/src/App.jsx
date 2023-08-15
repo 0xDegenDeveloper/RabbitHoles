@@ -144,14 +144,16 @@ function AppInner(props) {
 
   return (
     <div
-      style={{
-        width: "100vw",
-        // height: "100vh",
-        overflow: "scroll",
-        top: "0",
-        left: "0",
-        position: "absolute",
-      }}
+      style={
+        {
+          // width: "100vw",
+          // height: "100vh",
+          // overflow: "scroll",
+          // top: "0",
+          // left: "0",
+          // position: "absolute",
+        }
+      }
     >
       <GlobalStyles mobile={mobile} modals={modals} path={location.pathname} />
 
