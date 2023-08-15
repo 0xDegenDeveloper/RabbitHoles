@@ -48,8 +48,11 @@ const GlobalStyle = createGlobalStyle`
         -moz-osx-font-smoothing: grayscale;
         -webkit-text-size-adjust: 100%;
         border:none;
-        width: 100vw;
-        height: 100vh;
+    }
+
+    body{
+      width: 100vw;
+      height: 100vh;
     }
 
     @font-face {
