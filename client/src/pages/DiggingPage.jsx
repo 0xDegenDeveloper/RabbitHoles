@@ -126,10 +126,12 @@ const Wrapper = styled.div`
     /* height: fit-content; */
     h4 {
       color: var(--lightGreen);
+      /* padding: 2rem; */
     }
 
     h2 {
       color: var(--limeGreen);
+      /* padding: 2rem; */
     }
 
     .bottom {

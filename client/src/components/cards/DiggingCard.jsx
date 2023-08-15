@@ -41,6 +41,7 @@ export default function DiggingCard(props) {
             whiteSpace: "wrap",
             cursor: "default",
             maxWidth: "500px",
+            whiteSpace: "pre-wrap",
           }}
         >
           {key == "" ? (
