@@ -174,7 +174,8 @@ const Wrapper = styled.div`
     svg {
       color: var(--limeGreen);
       padding: 0.5rem;
-      font-size: clamp(10px, 5vw, 20px);
+      font-size: clamp(10px, 4vw, 25px);
+
       text-align: center;
     }
 
@@ -194,6 +195,7 @@ const Wrapper = styled.div`
       position: absolute;
       top: 1rem;
       right: 1rem;
+      /* font-size: clamp(10px, 4vw, 25px); */
 
       svg {
         color: var(--lightGreen);

@@ -50,10 +50,6 @@ const GlobalStyle = createGlobalStyle`
         border:none;
     }
 
-    body{
-     overflow: hidden;
-    }
-
     @font-face {
       font-family: "Lato";
       src: ${(props) => `url(/fonts/Lato/Lato-BlackItalic.ttf)`};
@@ -72,7 +68,7 @@ const GlobalStyle = createGlobalStyle`
         overflow-y: scroll;
         font-family: "Andale Mono", monospace;
         border:none;
-        overflow: hidden;
+        ${"" /* overflow: hidden; */}
     }
 
     em {
@@ -81,17 +77,14 @@ const GlobalStyle = createGlobalStyle`
 
     .container {
         position: absolute;
-        ${
-          "" /* top: 0;
+        top: 0;
         left: 0;
         right: 0;
-        bottom: 0; */
-        }
+        bottom: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 100vh;   
-        width: 100vw;
+        max-height: 100vh;   
         ${"" /* height: -webkit-fill-available; */}
 
         z-index: 999;   
